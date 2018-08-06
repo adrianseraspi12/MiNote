@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#0d46a0</color>
+    <color name="colorPrimaryDark">#002071</color>
+    <color name="colorPrimaryLight">#5471d2</color>
+
+    <color name="colorSecondary">#26c6da</color>
+
+    <color name="colorPrimaryRipple">#420d46a0</color>
+
+    <!-- color picker -->
+    <color name="colorRed">#ef5350</color>
+    <color name="colorBlue">#42a5f5</color>
+    <color name="colorGreen">#66bb6a</color>
+    <color name="colorOrange">#ffa726</color>
+    <color name="colorBlueGray">#78909c</color>
+
+</resources>

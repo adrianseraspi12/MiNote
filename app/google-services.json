@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1046216082240",
+    "firebase_url": "https://minote-suzei.firebaseio.com",
+    "project_id": "minote-suzei",
+    "storage_bucket": "minote-suzei.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1046216082240:android:c3c1ef0fd094c41e",
+        "android_client_info": {
+          "package_name": "com.suzei.minote"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1046216082240-oepit9f4sqft5rj5u9o960r73qnims2n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDO3vnxXQt8eOczESsgPQbpJx6R68pty_8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

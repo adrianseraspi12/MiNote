@@ -1,0 +1,1126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="4" by="lint 3.1.3">
+
+    <issue
+        id="GradleCompatible"
+        message="All com.android.support libraries must use the exact same version specification (mixing versions can lead to runtime crashes). Found versions 27.1.1, 26.1.0. Examples include `com.android.support:animated-vector-drawable:27.1.1` and `com.android.support:customtabs:26.1.0`">
+        <location
+            file="build.gradle"/>
+    </issue>
+
+    <issue
+        id="PrivateApi"
+        message="Accessing internal APIs via reflection is not supported and may not work on all devices or in the future"
+        errorLine1="                final Class&lt;?> delegateClass = Class.forName("
+        errorLine2="                                               ^">
+        <location
+            file="src/main/java/com/suzei/minote/utils/FixedHoloDatePickerDialog.java"
+            line="38"
+            column="48"/>
+    </issue>
+
+    <issue
+        id="PrivateApi"
+        message="Accessing internal APIs via reflection is not supported and may not work on all devices or in the future"
+        errorLine1="                final Class&lt;?> spinnerDelegateClass = Class.forName("
+        errorLine2="                                                      ^">
+        <location
+            file="src/main/java/com/suzei/minote/utils/FixedHoloDatePickerDialog.java"
+            line="48"
+            column="55"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.style.FullScreenDialogToolbar` appears to be unused"
+        errorLine1="    &lt;style name=&quot;FullScreenDialogToolbar&quot;>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="20"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.project_id` appears to be unused"
+        errorLine1="    &lt;string name=&quot;project_id&quot; translatable=&quot;false&quot;>minote-suzei&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="build/generated/res/google-services/debug/values/values.xml"
+            line="10"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="TextFields"
+        message="The view name (`@+id/note_date`) suggests this is a date, but it does not include &apos;`date`&apos; or &apos;`datetime`&apos; in the `inputType`"
+        errorLine1="                android:inputType=&quot;text&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fullscreen_dialog_lecture.xml"
+            line="33"
+            column="17"/>
+        <location
+            file="src/main/res/layout/fullscreen_dialog_lecture.xml"
+            line="24"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="`onTouch` should call `View#performClick` when a click is detected"
+        errorLine1="        public boolean onTouch(View v, MotionEvent event) {"
+        errorLine2="                       ~~~~~~~">
+        <location
+            file="src/main/java/com/suzei/minote/fullscreendialog/FullScreenEvents.java"
+            line="68"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view ``EditText`` has `setOnTouchListener` called on it but does not override `performClick`"
+        errorLine1="        titleView.setOnTouchListener(mTouchListener);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/suzei/minote/fullscreendialog/FullScreenEvents.java"
+            line="188"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view ``EditText`` has `setOnTouchListener` called on it but does not override `performClick`"
+        errorLine1="        messageView.setOnTouchListener(mTouchListener);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/suzei/minote/fullscreendialog/FullScreenEvents.java"
+            line="189"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view ``EditText`` has `setOnTouchListener` called on it but does not override `performClick`"
+        errorLine1="        locationView.setOnTouchListener(mTouchListener);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/suzei/minote/fullscreendialog/FullScreenEvents.java"
+            line="190"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view ``EditText`` has `setOnTouchListener` called on it but does not override `performClick`"
+        errorLine1="        dateView.setOnTouchListener(mTouchListener);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/suzei/minote/fullscreendialog/FullScreenEvents.java"
+            line="191"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view ``EditText`` has `setOnTouchListener` called on it but does not override `performClick`"
+        errorLine1="        timeView.setOnTouchListener(mTouchListener);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/suzei/minote/fullscreendialog/FullScreenEvents.java"
+            line="192"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="`onTouch` should call `View#performClick` when a click is detected"
+        errorLine1="        public boolean onTouch(View v, MotionEvent event) {"
+        errorLine2="                       ~~~~~~~">
+        <location
+            file="src/main/java/com/suzei/minote/fullscreendialog/FullScreenLecture.java"
+            line="64"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view ``EditText`` has `setOnTouchListener` called on it but does not override `performClick`"
+        errorLine1="        titleView.setOnTouchListener(mTouchListener);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/suzei/minote/fullscreendialog/FullScreenLecture.java"
+            line="174"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view ``EditText`` has `setOnTouchListener` called on it but does not override `performClick`"
+        errorLine1="        dateView.setOnTouchListener(mTouchListener);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/suzei/minote/fullscreendialog/FullScreenLecture.java"
+            line="175"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view ``EditText`` has `setOnTouchListener` called on it but does not override `performClick`"
+        errorLine1="        messageView.setOnTouchListener(mTouchListener);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/suzei/minote/fullscreendialog/FullScreenLecture.java"
+            line="176"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="`onTouch` should call `View#performClick` when a click is detected"
+        errorLine1="        public boolean onTouch(View v, MotionEvent event) {"
+        errorLine2="                       ~~~~~~~">
+        <location
+            file="src/main/java/com/suzei/minote/fullscreendialog/FullScreenReminder.java"
+            line="66"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view ``EditText`` has `setOnTouchListener` called on it but does not override `performClick`"
+        errorLine1="        dateView.setOnTouchListener(mTouchListener);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/suzei/minote/fullscreendialog/FullScreenReminder.java"
+            line="190"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view ``EditText`` has `setOnTouchListener` called on it but does not override `performClick`"
+        errorLine1="        timeView.setOnTouchListener(mTouchListener);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/suzei/minote/fullscreendialog/FullScreenReminder.java"
+            line="191"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view ``EditText`` has `setOnTouchListener` called on it but does not override `performClick`"
+        errorLine1="        titleView.setOnTouchListener(mTouchListener);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/suzei/minote/fullscreendialog/FullScreenReminder.java"
+            line="192"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view ``EditText`` has `setOnTouchListener` called on it but does not override `performClick`"
+        errorLine1="        messageView.setOnTouchListener(mTouchListener);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/suzei/minote/fullscreendialog/FullScreenReminder.java"
+            line="193"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="`onTouch` should call `View#performClick` when a click is detected"
+        errorLine1="        public boolean onTouch(View v, MotionEvent event) {"
+        errorLine2="                       ~~~~~~~">
+        <location
+            file="src/main/java/com/suzei/minote/fullscreendialog/FullScreenTodo.java"
+            line="84"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view ``EditText`` has `setOnTouchListener` called on it but does not override `performClick`"
+        errorLine1="        titleView.setOnTouchListener(mTouchListener);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/suzei/minote/fullscreendialog/FullScreenTodo.java"
+            line="234"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view ``EditText`` has `setOnTouchListener` called on it but does not override `performClick`"
+        errorLine1="        dateView.setOnTouchListener(mTouchListener);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/suzei/minote/fullscreendialog/FullScreenTodo.java"
+            line="235"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view ``EditText`` has `setOnTouchListener` called on it but does not override `performClick`"
+        errorLine1="        timeView.setOnTouchListener(mTouchListener);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/suzei/minote/fullscreendialog/FullScreenTodo.java"
+            line="236"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view ``ImageButton`` has `setOnTouchListener` called on it but does not override `performClick`"
+        errorLine1="        addView.setOnTouchListener(mTouchListener);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/suzei/minote/fullscreendialog/FullScreenTodo.java"
+            line="237"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                &lt;ImageButton"
+        errorLine2="                ^">
+        <location
+            file="src/main/res/layout/fullscreen_dialog_todo.xml"
+            line="89"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="    &lt;ImageButton"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/layout/item_row_todo.xml"
+            line="38"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="                    android:clickable=&quot;true&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fullscreen_dialog_events.xml"
+            line="45"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="                    android:clickable=&quot;true&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fullscreen_dialog_events.xml"
+            line="57"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="                android:clickable=&quot;true&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fullscreen_dialog_lecture.xml"
+            line="30"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="                    android:clickable=&quot;true&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fullscreen_dialog_reminder.xml"
+            line="38"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="                    android:clickable=&quot;true&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fullscreen_dialog_reminder.xml"
+            line="50"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="                    android:clickable=&quot;true&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fullscreen_dialog_todo.xml"
+            line="38"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="                    android:clickable=&quot;true&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fullscreen_dialog_todo.xml"
+            line="50"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="                    numberView.setText(number + &quot;.)&quot;);"
+        errorLine2="                                       ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/suzei/minote/fullscreendialog/FullScreenTodo.java"
+            line="171"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="                numberView.setText(number + &quot;.)&quot;);"
+        errorLine2="                                   ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/suzei/minote/fullscreendialog/FullScreenTodo.java"
+            line="205"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="                    numberView.setText(number + &quot;.)&quot;);"
+        errorLine2="                                       ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/suzei/minote/fullscreendialog/FullScreenTodo.java"
+            line="389"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;All&quot;, should use `@string` resource"
+        errorLine1="            android:title=&quot;All&quot; />"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/menu/activity_main_drawer.xml"
+            line="10"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Reminder&quot;, should use `@string` resource"
+        errorLine1="            android:title=&quot;Reminder&quot; />"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/menu/activity_main_drawer.xml"
+            line="14"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;To-Do List&quot;, should use `@string` resource"
+        errorLine1="            android:title=&quot;To-Do List&quot; />"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/menu/activity_main_drawer.xml"
+            line="18"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Lecture&quot;, should use `@string` resource"
+        errorLine1="            android:title=&quot;Lecture&quot; />"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/menu/activity_main_drawer.xml"
+            line="22"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Events&quot;, should use `@string` resource"
+        errorLine1="            android:title=&quot;Events&quot; />"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/menu/activity_main_drawer.xml"
+            line="26"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Instructions&quot;, should use `@string` resource"
+        errorLine1="            android:title=&quot;Instructions&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/menu/activity_main_drawer.xml"
+            line="32"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Send Feedback&quot;, should use `@string` resource"
+        errorLine1="            android:title=&quot;Send Feedback&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/menu/activity_main_drawer.xml"
+            line="36"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Rate MiNote&quot;, should use `@string` resource"
+        errorLine1="            android:title=&quot;Rate MiNote&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/menu/activity_main_drawer.xml"
+            line="40"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;About&quot;, should use `@string` resource"
+        errorLine1="            android:title=&quot;About&quot; />"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/menu/activity_main_drawer.xml"
+            line="46"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Choose note color:&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;Choose note color:&quot; />"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/color_picker.xml"
+            line="11"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;No notes found&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;No notes found&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_all.xml"
+            line="28"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;No notes found&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;No notes found&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_events.xml"
+            line="27"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;No notes found&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;No notes found&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_lecture.xml"
+            line="28"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;No notes found&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;No notes found&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_reminder.xml"
+            line="28"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;No notes found&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;No notes found&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_todo.xml"
+            line="27"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Event Name&quot;, should use `@string` resource"
+        errorLine1="                android:hint=&quot;Event Name&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fullscreen_dialog_events.xml"
+            line="19"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Location&quot;, should use `@string` resource"
+        errorLine1="                android:hint=&quot;Location&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fullscreen_dialog_events.xml"
+            line="28"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Date&quot;, should use `@string` resource"
+        errorLine1="                    android:hint=&quot;Date&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fullscreen_dialog_events.xml"
+            line="47"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Time&quot;, should use `@string` resource"
+        errorLine1="                    android:hint=&quot;Time&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fullscreen_dialog_events.xml"
+            line="59"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Enter message&quot;, should use `@string` resource"
+        errorLine1="                android:hint=&quot;Enter message&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fullscreen_dialog_events.xml"
+            line="74"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Title&quot;, should use `@string` resource"
+        errorLine1="                android:hint=&quot;Title&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fullscreen_dialog_lecture.xml"
+            line="19"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Date&quot;, should use `@string` resource"
+        errorLine1="                android:hint=&quot;Date&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fullscreen_dialog_lecture.xml"
+            line="32"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Enter message&quot;, should use `@string` resource"
+        errorLine1="                android:hint=&quot;Enter message&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fullscreen_dialog_lecture.xml"
+            line="46"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Title&quot;, should use `@string` resource"
+        errorLine1="                android:hint=&quot;Title&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fullscreen_dialog_reminder.xml"
+            line="20"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Date&quot;, should use `@string` resource"
+        errorLine1="                    android:hint=&quot;Date&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fullscreen_dialog_reminder.xml"
+            line="40"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Time&quot;, should use `@string` resource"
+        errorLine1="                    android:hint=&quot;Time&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fullscreen_dialog_reminder.xml"
+            line="52"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Enter message&quot;, should use `@string` resource"
+        errorLine1="                android:hint=&quot;Enter message&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fullscreen_dialog_reminder.xml"
+            line="67"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Title&quot;, should use `@string` resource"
+        errorLine1="                android:hint=&quot;Title&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fullscreen_dialog_todo.xml"
+            line="20"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Date&quot;, should use `@string` resource"
+        errorLine1="                    android:hint=&quot;Date&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fullscreen_dialog_todo.xml"
+            line="40"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Time&quot;, should use `@string` resource"
+        errorLine1="                    android:hint=&quot;Time&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fullscreen_dialog_todo.xml"
+            line="52"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;1.)&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;1.)&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fullscreen_dialog_todo.xml"
+            line="75"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;To-do&quot;, should use `@string` resource"
+        errorLine1="                    android:hint=&quot;To-do&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fullscreen_dialog_todo.xml"
+            line="85"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Add&quot;, should use `@string` resource"
+        errorLine1="        android:title=&quot;Add&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/menu/main.xml"
+            line="8"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Edit&quot;, should use `@string` resource"
+        errorLine1="        android:title=&quot;Edit&quot;/>"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/menu/note.xml"
+            line="6"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Delete&quot;, should use `@string` resource"
+        errorLine1="        android:title=&quot;Delete&quot;/>"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/menu/note.xml"
+            line="10"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RelativeOverlap"
+        message="`@id/dialog_note_time` can overlap `@id/dialog_note_date` if @id/dialog_note_date, @id/dialog_note_time grow due to localized text expansion"
+        errorLine1="        &lt;TextView"
+        errorLine2="        ^">
+        <location
+            file="src/main/res/layout/dialog_notes.xml"
+            line="23"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RelativeOverlap"
+        message="`@id/dialog_note_time` can overlap `@id/dialog_note_title` if @id/dialog_note_title, @id/dialog_note_time grow due to localized text expansion"
+        errorLine1="        &lt;TextView"
+        errorLine2="        ^">
+        <location
+            file="src/main/res/layout/dialog_notes.xml"
+            line="23"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RelativeOverlap"
+        message="`@id/item_time` can overlap `@id/item_date` if @id/item_date, @id/item_time grow due to localized text expansion"
+        errorLine1="            &lt;TextView"
+        errorLine2="            ^">
+        <location
+            file="src/main/res/layout/item_row_notes_default.xml"
+            line="43"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RelativeOverlap"
+        message="`@id/item_time` can overlap `@id/item_title` if @id/item_title, @id/item_time grow due to localized text expansion"
+        errorLine1="            &lt;TextView"
+        errorLine2="            ^">
+        <location
+            file="src/main/res/layout/item_row_notes_default.xml"
+            line="43"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RelativeOverlap"
+        message="`@id/item_time` can overlap `@id/item_date` if @id/item_date, @id/item_time grow due to localized text expansion"
+        errorLine1="            &lt;TextView"
+        errorLine2="            ^">
+        <location
+            file="src/main/res/layout/item_row_notes_todo.xml"
+            line="43"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RelativeOverlap"
+        message="`@id/item_time` can overlap `@id/item_title` if @id/item_title, @id/item_time grow due to localized text expansion"
+        errorLine1="            &lt;TextView"
+        errorLine2="            ^">
+        <location
+            file="src/main/res/layout/item_row_notes_todo.xml"
+            line="43"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider adding `android:layout_alignParentStart=&quot;true&quot;` to better support right-to-left layouts"
+        errorLine1="            android:layout_alignParentLeft=&quot;true&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/dialog_notes.xml"
+            line="18"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider adding `android:layout_alignParentEnd=&quot;true&quot;` to better support right-to-left layouts"
+        errorLine1="            android:layout_alignParentRight=&quot;true&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/dialog_notes.xml"
+            line="27"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider adding `android:layout_marginEnd=&quot;8dp&quot;` to better support right-to-left layouts"
+        errorLine1="                    android:layout_marginRight=&quot;8dp&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fullscreen_dialog_todo.xml"
+            line="83"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider adding `android:layout_alignParentStart=&quot;true&quot;` to better support right-to-left layouts"
+        errorLine1="                android:layout_alignParentLeft=&quot;true&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_row_notes_default.xml"
+            line="36"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider adding `android:layout_marginStart=&quot;4dp&quot;` to better support right-to-left layouts"
+        errorLine1="                android:layout_marginLeft=&quot;4dp&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_row_notes_default.xml"
+            line="38"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider adding `android:layout_alignParentEnd=&quot;true&quot;` to better support right-to-left layouts"
+        errorLine1="                android:layout_alignParentRight=&quot;true&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_row_notes_default.xml"
+            line="47"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider adding `android:layout_marginEnd=&quot;4dp&quot;` to better support right-to-left layouts"
+        errorLine1="                android:layout_marginRight=&quot;4dp&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_row_notes_default.xml"
+            line="49"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider adding `android:layout_alignParentEnd=&quot;true&quot;` to better support right-to-left layouts"
+        errorLine1="                android:layout_alignParentRight=&quot;true&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_row_notes_default.xml"
+            line="60"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider adding `android:paddingStart=&quot;16dp&quot;` to better support right-to-left layouts"
+        errorLine1="                android:paddingLeft=&quot;16dp&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_row_notes_default.xml"
+            line="62"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider adding `android:paddingEnd=&quot;8dp&quot;` to better support right-to-left layouts"
+        errorLine1="                android:paddingRight=&quot;8dp&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_row_notes_default.xml"
+            line="63"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider adding `android:layout_alignParentEnd=&quot;true&quot;` to better support right-to-left layouts"
+        errorLine1="                android:layout_alignParentRight=&quot;true&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_row_notes_default.xml"
+            line="104"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider adding `android:paddingStart=&quot;16dp&quot;` to better support right-to-left layouts"
+        errorLine1="                android:paddingLeft=&quot;16dp&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_row_notes_default.xml"
+            line="106"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider adding `android:paddingEnd=&quot;8dp&quot;` to better support right-to-left layouts"
+        errorLine1="                android:paddingRight=&quot;8dp&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_row_notes_default.xml"
+            line="107"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider adding `android:layout_alignParentStart=&quot;true&quot;` to better support right-to-left layouts"
+        errorLine1="                android:layout_alignParentLeft=&quot;true&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_row_notes_todo.xml"
+            line="36"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider adding `android:layout_marginStart=&quot;4dp&quot;` to better support right-to-left layouts"
+        errorLine1="                android:layout_marginLeft=&quot;4dp&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_row_notes_todo.xml"
+            line="38"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider adding `android:layout_alignParentEnd=&quot;true&quot;` to better support right-to-left layouts"
+        errorLine1="                android:layout_alignParentRight=&quot;true&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_row_notes_todo.xml"
+            line="47"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider adding `android:layout_marginEnd=&quot;4dp&quot;` to better support right-to-left layouts"
+        errorLine1="                android:layout_marginRight=&quot;4dp&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_row_notes_todo.xml"
+            line="49"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider adding `android:layout_alignParentEnd=&quot;true&quot;` to better support right-to-left layouts"
+        errorLine1="                android:layout_alignParentRight=&quot;true&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_row_notes_todo.xml"
+            line="60"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider adding `android:paddingStart=&quot;16dp&quot;` to better support right-to-left layouts"
+        errorLine1="                android:paddingLeft=&quot;16dp&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_row_notes_todo.xml"
+            line="62"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider adding `android:paddingEnd=&quot;8dp&quot;` to better support right-to-left layouts"
+        errorLine1="                android:paddingRight=&quot;8dp&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_row_notes_todo.xml"
+            line="63"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider adding `android:paddingStart=&quot;16dp&quot;` to better support right-to-left layouts"
+        errorLine1="                android:paddingLeft=&quot;16dp&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_row_notes_todo.xml"
+            line="112"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider adding `android:paddingEnd=&quot;8dp&quot;` to better support right-to-left layouts"
+        errorLine1="                android:paddingRight=&quot;8dp&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_row_notes_todo.xml"
+            line="113"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider adding `android:layout_marginStart=&quot;8dp&quot;` to better support right-to-left layouts"
+        errorLine1="            android:layout_marginLeft=&quot;8dp&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_row_todo.xml"
+            line="32"
+            column="13"/>
+    </issue>
+
+</issues>

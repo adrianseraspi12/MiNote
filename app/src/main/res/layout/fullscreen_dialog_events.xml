@@ -1,0 +1,85 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:padding="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/note_enter_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Event Name"
+                android:inputType="text"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/note_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Location"
+                android:inputType="text"
+                android:textSize="20sp" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <EditText
+                    android:id="@+id/note_start_date"
+                    style="@android:style/Widget.Holo.Spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.3"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:hint="Date"
+                    android:padding="10dp"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/note_start_time"
+                    style="@android:style/Widget.Holo.Spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.7"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:hint="Time"
+                    android:padding="10dp"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+
+            <include layout="@layout/color_picker" />
+
+            <EditText
+                android:id="@+id/note_enter_message"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="16dp"
+                android:background="@android:color/transparent"
+                android:gravity="top|start"
+                android:hint="Enter message"
+                android:inputType="textMultiLine"
+                android:singleLine="false"
+                android:minHeight="340dp"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>

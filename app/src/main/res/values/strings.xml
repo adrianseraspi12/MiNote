@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">MiNote</string>
+
+    <string name="ad_app_id">ca-app-pub-7732295785757170~1157842656</string>
+    <string name="banner_ad_id">ca-app-pub-7732295785757170/1333952537</string>
+    <!--ca-app-pub-3940256099942544/6300978111 for testing-->
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">MiNote</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+    <!-- ascii code -->
+    <string name="ellipsis">⋮</string>
+    <string name="check">✔</string>
+
+    <!-- about/instruction -->
+    <string name="dialog_about_title">About</string>
+    <string name="dialog_about_message">Developed by: AJ Seraspi\nMiNote Version: </string>
+    <string name="dialog_instruction_title">Instructions</string>
+    <string name="dialog_instruction_message">
+        1. Press the (+) button at the top-right corner to add a note
+        \n2. Tap the note to flip.
+        \n3. Tap and hold the note to view.
+        \n4. Press the (⋮) to edit/delete a note
+    </string>
+</resources>
