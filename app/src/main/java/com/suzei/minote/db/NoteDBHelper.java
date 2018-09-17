@@ -11,8 +11,8 @@ import static com.suzei.minote.db.NoteContract.NoteEntry;
 public class NoteDBHelper extends SQLiteOpenHelper {
 
     // if you change the database schema, then increment it by 1
-    public static final int DATABASE_VERSION = 1;
-    public static final String DATABASE_NAME = "notes_storage.db";
+    private static final int DATABASE_VERSION = 2;
+    private static final String DATABASE_NAME = "notes_storage.db";
     private static final String TAG = "NoteDBHelper";
 
     public NoteDBHelper(Context context) {
@@ -22,26 +22,42 @@ public class NoteDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         try {
-            createTable(db, "Temptable");
-            copy(db, "Temptable", NoteEntry.TABLE_NAME);
-            dropTable(db, NoteEntry.TABLE_NAME);
             createTable(db, NoteEntry.TABLE_NAME);
-            copy(db, NoteEntry.TABLE_NAME, "Temptable");
-            dropTable(db, "Temptable");
         } catch (SQLiteException e) {
-            if (e.getMessage().contains("no such table")) {
-                createTable(db, NoteEntry.TABLE_NAME);
-            }
+            Log.e(TAG, "onCreate: ", e);
         }
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + NoteEntry.TABLE_NAME);
+        switch (oldVersion) {
+            case 1:
+                createTempTable(db, "Temptable");
+                copy(db, "Temptable", NoteEntry.TABLE_NAME);
+                dropTable(db, NoteEntry.TABLE_NAME);
+                createTable(db, NoteEntry.TABLE_NAME);
+                copy(db, NoteEntry.TABLE_NAME, "Temptable");
+                dropTable(db, "Temptable");
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid oldVersion= " + oldVersion);
+        }
         onCreate(db);
     }
 
     private void createTable(SQLiteDatabase db, String tableName) {
+        String SQL_CREATE_TEMP_TABLE = "CREATE TABLE " + tableName
+                + " (" + NoteEntry._ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
+                + NoteEntry.TYPE + " INTEGER NOT NULL, "
+                + NoteEntry.DATE + " TEXT, "
+                + NoteEntry.TIME + " TEXT, "
+                + NoteEntry.MESSAGE + " TEXT, "
+                + NoteEntry.LOCATION + " TEXT, "
+                + NoteEntry.COLOR + " TEXT);";
+        db.execSQL(SQL_CREATE_TEMP_TABLE);
+    }
+
+    private void createTempTable(SQLiteDatabase db, String tableName) {
         String SQL_CREATE_TEMP_TABLE = "CREATE TEMPORARY TABLE " + tableName
                 + " (" + NoteEntry._ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
                 + NoteEntry.TYPE + " INTEGER NOT NULL, "
