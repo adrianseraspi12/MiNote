@@ -35,8 +35,6 @@ public class LectureFragment extends Fragment implements LoaderManager.LoaderCal
     private LoaderManager loaderManager;
     private NotesAdapter mAdapter;
 
-    private SparseBooleanArray positionVisible;
-
     public LectureFragment() {
         // Required empty public constructor
     }
@@ -72,7 +70,6 @@ public class LectureFragment extends Fragment implements LoaderManager.LoaderCal
                 loaderManager.restartLoader(NOTE_LOADER, null, LectureFragment.this);
             }
         });
-        positionVisible = mAdapter.getSparseBoolean();
         noteList.setAdapter(mAdapter);
     }
 
@@ -106,16 +103,4 @@ public class LectureFragment extends Fragment implements LoaderManager.LoaderCal
         mAdapter.swapCursor(null);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        positionVisible = new SparseBooleanArray();
-        mAdapter.setSparseBooleanArray(positionVisible);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        positionVisible = mAdapter.getSparseBoolean();
-    }
 }

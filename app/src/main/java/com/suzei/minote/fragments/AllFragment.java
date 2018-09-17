@@ -36,10 +36,6 @@ public class AllFragment extends Fragment implements LoaderManager.LoaderCallbac
     private LoaderManager loaderManager;
     private NotesAdapter mAdapter;
 
-    private SparseBooleanArray positionVisible;
-
-    private String query;
-
     public AllFragment() {
         // Required empty public constructor
     }
@@ -106,16 +102,4 @@ public class AllFragment extends Fragment implements LoaderManager.LoaderCallbac
         mAdapter.swapCursor(null);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        positionVisible = new SparseBooleanArray();
-        mAdapter.setSparseBooleanArray(positionVisible);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        positionVisible = mAdapter.getSparseBoolean();
-    }
 }

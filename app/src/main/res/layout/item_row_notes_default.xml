@@ -1,114 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="178dp"
-    android:layout_height="148dp"
-    android:id="@+id/item_notes_container">
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:id="@+id/card_view_item_recycler_view"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:layout_marginBottom="@dimen/card_margin_vertical_big_activity"
+    android:layout_marginEnd="@dimen/card_margin_horizontal_big_activity"
+    android:layout_marginStart="@dimen/card_margin_horizontal_big_activity"
+    android:layout_marginTop="@dimen/card_margin_vertical_big_activity"
+    android:background="@color/white"
+    android:foreground="?android:attr/selectableItemBackground"
+    card_view:cardCornerRadius="@dimen/card_recycler_corner_radius"
+    card_view:cardElevation="@dimen/card_recycler_elevation">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/item_notes_front"
-        android:layout_width="170dp"
-        android:layout_height="140dp"
-        android:layout_margin="4dp"
-        app:cardElevation="4dp"
-        app:cardCornerRadius="0dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/item_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:maxHeight="52dp"
-                android:textAlignment="center"
-                android:textColor="@android:color/black"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/item_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="4dp"
-                android:textColor="@android:color/black"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/item_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginRight="4dp"
-                android:layout_marginTop="4dp"
-                android:textColor="@android:color/black"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/item_menu_front"
-                style="?android:attr/textAppearanceLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:paddingBottom="8dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="8dp"
-                android:text="@string/ellipsis"
-                android:textSize="20sp"
-                android:textStyle="bold"/>
-
-        </RelativeLayout>
-
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/item_notes_back"
-        android:layout_width="170dp"
-        android:layout_height="140dp"
-        android:layout_margin="4dp"
-        android:alpha="0"
-        app:cardCornerRadius="0dp"
-        app:cardElevation="4dp">
+        <View
+            android:id="@+id/item_notes_color"
+            android:layout_width="16dp"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@id/item_notes_color"
+            android:padding="@dimen/text_margin">
 
             <TextView
-                android:id="@+id/item_message"
+                android:id="@+id/item_notes_message"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@id/item_menu_back"
-                android:layout_centerInParent="true"
-                android:layout_marginBottom="4dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="8dp"
-                android:textColor="@android:color/black"
-                android:textSize="12sp" />
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:textColor="@color/black"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@id/item_notes_delete"/>
 
-            <TextView
-                android:id="@+id/item_menu_back"
-                style="?android:attr/textAppearanceLarge"
+            <ImageView
+                android:id="@+id/item_notes_delete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:paddingBottom="8dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="8dp"
-                android:text="@string/ellipsis"/>
+                app:srcCompat="@drawable/delete"
+                android:layout_alignParentEnd="true"
+                android:padding="8dp"
+                android:background="?android:attr/selectableItemBackground"/>
 
         </RelativeLayout>
 
-    </android.support.v7.widget.CardView>
+    </RelativeLayout>
 
-</RelativeLayout>
+</android.support.v7.widget.CardView>

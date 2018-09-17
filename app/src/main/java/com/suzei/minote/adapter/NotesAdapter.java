@@ -1,30 +1,22 @@
 package com.suzei.minote.adapter;
 
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorSet;
+import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-import android.support.v7.widget.PopupMenu;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,11 +24,7 @@ import com.franmontiel.fullscreendialog.FullScreenDialogFragment;
 import com.suzei.minote.R;
 import com.suzei.minote.db.NoteContract.NoteEntry;
 import com.suzei.minote.models.Notes;
-import com.suzei.minote.utils.CustomDialog;
 import com.suzei.minote.utils.FullScreenFragmentSelector;
-import com.suzei.minote.utils.TodoJson;
-
-import java.util.ArrayList;
 
 public class NotesAdapter extends CursorAdapter {
 
@@ -47,8 +35,6 @@ public class NotesAdapter extends CursorAdapter {
     private Context mContext;
 
     private DatabaseCallbacks callbacks;
-
-    private SparseBooleanArray positionVisible;
 
     public NotesAdapter(Context context, Cursor c, DatabaseCallbacks callbacks) {
         super(context, c, 0);
@@ -90,22 +76,11 @@ public class NotesAdapter extends CursorAdapter {
     public void bindView(final View view, Context context, final Cursor cursor) {
         int position = cursor.getPosition();
         Notes notes = get(position, cursor);
-        ViewHolder holder = new ViewHolder(view, notes.getType());
-        holder.dateView.setText(notes.getDate());
-        holder.timeView.setText(notes.getTime());
-        holder.notesViewFront.setCardBackgroundColor(Color.parseColor(notes.getColor()));
-        holder.notesViewBack.setCardBackgroundColor(Color.parseColor(notes.getColor()));
+        ViewHolder holder = new ViewHolder(view);
 
-        if (notes.getType() == NoteEntry.TYPE_TODO) {
-            bindTodoList(holder.noteTodoList, notes.getMessage());
-        } else {
-            Log.d(TAG, "bindView: message=" + notes.getMessage());
-            holder.messageView.setText(notes.getMessage());
-        }
-
-        if (positionVisible == null) {
-            positionVisible.put(position, false);
-        }
+        Log.d(TAG, "bindView: message=" + notes.getMessage());
+        holder.messageView.setText(notes.getMessage());
+        holder.colorNote.setBackgroundColor(Color.parseColor(notes.getColor()));
 
         Bundle bundle = new Bundle();
 
@@ -115,21 +90,6 @@ public class NotesAdapter extends CursorAdapter {
         bundle.putString("note_time", notes.getTime());
         bundle.putString("note_message", notes.getMessage());
         bundle.putString("note_color", notes.getColor());
-
-        holder.menuFront.setOnClickListener(cardMenuListener(holder.menuFront, notes.get_id(), notes.getType()));
-        holder.menuBack.setOnClickListener(cardMenuListener(holder.menuBack, notes.get_id(), notes.getType()));
-
-        if (positionVisible.get(cursor.getPosition())) {
-
-            if (holder.cardFlipLayout != null) {
-                holder.cardFlipLayout.setOnLongClickListener(showNoteDialog(bundle, position));
-                holder.cardFlipLayout.setOnClickListener(cardFlip(holder, position));
-            }
-
-        } else {
-            holder.noteRootContainer.setOnLongClickListener(showNoteDialog(bundle, position));
-            holder.noteRootContainer.setOnClickListener(cardFlip(holder, position));
-        }
 
     }
 
@@ -152,105 +112,6 @@ public class NotesAdapter extends CursorAdapter {
             notes.setColor(color);
         }
         return notes;
-    }
-
-    private void bindTodoList(ListView listView, String message) {
-        String items = TodoJson.getMapFormatListString(message);
-        ArrayList<String> todoList = new ArrayList<>(TodoJson.getItemsArray(items));
-        NoteTodoList adapter = new NoteTodoList(todoList);
-        listView.setAdapter(adapter);
-    }
-
-    private View.OnClickListener cardMenuListener(final View anchor, final int id, final int type) {
-
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final PopupMenu popup = new PopupMenu(mContext, anchor);
-                popup.getMenuInflater().inflate(R.menu.note, popup.getMenu());
-
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.menu_edit:
-                                editNote(id, type);
-                                break;
-                            case R.id.menu_delete:
-                                showDeleteConfirmationDialog(id);
-                                break;
-                        }
-
-                        return true;
-                    }
-                });
-                popup.show();
-            }
-        };
-    }
-
-    private View.OnClickListener cardFlip(final ViewHolder holder, final int position) {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AnimatorSet setRightOut = (AnimatorSet) AnimatorInflater.loadAnimator(mContext,
-                        R.animator.flip_right_out);
-
-                AnimatorSet setLeftIn = (AnimatorSet) AnimatorInflater.loadAnimator(mContext,
-                        R.animator.flip_left_in);
-
-                boolean isBackVisible = positionVisible.get(position);
-
-                if (!isBackVisible) {
-
-                    if (holder.noteTodoList != null) {
-                        holder.noteTodoList.setVisibility(View.VISIBLE);
-                    }
-
-                    setRightOut.setTarget(holder.notesViewFront);
-                    setLeftIn.setTarget(holder.notesViewBack);
-                    setRightOut.start();
-                    setLeftIn.start();
-                    positionVisible.put(position, true);
-                } else {
-
-                    if (holder.noteTodoList != null) {
-                        holder.noteTodoList.setVisibility(View.GONE);
-                    }
-
-                    setRightOut.setTarget(holder.notesViewBack);
-                    setLeftIn.setTarget(holder.notesViewFront);
-                    setRightOut.start();
-                    setLeftIn.start();
-                    positionVisible.put(position, false);
-                }
-            }
-        };
-    }
-
-    private View.OnLongClickListener showNoteDialog(final Bundle bundle, final int position) {
-        return new View.OnLongClickListener() {
-
-            @Override
-            public boolean onLongClick(View v) {
-                final int type = !positionVisible.get(position) ?
-                        CustomDialog.NOTE_FRONT : CustomDialog.NOTE_BACK;
-
-                CustomDialog dialog = new CustomDialog(mContext, type, bundle.getInt("note_id"),
-                        new CustomDialog.DialogCallback() {
-
-                    @Override
-                    public void AfterCancel(Cursor cursor) {
-                        swapCursor(cursor);
-                        notifyDataSetChanged();
-                    }
-                });
-                dialog.show();
-                dialog.setContent(bundle);
-                dialog.setCanceledOnTouchOutside(true);
-                return true;
-            }
-        };
     }
 
     private void showDeleteConfirmationDialog(final int id) {
@@ -302,50 +163,15 @@ public class NotesAdapter extends CursorAdapter {
         dialogFragment.show(fm, "dialog");
     }
 
-    public SparseBooleanArray getSparseBoolean() {
-        return positionVisible;
-    }
-
-    public void setSparseBooleanArray(SparseBooleanArray sparseBooleanArray) {
-        this.positionVisible = sparseBooleanArray;
-    }
-
     public class ViewHolder {
         View view;
-        TextView titleView;
-        TextView dateView;
-        TextView timeView;
+        View colorNote;
         TextView messageView;
-        TextView menuFront;
-        TextView menuBack;
-        CardView notesViewFront;
-        CardView notesViewBack;
-        ListView noteTodoList;
-        LinearLayout cardFlipLayout;
-        RelativeLayout noteRootContainer;
 
-
-        public ViewHolder(View view, int type) {
+        ViewHolder(View view) {
             this.view = view;
-            initUiViews(type);
-        }
-
-        private void initUiViews(int type) {
-            if (type == NoteEntry.TYPE_TODO) {
-                cardFlipLayout = view.findViewById(R.id.todo_list_layout);
-                noteTodoList = view.findViewById(R.id.item_notes_todo_list);
-            }
-
-            messageView = view.findViewById(R.id.item_message);
-
-            titleView = view.findViewById(R.id.item_title);
-            dateView = view.findViewById(R.id.item_date);
-            timeView = view.findViewById(R.id.item_time);
-            menuFront = view.findViewById(R.id.item_menu_front);
-            menuBack = view.findViewById(R.id.item_menu_back);
-            notesViewFront = view.findViewById(R.id.item_notes_front);
-            notesViewBack = view.findViewById(R.id.item_notes_back);
-            noteRootContainer = view.findViewById(R.id.item_notes_container);
+            colorNote = view.findViewById(R.id.item_notes_color);
+            messageView = view.findViewById(R.id.item_notes_message);
         }
     }
 

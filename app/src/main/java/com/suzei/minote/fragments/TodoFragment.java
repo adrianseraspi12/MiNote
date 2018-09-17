@@ -35,8 +35,6 @@ public class TodoFragment extends Fragment implements LoaderManager.LoaderCallba
     private LoaderManager loaderManager;
     private NotesAdapter mAdapter;
 
-    private SparseBooleanArray positionVisible;
-
     public TodoFragment() {
         // Required empty public constructor
     }
@@ -73,7 +71,6 @@ public class TodoFragment extends Fragment implements LoaderManager.LoaderCallba
                 loaderManager.restartLoader(NOTE_LOADER, null, TodoFragment.this);
             }
         });
-        positionVisible = mAdapter.getSparseBoolean();
         noteList.setAdapter(mAdapter);
     }
 
@@ -103,16 +100,4 @@ public class TodoFragment extends Fragment implements LoaderManager.LoaderCallba
         mAdapter.swapCursor(null);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        positionVisible = new SparseBooleanArray();
-        mAdapter.setSparseBooleanArray(positionVisible);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        positionVisible = mAdapter.getSparseBoolean();
-    }
 }

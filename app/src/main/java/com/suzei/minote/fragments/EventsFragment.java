@@ -35,8 +35,6 @@ public class EventsFragment extends Fragment implements LoaderManager.LoaderCall
     private LoaderManager loaderManager;
     private NotesAdapter mAdapter;
 
-    private SparseBooleanArray positionVisible;
-
     public EventsFragment() {
         // Required empty public constructor
     }
@@ -73,7 +71,6 @@ public class EventsFragment extends Fragment implements LoaderManager.LoaderCall
                 loaderManager.restartLoader(NOTE_LOADER, null, EventsFragment.this);
             }
         });
-        positionVisible = mAdapter.getSparseBoolean();
         noteList.setAdapter(mAdapter);
     }
 
@@ -103,16 +100,4 @@ public class EventsFragment extends Fragment implements LoaderManager.LoaderCall
         mAdapter.swapCursor(null);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        positionVisible = new SparseBooleanArray();
-        mAdapter.setSparseBooleanArray(positionVisible);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        positionVisible = mAdapter.getSparseBoolean();
-    }
 }

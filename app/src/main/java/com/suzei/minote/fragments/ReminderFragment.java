@@ -35,8 +35,6 @@ public class ReminderFragment extends Fragment implements LoaderManager.LoaderCa
     private LoaderManager loaderManager;
     private NotesAdapter mAdapter;
 
-    private SparseBooleanArray positionVisible;
-
     public ReminderFragment() {
         // Required empty public constructor
     }
@@ -73,7 +71,6 @@ public class ReminderFragment extends Fragment implements LoaderManager.LoaderCa
                 loaderManager.restartLoader(NOTE_LOADER, null, ReminderFragment.this);
             }
         });
-        positionVisible = mAdapter.getSparseBoolean();
         noteList.setAdapter(mAdapter);
     }
 
@@ -103,16 +100,4 @@ public class ReminderFragment extends Fragment implements LoaderManager.LoaderCa
         mAdapter.swapCursor(null);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        positionVisible = new SparseBooleanArray();
-        mAdapter.setSparseBooleanArray(positionVisible);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        positionVisible = mAdapter.getSparseBoolean();
-    }
 }

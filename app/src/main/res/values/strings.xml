@@ -24,4 +24,9 @@
         \n3. Tap and hold the note to view.
         \n4. Press the (⋮) to edit/delete a note
     </string>
+
+    <string name="title_activity_recycler_view">RecyclerView</string>
+    <string name="tv_recycler_item_1">Swipe down to refresh</string>
+    <string name="tv_recycler_item_2">Swipe left or right to dismiss it</string>
+    <string name="tv_recycler_item_3">Drag up or down to move it</string>
 </resources>
