@@ -42,12 +42,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private static final String TAG = "MainActivity";
 
-    private AdView adView;
     private Toolbar toolbar;
     private NavigationView navigationView;
     private onBackPressedListener onBackPressedListener;
-
-    private FirebaseAnalytics mAnalytics;
 
     static {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
@@ -60,7 +57,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initObjects();
-        setUpAd();
         setUpToolbar();
         setUpDrawer();
         setUpNavigationView();
@@ -68,16 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void initObjects() {
-        MobileAds.initialize(MainActivity.this, getString(R.string.ad_app_id));
-        Fabric.with(this, new Crashlytics());
-        mAnalytics = FirebaseAnalytics.getInstance(this);
         AppRater.app_launched(this);
-    }
-
-    private void setUpAd() {
-        adView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        adView.loadAd(adRequest);
     }
 
     private void setUpToolbar() {
@@ -134,7 +121,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         //noinspection SimplifiableIfStatement
-
         switch (item.getItemId()) {
 
             case R.id.menu_add:
@@ -153,31 +139,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Bundle params = new Bundle();
         params.putInt("NavId", id);
-        String navName = null;
 
         switch (id) {
             case R.id.nav_all:
-                navName = "Nav_All Clicked";
                 showFragment(new AllFragment());
                 break;
 
             case R.id.nav_reminder:
-                navName = "Nav_Reminder Clicked";
                 showFragment(new ReminderFragment());
                 break;
 
             case R.id.nav_todo:
-                navName = "Nav_Todo Clicked";
                 showFragment(new TodoFragment());
                 break;
 
             case R.id.nav_lecture:
-                navName = "Nav_Lecture Clicked";
                 showFragment(new LectureFragment());
                 break;
 
             case R.id.nav_events:
-                navName = "Nav_Events Clicked";
                 showFragment(new EventsFragment());
                 break;
             case R.id.nav_instruction:
@@ -192,14 +172,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 showRateMiNote();
                 break;
             case R.id.nav_about:
-                navName = "Nav_About Clicked";
                 String titleAbout = getString(R.string.dialog_about_title);
                 String messageAbout = getString(R.string.dialog_about_message);
                 showDialog(titleAbout, messageAbout + BuildConfig.VERSION_NAME);
                 break;
         }
-
-        mAnalytics.logEvent(navName, params);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -268,11 +245,4 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.onBackPressedListener = null;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        mAnalytics.setCurrentScreen(this, fragment.getClass().getSimpleName(),
-                fragment.getClass().getSimpleName());
-    }
 }

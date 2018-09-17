@@ -1,10 +1,6 @@
 <resources>
     <string name="app_name">MiNote</string>
 
-    <string name="ad_app_id">ca-app-pub-7732295785757170~1157842656</string>
-    <string name="banner_ad_id">ca-app-pub-7732295785757170/1333952537</string>
-    <!--ca-app-pub-3940256099942544/6300978111 for testing-->
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">MiNote</string>
