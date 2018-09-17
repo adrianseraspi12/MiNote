@@ -15,7 +15,7 @@ public class NoteTodoList extends BaseAdapter {
 
     private List<String> todoList;
 
-    public NoteTodoList(List<String> todoList) {
+    NoteTodoList(List<String> todoList) {
         this.todoList = todoList;
     }
 

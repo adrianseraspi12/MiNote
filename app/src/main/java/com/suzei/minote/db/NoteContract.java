@@ -7,7 +7,7 @@ import android.provider.BaseColumns;
 public final class NoteContract {
 
     public static final String CONTENT_AUTHORITY = "com.suzei.minote";
-    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+    static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
     public static final String PATH_NOTES = "notes";
 
     public NoteContract() {

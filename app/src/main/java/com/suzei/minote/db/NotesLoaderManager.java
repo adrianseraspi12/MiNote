@@ -16,8 +16,6 @@ import static com.suzei.minote.db.NoteContract.NoteEntry;
 
 public class NotesLoaderManager implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final String TAG = "NotesLoaderManager";
-
     private Context context;
     private Uri mCurrentNoteUri;
     private NoteCallbacks callbacks;
@@ -34,7 +32,6 @@ public class NotesLoaderManager implements LoaderManager.LoaderCallbacks<Cursor>
         String[] projection = {NoteEntry._ID,
                 NoteEntry.TYPE,
                 NoteEntry.COLOR,
-                NoteEntry.TITLE,
                 NoteEntry.DATE,
                 NoteEntry.TIME,
                 NoteEntry.LOCATION,
@@ -52,7 +49,6 @@ public class NotesLoaderManager implements LoaderManager.LoaderCallbacks<Cursor>
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
         if (cursor.moveToFirst()) {
             int type = cursor.getInt(cursor.getColumnIndex(NoteEntry.TYPE));
-            String title = cursor.getString(cursor.getColumnIndex(NoteEntry.TITLE));
             String date = cursor.getString(cursor.getColumnIndex(NoteEntry.DATE));
             String time = cursor.getString(cursor.getColumnIndex(NoteEntry.TIME));
             String message = cursor.getString(cursor.getColumnIndex(NoteEntry.MESSAGE));
@@ -63,7 +59,7 @@ public class NotesLoaderManager implements LoaderManager.LoaderCallbacks<Cursor>
                 message = TodoJson.getMapFormatListString(message);
             }
 
-            callbacks.finishLoad(title, date, time, message, location, color);
+            callbacks.finishLoad(date, time, message, location, color);
         }
     }
 
@@ -73,7 +69,7 @@ public class NotesLoaderManager implements LoaderManager.LoaderCallbacks<Cursor>
     }
 
     public interface NoteCallbacks {
-        void finishLoad(String title, String date, String time, String message, String location,
+        void finishLoad(String date, String time, String message, String location,
                         String color);
 
         void resetLoad();

@@ -48,7 +48,6 @@ public class FullScreenEvents extends Fragment implements FullScreenDialogConten
 
     private View view;
 
-    private EditText titleView;
     private EditText locationView;
     private EditText messageView;
     private EditText dateView;
@@ -94,7 +93,6 @@ public class FullScreenEvents extends Fragment implements FullScreenDialogConten
     }
 
     private void initUiViews() {
-        titleView = view.findViewById(R.id.note_enter_title);
         locationView = view.findViewById(R.id.note_location);
         messageView = view.findViewById(R.id.note_enter_message);
         dateView = view.findViewById(R.id.note_start_date);
@@ -136,10 +134,9 @@ public class FullScreenEvents extends Fragment implements FullScreenDialogConten
                     new NotesLoaderManager.NoteCallbacks() {
 
                 @Override
-                public void finishLoad(String title, String date, String time, String message,
+                public void finishLoad(String date, String time, String message,
                                        String location, String color) {
 
-                    titleView.setText(title);
                     dateView.setText(date);
                     timeView.setText(time);
                     messageView.setText(message);
@@ -157,7 +154,6 @@ public class FullScreenEvents extends Fragment implements FullScreenDialogConten
 
                 @Override
                 public void resetLoad() {
-                    titleView.setText("");
                     dateView.setText("");
                     timeView.setText("");
                     messageView.setText("");
@@ -185,7 +181,6 @@ public class FullScreenEvents extends Fragment implements FullScreenDialogConten
         });
         dateView.setOnClickListener(this);
         timeView.setOnClickListener(this);
-        titleView.setOnTouchListener(mTouchListener);
         messageView.setOnTouchListener(mTouchListener);
         locationView.setOnTouchListener(mTouchListener);
         dateView.setOnTouchListener(mTouchListener);
@@ -258,20 +253,13 @@ public class FullScreenEvents extends Fragment implements FullScreenDialogConten
     private ContentValues userInputValues() {
         int type = NoteEntry.TYPE_EVENTS;
 
-        String title = titleView.getText().toString().trim();
         String date = dateView.getText().toString().trim();
         String time = timeView.getText().toString().trim();
         String location = locationView.getText().toString().trim();
         String message = messageView.getText().toString().trim();
         String color = mColorPicker.getSelectedColor();
 
-        if (TextUtils.isEmpty(title)) {
-            Toast.makeText(getContext(), "Note requires title", Toast.LENGTH_SHORT).show();
-            return null;
-        }
-
         ContentValues values = new ContentValues();
-        values.put(NoteEntry.TITLE, title);
         values.put(NoteEntry.TYPE, type);
         values.put(NoteEntry.DATE, date);
         values.put(NoteEntry.TIME, time);

@@ -63,7 +63,6 @@ public class FullScreenTodo extends Fragment implements FullScreenDialogContent,
     private ImageButton addView;
     private RecyclerView todoView;
     private TextView numberView;
-    private EditText titleView;
     private EditText dateView;
     private EditText timeView;
     private EditText messageView;
@@ -114,7 +113,6 @@ public class FullScreenTodo extends Fragment implements FullScreenDialogContent,
     private void initUiViews() {
         addView = view.findViewById(R.id.note_add);
         todoView = view.findViewById(R.id.note_list);
-        titleView = view.findViewById(R.id.note_enter_title);
         dateView = view.findViewById(R.id.note_date);
         timeView = view.findViewById(R.id.note_time);
         messageView = view.findViewById(R.id.note_enter_message);
@@ -155,10 +153,9 @@ public class FullScreenTodo extends Fragment implements FullScreenDialogContent,
             mNotesManager = new NotesLoaderManager(getContext(), currentNoteUri, new NotesLoaderManager.NoteCallbacks() {
 
                 @Override
-                public void finishLoad(String title, String date, String time, String message,
+                public void finishLoad(String date, String time, String message,
                                        String location, String color) {
 
-                    titleView.setText(title);
                     dateView.setText(date);
                     timeView.setText(time);
                     mColorPicker.setSelectedColor(color);
@@ -231,7 +228,6 @@ public class FullScreenTodo extends Fragment implements FullScreenDialogContent,
         dateView.setOnClickListener(this);
         timeView.setOnClickListener(this);
         addView.setOnClickListener(this);
-        titleView.setOnTouchListener(mTouchListener);
         dateView.setOnTouchListener(mTouchListener);
         timeView.setOnTouchListener(mTouchListener);
         addView.setOnTouchListener(mTouchListener);
@@ -303,16 +299,10 @@ public class FullScreenTodo extends Fragment implements FullScreenDialogContent,
 
     private ContentValues userInputValues() {
         int type = NoteEntry.TYPE_TODO;
-        String title = titleView.getText().toString().trim();
         String date = dateView.getText().toString().trim();
         String time = timeView.getText().toString().trim();
         String color = mColorPicker.getSelectedColor();
         String message = getMessage();
-
-        if (TextUtils.isEmpty(title)) {
-            Toast.makeText(getContext(), "Note requires title", Toast.LENGTH_SHORT).show();
-            return null;
-        }
 
         if (message == null) {
             return null;
@@ -320,7 +310,6 @@ public class FullScreenTodo extends Fragment implements FullScreenDialogContent,
 
         ContentValues values = new ContentValues();
         values.put(NoteEntry.TYPE, type);
-        values.put(NoteEntry.TITLE, title);
         values.put(NoteEntry.DATE, date);
         values.put(NoteEntry.TIME, time);
         values.put(NoteEntry.COLOR, color);

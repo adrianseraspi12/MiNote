@@ -91,7 +91,6 @@ public class NotesAdapter extends CursorAdapter {
         int position = cursor.getPosition();
         Notes notes = get(position, cursor);
         ViewHolder holder = new ViewHolder(view, notes.getType());
-        holder.titleView.setText(notes.getTitle());
         holder.dateView.setText(notes.getDate());
         holder.timeView.setText(notes.getTime());
         holder.notesViewFront.setCardBackgroundColor(Color.parseColor(notes.getColor()));
@@ -112,7 +111,6 @@ public class NotesAdapter extends CursorAdapter {
 
         bundle.putInt("note_id", notes.get_id());
         bundle.putInt("note_type", notes.getType());
-        bundle.putString("note_title", notes.getTitle());
         bundle.putString("note_date", notes.getDate());
         bundle.putString("note_time", notes.getTime());
         bundle.putString("note_message", notes.getMessage());
@@ -141,7 +139,6 @@ public class NotesAdapter extends CursorAdapter {
         if (cursor.moveToPosition(position)) {
             int _id = cursor.getInt(cursor.getColumnIndex(NoteEntry._ID));
             int type = cursor.getInt(cursor.getColumnIndex(NoteEntry.TYPE));
-            String title = cursor.getString(cursor.getColumnIndex(NoteEntry.TITLE));
             String date = cursor.getString(cursor.getColumnIndex(NoteEntry.DATE));
             String time = cursor.getString(cursor.getColumnIndex(NoteEntry.TIME));
             String message = cursor.getString(cursor.getColumnIndex(NoteEntry.MESSAGE));
@@ -149,7 +146,6 @@ public class NotesAdapter extends CursorAdapter {
 
             notes.set_id(_id);
             notes.setType(type);
-            notes.setTitle(title);
             notes.setDate(date);
             notes.setTime(time);
             notes.setMessage(message);

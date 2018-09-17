@@ -4,7 +4,6 @@ public class Notes {
 
     private int _id;
     private int type;
-    private String title;
     private String date;
     private String time;
     private String message;
@@ -36,14 +35,6 @@ public class Notes {
 
     public void setType(int type) {
         this.type = type;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getTitle() {
-        return title;
     }
 
     public String getDate() {

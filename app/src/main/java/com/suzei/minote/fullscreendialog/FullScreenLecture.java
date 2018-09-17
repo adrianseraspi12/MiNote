@@ -46,7 +46,6 @@ public class FullScreenLecture extends Fragment implements FullScreenDialogConte
 
     private View view;
 
-    private EditText titleView;
     private EditText dateView;
     private EditText messageView;
 
@@ -89,7 +88,6 @@ public class FullScreenLecture extends Fragment implements FullScreenDialogConte
     }
 
     private void initUiViews() {
-        titleView = view.findViewById(R.id.note_enter_title);
         dateView = view.findViewById(R.id.note_date);
         messageView = view.findViewById(R.id.note_enter_message);
 
@@ -125,10 +123,9 @@ public class FullScreenLecture extends Fragment implements FullScreenDialogConte
                     new NotesLoaderManager.NoteCallbacks() {
 
                 @Override
-                public void finishLoad(String title, String date, String time, String message,
+                public void finishLoad(String date, String time, String message,
                                        String location, String color) {
 
-                    titleView.setText(title);
                     dateView.setText(date);
                     messageView.setText(message);
                     mColorPicker.setSelectedColor(color);
@@ -145,7 +142,6 @@ public class FullScreenLecture extends Fragment implements FullScreenDialogConte
 
                 @Override
                 public void resetLoad() {
-                    titleView.setText("");
                     dateView.setText("");
                     messageView.setText("");
                 }
@@ -171,7 +167,6 @@ public class FullScreenLecture extends Fragment implements FullScreenDialogConte
         });
 
         dateView.setOnClickListener(this);
-        titleView.setOnTouchListener(mTouchListener);
         dateView.setOnTouchListener(mTouchListener);
         messageView.setOnTouchListener(mTouchListener);
     }
@@ -242,20 +237,12 @@ public class FullScreenLecture extends Fragment implements FullScreenDialogConte
     private ContentValues userInputValues() {
         int type = NoteEntry.TYPE_LECTURE;
 
-        String title = titleView.getText().toString().trim();
         String date = dateView.getText().toString().trim();
         String color = mColorPicker.getSelectedColor();
         String message = messageView.getText().toString().trim();
 
-        if (TextUtils.isEmpty(title)) {
-            Toast.makeText(getContext(), "Note requires title", Toast.LENGTH_SHORT)
-                    .show();
-            return null;
-        }
-
         ContentValues values = new ContentValues();
         values.put(NoteEntry.TYPE, type);
-        values.put(NoteEntry.TITLE, title);
         values.put(NoteEntry.DATE, date);
         values.put(NoteEntry.COLOR, color);
         values.put(NoteEntry.MESSAGE, message);

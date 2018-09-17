@@ -85,7 +85,7 @@ public class ReminderFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
         Uri uri = NoteEntry.CONTENT_URI;
-        String[] projection = {NoteEntry._ID, NoteEntry.TYPE, NoteEntry.TITLE, NoteEntry.DATE,
+        String[] projection = {NoteEntry._ID, NoteEntry.TYPE, NoteEntry.DATE,
                 NoteEntry.TIME, NoteEntry.MESSAGE, NoteEntry.COLOR};
         String selection = NoteEntry.TYPE + "=" + NoteEntry.TYPE_REMINDER;
 

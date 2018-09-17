@@ -2,6 +2,7 @@ package com.suzei.minote.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
@@ -20,18 +21,18 @@ public class NoteDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String SQL_CREATE_NOTES_TABLE = "CREATE TABLE " + NoteEntry.TABLE_NAME
-                + " (" + NoteEntry._ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
-                + NoteEntry.TYPE + " INTEGER NOT NULL, "
-                + NoteEntry.TITLE + " TEXT NOT NULL, "
-                + NoteEntry.DATE + " TEXT, "
-                + NoteEntry.TIME + " TEXT, "
-                + NoteEntry.MESSAGE + " TEXT, "
-                + NoteEntry.LOCATION + " TEXT, "
-                + NoteEntry.COLOR + " TEXT);";
-
-        Log.d(TAG, "onCreate: SQL query-> " + SQL_CREATE_NOTES_TABLE);
-        db.execSQL(SQL_CREATE_NOTES_TABLE);
+        try {
+            createTable(db, "Temptable");
+            copy(db, "Temptable", NoteEntry.TABLE_NAME);
+            dropTable(db, NoteEntry.TABLE_NAME);
+            createTable(db, NoteEntry.TABLE_NAME);
+            copy(db, NoteEntry.TABLE_NAME, "Temptable");
+            dropTable(db, "Temptable");
+        } catch (SQLiteException e) {
+            if (e.getMessage().contains("no such table")) {
+                createTable(db, NoteEntry.TABLE_NAME);
+            }
+        }
     }
 
     @Override
@@ -39,4 +40,35 @@ public class NoteDBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + NoteEntry.TABLE_NAME);
         onCreate(db);
     }
+
+    private void createTable(SQLiteDatabase db, String tableName) {
+        String SQL_CREATE_TEMP_TABLE = "CREATE TEMPORARY TABLE " + tableName
+                + " (" + NoteEntry._ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
+                + NoteEntry.TYPE + " INTEGER NOT NULL, "
+                + NoteEntry.DATE + " TEXT, "
+                + NoteEntry.TIME + " TEXT, "
+                + NoteEntry.MESSAGE + " TEXT, "
+                + NoteEntry.LOCATION + " TEXT, "
+                + NoteEntry.COLOR + " TEXT);";
+        db.execSQL(SQL_CREATE_TEMP_TABLE);
+    }
+
+    private void copy(SQLiteDatabase db, String intoTable, String fromTable) {
+        String SQL_INSERT_NOTES_INTO_TEMPTABLE = "INSERT INTO " + intoTable
+                + " SELECT " + NoteEntry._ID + ", "
+                + NoteEntry.TYPE + ", "
+                + NoteEntry.DATE + ", "
+                + NoteEntry.TIME + ", "
+                + NoteEntry.MESSAGE + ", "
+                + NoteEntry.LOCATION + ", "
+                + NoteEntry.COLOR
+                + " FROM " + fromTable;
+        db.execSQL(SQL_INSERT_NOTES_INTO_TEMPTABLE);
+    }
+
+    private void dropTable(SQLiteDatabase db, String tableName) {
+        String dropTable = "DROP TABLE " + tableName;
+        db.execSQL(dropTable);
+    }
+
 }

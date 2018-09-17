@@ -47,7 +47,6 @@ public class FullScreenReminder extends Fragment implements FullScreenDialogCont
     public static final int EXISTING_NOTE_LOADER = 0;
 
     private View view;
-    private EditText titleView;
     private EditText dateView;
     private EditText timeView;
     private EditText messageView;
@@ -96,7 +95,6 @@ public class FullScreenReminder extends Fragment implements FullScreenDialogCont
     }
 
     private void initUiViews() {
-        titleView = view.findViewById(R.id.note_enter_title);
         dateView = view.findViewById(R.id.note_date);
         timeView = view.findViewById(R.id.note_time);
         messageView = view.findViewById(R.id.note_enter_message);
@@ -137,8 +135,7 @@ public class FullScreenReminder extends Fragment implements FullScreenDialogCont
                     new NotesLoaderManager.NoteCallbacks() {
 
                 @Override
-                public void finishLoad(String title, String date, String time, String message, String location, String color) {
-                    titleView.setText(title);
+                public void finishLoad(String date, String time, String message, String location, String color) {
                     dateView.setText(date);
                     timeView.setText(time);
                     messageView.setText(message);
@@ -158,7 +155,6 @@ public class FullScreenReminder extends Fragment implements FullScreenDialogCont
 
                 @Override
                 public void resetLoad() {
-                    titleView.setText("");
                     dateView.setText("");
                     timeView.setText("");
                     messageView.setText("");
@@ -189,7 +185,6 @@ public class FullScreenReminder extends Fragment implements FullScreenDialogCont
         timeView.setOnClickListener(this);
         dateView.setOnTouchListener(mTouchListener);
         timeView.setOnTouchListener(mTouchListener);
-        titleView.setOnTouchListener(mTouchListener);
         messageView.setOnTouchListener(mTouchListener);
     }
 
@@ -259,20 +254,12 @@ public class FullScreenReminder extends Fragment implements FullScreenDialogCont
     private ContentValues userInputValues() {
         int type = NoteEntry.TYPE_REMINDER;
 
-        String title = titleView.getText().toString().trim();
         String date = dateView.getText().toString().trim();
         String time = timeView.getText().toString().trim();
         String message = messageView.getText().toString().trim();
         String color = mColorPicker.getSelectedColor();
 
-        if (TextUtils.isEmpty(title)) {
-            Toast.makeText(getContext(), "Note requires title", Toast.LENGTH_SHORT)
-                    .show();
-            return null;
-        }
-
         ContentValues values = new ContentValues();
-        values.put(NoteEntry.TITLE, title);
         values.put(NoteEntry.DATE, date);
         values.put(NoteEntry.TIME, time);
         values.put(NoteEntry.TYPE, type);
