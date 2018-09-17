@@ -12,17 +12,14 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 
 import com.suzei.minote.R;
-import com.suzei.minote.adapter.NotesAdapter;
 import com.suzei.minote.adapter.NotesCursorAdapter;
 import com.suzei.minote.db.NoteContract.NoteEntry;
+import com.suzei.minote.utils.RecyclerViewEmptySupport;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,7 +38,7 @@ public class LectureFragment extends Fragment implements LoaderManager.LoaderCal
     private View mView;
     private LoaderManager loaderManager;
 
-    @BindView(R.id.all_notes) RecyclerView noteList;
+    @BindView(R.id.all_notes) RecyclerViewEmptySupport noteList;
     @BindView(R.id.empty_list) AppCompatTextView emptyView;
 
     public LectureFragment() {
@@ -67,6 +64,7 @@ public class LectureFragment extends Fragment implements LoaderManager.LoaderCal
     }
 
     private void setUpRecyclerView() {
+        noteList.setEmptyView(emptyView);
         noteList.setLayoutManager(new LinearLayoutManager(getContext()));
         noteList.setHasFixedSize(true);
     }

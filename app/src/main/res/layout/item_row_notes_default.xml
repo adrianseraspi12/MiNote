@@ -40,7 +40,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_toStartOf="@id/item_notes_delete"/>
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/item_notes_delete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

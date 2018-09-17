@@ -7,7 +7,7 @@
     android:background="@color/gray_very_light"
     tools:context=".fragments.AllFragment">
 
-    <android.support.v7.widget.RecyclerView
+    <com.suzei.minote.utils.RecyclerViewEmptySupport
         android:id="@+id/all_notes"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
