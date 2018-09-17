@@ -11,6 +11,8 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +21,12 @@ import android.widget.GridView;
 
 import com.suzei.minote.R;
 import com.suzei.minote.adapter.NotesAdapter;
+import com.suzei.minote.adapter.NotesCursorAdapter;
 import com.suzei.minote.db.NoteContract.NoteEntry;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,12 +35,14 @@ public class TodoFragment extends Fragment implements LoaderManager.LoaderCallba
 
     private static final int NOTE_LOADER = 0;
 
-    private View mView;
-    private GridView noteList;
-    private AppCompatTextView emptyView;
+    private NotesCursorAdapter mAdapter;
+    private Unbinder unbinder;
 
+    private View mView;
     private LoaderManager loaderManager;
-    private NotesAdapter mAdapter;
+
+    @BindView(R.id.all_notes) RecyclerView noteList;
+    @BindView(R.id.empty_list) AppCompatTextView emptyView;
 
     public TodoFragment() {
         // Required empty public constructor
@@ -44,33 +53,27 @@ public class TodoFragment extends Fragment implements LoaderManager.LoaderCallba
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mView = inflater.inflate(R.layout.fragment_todo, container, false);
-        initUiViews();
+        mView = inflater.inflate(R.layout.fragment_notes_list, container, false);
         initObjects();
+        setUpRecyclerView();
         setUpAdapters();
         loaderStarts();
         return mView;
     }
 
-    private void initUiViews() {
-        getActivity().setTitle("To-do list");
-        emptyView = mView.findViewById(R.id.empty_list);
-        noteList = mView.findViewById(R.id.all_notes);
-        noteList.setEmptyView(emptyView);
-    }
-
     private void initObjects() {
+        getActivity().setTitle("To-do list");
+        unbinder = ButterKnife.bind(this, mView);
         loaderManager = getLoaderManager();
     }
 
-    private void setUpAdapters() {
-        mAdapter = new NotesAdapter(getContext(), null, new NotesAdapter.DatabaseCallbacks() {
+    private void setUpRecyclerView() {
+        noteList.setLayoutManager(new LinearLayoutManager(getContext()));
+        noteList.setHasFixedSize(true);
+    }
 
-            @Override
-            public void AfterDeletion() {
-                loaderManager.restartLoader(NOTE_LOADER, null, TodoFragment.this);
-            }
-        });
+    private void setUpAdapters() {
+        mAdapter = new NotesCursorAdapter(getContext(), null);
         noteList.setAdapter(mAdapter);
     }
 
@@ -98,6 +101,12 @@ public class TodoFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         mAdapter.swapCursor(null);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        unbinder.unbind();
     }
 
 }

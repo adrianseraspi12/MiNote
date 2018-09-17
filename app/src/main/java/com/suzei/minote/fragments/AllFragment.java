@@ -11,16 +11,22 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.AppCompatTextView;
-import android.util.SparseBooleanArray;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
-import android.widget.TextView;
 
 import com.suzei.minote.R;
+import com.suzei.minote.adapter.CursorRecyclerviewAdapter;
 import com.suzei.minote.adapter.NotesAdapter;
+import com.suzei.minote.adapter.NotesCursorAdapter;
 import com.suzei.minote.db.NoteContract.NoteEntry;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,49 +35,43 @@ public class AllFragment extends Fragment implements LoaderManager.LoaderCallbac
 
     private static final int NOTE_LOADER = 0;
 
-    private View mView;
-    private GridView noteList;
-    private AppCompatTextView emptyView;
+    private NotesCursorAdapter mAdapter;
+    private Unbinder unbinder;
 
+    private View mView;
     private LoaderManager loaderManager;
-    private NotesAdapter mAdapter;
+
+    @BindView(R.id.all_notes) RecyclerView noteList;
+    @BindView(R.id.empty_list) AppCompatTextView emptyView;
 
     public AllFragment() {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_all, container, false);
-        initUiViews();
+        mView = inflater.inflate(R.layout.fragment_notes_list, container, false);
         initObjects();
+        setUpRecyclerView();
         setUpAdapters();
         loaderStarts();
         return mView;
     }
 
-    private void initUiViews() {
-        getActivity().setTitle("All Notes");
-
-        emptyView = mView.findViewById(R.id.empty_list);
-        noteList = mView.findViewById(R.id.all_notes);
-        noteList.setEmptyView(emptyView);
-    }
-
     private void initObjects() {
+        unbinder = ButterKnife.bind(this, mView);
+        getActivity().setTitle("All Notes");
         loaderManager = getLoaderManager();
     }
 
-    private void setUpAdapters() {
-        mAdapter = new NotesAdapter(getContext(), null, new NotesAdapter.DatabaseCallbacks() {
+    private void setUpRecyclerView() {
+        noteList.setLayoutManager(new LinearLayoutManager(getContext()));
+        noteList.setHasFixedSize(true);
+    }
 
-            @Override
-            public void AfterDeletion() {
-                loaderManager.restartLoader(NOTE_LOADER, null, AllFragment.this);
-            }
-        });
+    private void setUpAdapters() {
+        mAdapter = new NotesCursorAdapter(getContext(), null);
         noteList.setAdapter(mAdapter);
     }
 
@@ -102,4 +102,9 @@ public class AllFragment extends Fragment implements LoaderManager.LoaderCallbac
         mAdapter.swapCursor(null);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        unbinder.unbind();
+    }
 }
