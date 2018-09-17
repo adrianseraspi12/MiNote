@@ -193,11 +193,6 @@ public class NoteProvider extends ContentProvider {
             throw new IllegalArgumentException("Note requires a type");
         }
 
-        String title = values.getAsString(NoteEntry.TITLE);
-        if (title == null) {
-            throw new IllegalArgumentException("Note requires a title");
-        }
-
         String color = values.getAsString(NoteEntry.COLOR);
         if (color == null) {
             throw new IllegalArgumentException("Note requires a color");

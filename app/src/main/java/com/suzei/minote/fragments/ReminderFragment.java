@@ -104,8 +104,8 @@ public class ReminderFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onDestroyView() {
+        super.onDestroyView();
         unbinder.unbind();
     }
 

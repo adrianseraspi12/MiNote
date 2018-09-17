@@ -104,8 +104,8 @@ public class EventsFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onDestroyView() {
+        super.onDestroyView();
         unbinder.unbind();
     }
 

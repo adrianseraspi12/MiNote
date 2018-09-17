@@ -211,20 +211,6 @@ public class FullScreenTodo extends Fragment implements FullScreenDialogContent,
     }
 
     private void setListeners() {
-        Activity activity = getActivity();
-        ((MainActivity) activity).setOnBackPressedListener(new onBackPressedListener() {
-
-            @Override
-            public void doBack() {
-                if (!mNoteHasChanged) {
-                    dialogController.discard();
-                    return;
-                }
-
-                showUnsaveChangesDialog();
-            }
-        });
-
         dateView.setOnClickListener(this);
         timeView.setOnClickListener(this);
         addView.setOnClickListener(this);
@@ -239,8 +225,6 @@ public class FullScreenTodo extends Fragment implements FullScreenDialogContent,
         builder.setPositiveButton("Discard", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Activity activity = getActivity();
-                ((MainActivity) activity).removeOnBackPressedListener();
                 dialogController.discard();
             }
         });
@@ -291,8 +275,6 @@ public class FullScreenTodo extends Fragment implements FullScreenDialogContent,
             }
         }
 
-        Activity activity = getActivity();
-        ((MainActivity) activity).removeOnBackPressedListener();
         AndroidUtils.hideKeyboardFrom(getContext(), view);
         return false;
     }
@@ -352,9 +334,6 @@ public class FullScreenTodo extends Fragment implements FullScreenDialogContent,
             showUnsaveChangesDialog();
             return true;
         }
-
-        Activity activity = getActivity();
-        ((MainActivity) activity).removeOnBackPressedListener();
         return false;
     }
 

@@ -103,8 +103,8 @@ public class AllFragment extends Fragment implements LoaderManager.LoaderCallbac
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onDestroyView() {
+        super.onDestroyView();
         unbinder.unbind();
     }
 }

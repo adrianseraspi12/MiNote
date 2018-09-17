@@ -107,8 +107,8 @@ public class LectureFragment extends Fragment implements LoaderManager.LoaderCal
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onDestroyView() {
+        super.onDestroyView();
         unbinder.unbind();
     }
 

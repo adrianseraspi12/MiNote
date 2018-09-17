@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private Toolbar toolbar;
     private NavigationView navigationView;
-    private onBackPressedListener onBackPressedListener;
 
     static {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
@@ -100,12 +99,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             drawer.closeDrawer(GravityCompat.START);
         }
 
-        if (onBackPressedListener != null) {
-            Log.d(TAG, "onBackPressed: Listener= RUN");
-            onBackPressedListener.doBack();
-        } else {
-            super.onBackPressed();
-        }
+        super.onBackPressed();
     }
 
     @Override
@@ -235,14 +229,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SharedPreferences prefs = getSharedPreferences("apprater", 0);
         SharedPreferences.Editor editor = prefs.edit();
         AppRater.showRateDialog(MainActivity.this, editor);
-    }
-
-    public void setOnBackPressedListener(onBackPressedListener listener) {
-        this.onBackPressedListener = listener;
-    }
-
-    public void removeOnBackPressedListener() {
-        this.onBackPressedListener = null;
     }
 
 }

@@ -104,8 +104,8 @@ public class TodoFragment extends Fragment implements LoaderManager.LoaderCallba
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onDestroyView() {
+        super.onDestroyView();
         unbinder.unbind();
     }
 

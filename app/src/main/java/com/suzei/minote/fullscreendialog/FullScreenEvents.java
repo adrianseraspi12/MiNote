@@ -166,19 +166,6 @@ public class FullScreenEvents extends Fragment implements FullScreenDialogConten
     }
 
     private void setListeners() {
-        Activity activity = getActivity();
-        ((MainActivity) activity).setOnBackPressedListener(new onBackPressedListener() {
-
-            @Override
-            public void doBack() {
-                if (!mNoteHasChanged) {
-                    dialogController.discard();
-                    return;
-                }
-
-                showUnsaveChangesDialog();
-            }
-        });
         dateView.setOnClickListener(this);
         timeView.setOnClickListener(this);
         messageView.setOnTouchListener(mTouchListener);
@@ -190,14 +177,6 @@ public class FullScreenEvents extends Fragment implements FullScreenDialogConten
     private void showUnsaveChangesDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setMessage("Discard your changes and quit editing");
-        builder.setPositiveButton("Discard", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Activity activity = getActivity();
-                ((MainActivity) activity).removeOnBackPressedListener();
-                dialogController.discard();
-            }
-        });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 
             @Override
@@ -244,8 +223,6 @@ public class FullScreenEvents extends Fragment implements FullScreenDialogConten
             }
         }
 
-        Activity activity = getActivity();
-        ((MainActivity) activity).removeOnBackPressedListener();
         AndroidUtils.hideKeyboardFrom(getContext(), view);
         return false;
     }
@@ -279,9 +256,6 @@ public class FullScreenEvents extends Fragment implements FullScreenDialogConten
             showUnsaveChangesDialog();
             return true;
         }
-
-        Activity activity = getActivity();
-        ((MainActivity) activity).removeOnBackPressedListener();
         return false;
     }
 
