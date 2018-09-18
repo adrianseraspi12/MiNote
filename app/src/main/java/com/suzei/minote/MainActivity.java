@@ -1,11 +1,13 @@
 package com.suzei.minote;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,33 +19,34 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
+import com.flask.colorpicker.ColorPickerView;
+import com.flask.colorpicker.builder.ColorPickerClickListener;
+import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.franmontiel.fullscreendialog.FullScreenDialogFragment;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.suzei.minote.fragments.AllFragment;
 import com.suzei.minote.fragments.EventsFragment;
 import com.suzei.minote.fragments.LectureFragment;
 import com.suzei.minote.fragments.ReminderFragment;
 import com.suzei.minote.fragments.TodoFragment;
 import com.suzei.minote.utils.AppRater;
+import com.suzei.minote.utils.FullscreenDialog;
 import com.suzei.minote.utils.ListDialog;
-import com.suzei.minote.utils.onBackPressedListener;
 
-import io.fabric.sdk.android.Fabric;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String TAG = "MainActivity";
-
-    private Toolbar toolbar;
-    private NavigationView navigationView;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.nav_view) NavigationView navigationView;
+    @BindView(R.id.drawer_layout) DrawerLayout drawer;
+    @BindView(R.id.main_fab) FloatingActionButton fabView;
 
     static {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
@@ -57,32 +60,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         initObjects();
         setUpToolbar();
-        setUpDrawer();
         setUpNavigationView();
+        setUpFab();
+        setUpDrawer();
         showUi(savedInstanceState);
     }
 
     private void initObjects() {
         AppRater.app_launched(this);
+        ButterKnife.bind(this);
     }
 
     private void setUpToolbar() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
     }
 
+    private void setUpNavigationView() {
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void setUpFab() {
+        fabView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                FullscreenDialog dialog = new FullscreenDialog(MainActivity.this, R.style.FullscreenDialog);
+                dialog.show();
+            }
+
+        });
+    }
+
     private void setUpDrawer() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-    }
-
-    private void setUpNavigationView() {
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
     }
 
     private void showUi(Bundle savedInstanceState) {
@@ -94,7 +108,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }
@@ -102,37 +115,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onBackPressed();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        //noinspection SimplifiableIfStatement
-        switch (item.getItemId()) {
-
-            case R.id.menu_add:
-                showListDialog();
-                break;
-        }
-
-        return true;
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        Bundle params = new Bundle();
-        params.putInt("NavId", id);
 
         switch (id) {
             case R.id.nav_all:
@@ -172,7 +159,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -230,5 +216,4 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SharedPreferences.Editor editor = prefs.edit();
         AppRater.showRateDialog(MainActivity.this, editor);
     }
-
 }

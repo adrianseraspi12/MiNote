@@ -20,5 +20,6 @@
     <color name="gray_light">#CCCCCC</color>
     <color name="gray_very_light">#E0E0E0</color>
     <color name="black">#000000</color>
+    <color name="gray_deep">#666666</color>
 
 </resources>

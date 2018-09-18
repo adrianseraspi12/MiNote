@@ -26,7 +26,7 @@ android {
     lintOptions {
         abortOnError false
         disable 'GoogleAppIndexingWarning'
-        disable 'TypographyFractions','TypographyQuotes'
+        disable 'TypographyFractions', 'TypographyQuotes'
         baseline file("lint-baseline.xml") // your choice of filename/path here
     }
     aaptOptions {
@@ -55,5 +55,8 @@ dependencies {
     //  Butterknife
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'com.jakewharton:butterknife:8.8.1'
+
+    //  ColorPicker
+    implementation 'com.github.QuadFlask:colorpicker:0.0.13'
 }
 apply plugin: 'com.google.gms.google-services'

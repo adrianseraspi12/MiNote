@@ -1,6 +1,5 @@
 package com.suzei.minote.fullscreendialog;
 
-import android.app.Activity;
 import android.support.v7.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.ContentUris;
@@ -11,7 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -24,7 +22,6 @@ import android.widget.Toast;
 
 import com.franmontiel.fullscreendialog.FullScreenDialogContent;
 import com.franmontiel.fullscreendialog.FullScreenDialogController;
-import com.suzei.minote.MainActivity;
 import com.suzei.minote.R;
 import com.suzei.minote.db.NoteContract.NoteEntry;
 import com.suzei.minote.db.NotesLoaderManager;
