@@ -15,17 +15,19 @@ public class NoteDBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "notes_storage.db";
     private static final String TAG = "NoteDBHelper";
 
-    public NoteDBHelper(Context context) {
+    NoteDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        try {
-            createTable(db, NoteEntry.TABLE_NAME);
-        } catch (SQLiteException e) {
-            Log.e(TAG, "onCreate: ", e);
-        }
+        String SQL_CREATE_TABLE = "CREATE TABLE " + NoteEntry.TABLE_NAME
+                + " (" + NoteEntry._ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
+                + NoteEntry.TYPE + " INTEGER NOT NULL, "
+                + NoteEntry.MESSAGE + " TEXT, "
+                + NoteEntry.COLOR + " TEXT, "
+                + NoteEntry.TEXT_COLOR + " TEXT);";
+        db.execSQL(SQL_CREATE_TABLE);
     }
 
     @Override
@@ -38,11 +40,11 @@ public class NoteDBHelper extends SQLiteOpenHelper {
                 createTable(db, NoteEntry.TABLE_NAME);
                 copy(db, NoteEntry.TABLE_NAME, "Temptable");
                 dropTable(db, "Temptable");
+                addColumn(db);
                 break;
             default:
                 throw new IllegalArgumentException("Invalid oldVersion= " + oldVersion);
         }
-        onCreate(db);
     }
 
     private void createTable(SQLiteDatabase db, String tableName) {
@@ -50,8 +52,7 @@ public class NoteDBHelper extends SQLiteOpenHelper {
                 + " (" + NoteEntry._ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
                 + NoteEntry.TYPE + " INTEGER NOT NULL, "
                 + NoteEntry.MESSAGE + " TEXT, "
-                + NoteEntry.COLOR + " TEXT, "
-                + NoteEntry.TEXT_COLOR + " TEXT);";
+                + NoteEntry.COLOR + " TEXT, ";
         db.execSQL(SQL_CREATE_TEMP_TABLE);
     }
 
@@ -69,7 +70,7 @@ public class NoteDBHelper extends SQLiteOpenHelper {
                 + " SELECT " + NoteEntry._ID + ", "
                 + NoteEntry.TYPE + ", "
                 + NoteEntry.MESSAGE + ", "
-                + NoteEntry.COLOR + ", "
+                + NoteEntry.COLOR
                 + " FROM " + fromTable;
         db.execSQL(SQL_INSERT_NOTES_INTO_TEMPTABLE);
     }
@@ -77,6 +78,12 @@ public class NoteDBHelper extends SQLiteOpenHelper {
     private void dropTable(SQLiteDatabase db, String tableName) {
         String dropTable = "DROP TABLE " + tableName;
         db.execSQL(dropTable);
+    }
+
+    private void addColumn(SQLiteDatabase db) {
+        String addColumn = "ALTER TABLE " + NoteEntry.TABLE_NAME + " ADD COLUMN "
+                + NoteEntry.TEXT_COLOR + " TEXT";
+        db.execSQL(addColumn);
     }
 
 }

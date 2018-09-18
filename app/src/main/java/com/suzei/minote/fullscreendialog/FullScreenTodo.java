@@ -150,41 +150,6 @@ public class FullScreenTodo extends Fragment implements FullScreenDialogContent,
 
     private void initLoaderManager() {
         if (currentNoteUri != null) {
-            mNotesManager = new NotesLoaderManager(getContext(), currentNoteUri, new NotesLoaderManager.NoteCallbacks() {
-
-                @Override
-                public void finishLoad(String date, String time, String message,
-                                       String location, String color) {
-
-                    dateView.setText(date);
-                    timeView.setText(time);
-                    mColorPicker.setSelectedColor(color);
-
-                    todoList.addAll(TodoJson.getItemsArray(message));
-
-                    todoView.swapAdapter(mAdapter, true);
-
-                    String number = String.valueOf(todoList.size() + 1);
-                    numberView.setText(number + ".)");
-
-                    try {
-                        SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM/dd/yyyy "
-                                + "hh:mm aa", Locale.ENGLISH);
-                        calendar.setTime(sdf.parse(date + " " + time));
-                    } catch (ParseException e) {
-                        Log.e(TAG, "finishLoad: Error parsing date ", e);
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void resetLoad() {
-                    timeView.setText("");
-                    dateView.setText("");
-                    timeView.setText("");
-                    todoList.clear();
-                }
-            });
             LoaderManager loaderManager = getLoaderManager();
             loaderManager.initLoader(EXISTING_NOTE_LOADER, null, mNotesManager);
         }
@@ -292,8 +257,6 @@ public class FullScreenTodo extends Fragment implements FullScreenDialogContent,
 
         ContentValues values = new ContentValues();
         values.put(NoteEntry.TYPE, type);
-        values.put(NoteEntry.DATE, date);
-        values.put(NoteEntry.TIME, time);
         values.put(NoteEntry.COLOR, color);
         values.put(NoteEntry.MESSAGE, message);
 

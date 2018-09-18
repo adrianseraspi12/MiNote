@@ -116,33 +116,6 @@ public class FullScreenLecture extends Fragment implements FullScreenDialogConte
 
     private void initLoaderManager() {
         if (currentNoteUri != null) {
-            mNotesManager = new NotesLoaderManager(getContext(), currentNoteUri,
-                    new NotesLoaderManager.NoteCallbacks() {
-
-                @Override
-                public void finishLoad(String date, String time, String message,
-                                       String location, String color) {
-
-                    dateView.setText(date);
-                    messageView.setText(message);
-                    mColorPicker.setSelectedColor(color);
-
-                    try {
-                        SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM/dd/yyyy",
-                                Locale.ENGLISH);
-                        calendar.setTime(sdf.parse(date));
-                    } catch (ParseException e) {
-                        Log.e(TAG, "finishLoad: Error parsing date ", e);
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void resetLoad() {
-                    dateView.setText("");
-                    messageView.setText("");
-                }
-            });
             LoaderManager loaderManager = getLoaderManager();
             loaderManager.initLoader(EXISTING_NOTE_LOADER, null, mNotesManager);
         }
@@ -222,7 +195,6 @@ public class FullScreenLecture extends Fragment implements FullScreenDialogConte
 
         ContentValues values = new ContentValues();
         values.put(NoteEntry.TYPE, type);
-        values.put(NoteEntry.DATE, date);
         values.put(NoteEntry.COLOR, color);
         values.put(NoteEntry.MESSAGE, message);
 

@@ -1,6 +1,5 @@
 package com.suzei.minote.fullscreendialog;
 
-import android.app.Activity;
 import android.support.v7.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.ContentUris;
@@ -11,8 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -24,7 +21,6 @@ import android.widget.Toast;
 
 import com.franmontiel.fullscreendialog.FullScreenDialogContent;
 import com.franmontiel.fullscreendialog.FullScreenDialogController;
-import com.suzei.minote.MainActivity;
 import com.suzei.minote.R;
 import com.suzei.minote.db.NoteContract.NoteEntry;
 import com.suzei.minote.db.NotesLoaderManager;
@@ -53,7 +49,6 @@ public class FullScreenReminder extends Fragment implements FullScreenDialogCont
 
     private Calendar calendar;
     private DateTimePickerDialog dateTime;
-    private NotesLoaderManager mNotesManager;
     private FullScreenDialogController dialogController;
     private ColorPicker mColorPicker;
 
@@ -131,38 +126,6 @@ public class FullScreenReminder extends Fragment implements FullScreenDialogCont
 
     private void initLoaderManager() {
         if (currentNoteUri != null) {
-            mNotesManager = new NotesLoaderManager(getContext(), currentNoteUri,
-                    new NotesLoaderManager.NoteCallbacks() {
-
-                @Override
-                public void finishLoad(String date, String time, String message, String location, String color) {
-                    dateView.setText(date);
-                    timeView.setText(time);
-                    messageView.setText(message);
-                    mColorPicker.setSelectedColor(color);
-
-                    String full_calendar = date + " " + time;
-
-                    try {
-                        SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM/dd/yyyy "
-                                + "hh:mm aa", Locale.ENGLISH);
-                        calendar.setTime(sdf.parse(full_calendar));
-                    } catch (ParseException e) {
-                        Log.e(TAG, "finishLoad: Error parsing date ", e);
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void resetLoad() {
-                    dateView.setText("");
-                    timeView.setText("");
-                    messageView.setText("");
-                }
-            });
-
-            LoaderManager loaderManager = getLoaderManager();
-            loaderManager.initLoader(EXISTING_NOTE_LOADER, null, mNotesManager);
         }
     }
 
@@ -242,8 +205,6 @@ public class FullScreenReminder extends Fragment implements FullScreenDialogCont
         String color = mColorPicker.getSelectedColor();
 
         ContentValues values = new ContentValues();
-        values.put(NoteEntry.DATE, date);
-        values.put(NoteEntry.TIME, time);
         values.put(NoteEntry.TYPE, type);
         values.put(NoteEntry.MESSAGE, message);
         values.put(NoteEntry.COLOR, color);
