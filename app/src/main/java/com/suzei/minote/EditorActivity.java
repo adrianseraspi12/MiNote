@@ -95,7 +95,7 @@ public class EditorActivity extends AppCompatActivity implements NotesLoaderMana
     }
 
     @Override
-    public void finishLoad(String date, String time, String message, String location, String color) {
+    public void finishLoad(String message, String color, String textColor) {
         rootView.setBackgroundColor(Color.parseColor(color));
         textView.setText(message);
     }

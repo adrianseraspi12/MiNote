@@ -4,19 +4,9 @@ public class Notes {
 
     private int _id;
     private int type;
-    private String date;
-    private String time;
     private String message;
     private String color;
-    private String location;
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
+    private String textColor;
 
     public Notes() {
     }
@@ -37,20 +27,12 @@ public class Notes {
         this.type = type;
     }
 
-    public String getDate() {
-        return date;
+    public String getTextColor() {
+        return textColor;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
+    public void setTextColor(String textColor) {
+        this.textColor = textColor;
     }
 
     public String getMessage() {

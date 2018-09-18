@@ -54,15 +54,11 @@ public class NotesCursorAdapter extends CursorRecyclerviewAdapter<NotesCursorAda
         if (cursor.moveToPosition(position)) {
             int _id = cursor.getInt(cursor.getColumnIndex(NoteEntry._ID));
             int type = cursor.getInt(cursor.getColumnIndex(NoteEntry.TYPE));
-            String date = cursor.getString(cursor.getColumnIndex(NoteEntry.DATE));
-            String time = cursor.getString(cursor.getColumnIndex(NoteEntry.TIME));
             String message = cursor.getString(cursor.getColumnIndex(NoteEntry.MESSAGE));
             String color = cursor.getString(cursor.getColumnIndex(NoteEntry.COLOR));
 
             notes.set_id(_id);
             notes.setType(type);
-            notes.setDate(date);
-            notes.setTime(time);
             notes.setMessage(message);
             notes.setColor(color);
         }

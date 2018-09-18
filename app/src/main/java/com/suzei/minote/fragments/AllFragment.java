@@ -81,8 +81,8 @@ public class AllFragment extends Fragment implements LoaderManager.LoaderCallbac
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
         Uri uri = NoteEntry.CONTENT_URI;
-        String[] projection = {NoteEntry._ID, NoteEntry.TYPE, NoteEntry.DATE,
-                NoteEntry.TIME, NoteEntry.MESSAGE, NoteEntry.COLOR};
+        String[] projection = {NoteEntry._ID, NoteEntry.TYPE, NoteEntry.MESSAGE, NoteEntry.COLOR,
+        NoteEntry.TEXT_COLOR};
 
         String selection = null;
 

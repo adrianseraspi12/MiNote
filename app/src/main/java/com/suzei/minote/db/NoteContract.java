@@ -28,11 +28,8 @@ public final class NoteContract {
         public static final String TABLE_NAME = "notes";
         public static final String _ID = BaseColumns._ID;
         public static final String TYPE = "type";
-        public static final String TITLE = "title";
-        public static final String DATE = "date";
-        public static final String TIME = "time";
         public static final String MESSAGE = "message";
-        public static final String LOCATION = "location";
+        public static final String TEXT_COLOR = "text_color";
         public static final String COLOR ="color";
 
         public static final int TYPE_REMINDER = 0;

@@ -49,11 +49,9 @@ public class NoteDBHelper extends SQLiteOpenHelper {
         String SQL_CREATE_TEMP_TABLE = "CREATE TABLE " + tableName
                 + " (" + NoteEntry._ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
                 + NoteEntry.TYPE + " INTEGER NOT NULL, "
-                + NoteEntry.DATE + " TEXT, "
-                + NoteEntry.TIME + " TEXT, "
                 + NoteEntry.MESSAGE + " TEXT, "
-                + NoteEntry.LOCATION + " TEXT, "
-                + NoteEntry.COLOR + " TEXT);";
+                + NoteEntry.COLOR + " TEXT, "
+                + NoteEntry.TEXT_COLOR + " TEXT);";
         db.execSQL(SQL_CREATE_TEMP_TABLE);
     }
 
@@ -61,10 +59,7 @@ public class NoteDBHelper extends SQLiteOpenHelper {
         String SQL_CREATE_TEMP_TABLE = "CREATE TEMPORARY TABLE " + tableName
                 + " (" + NoteEntry._ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
                 + NoteEntry.TYPE + " INTEGER NOT NULL, "
-                + NoteEntry.DATE + " TEXT, "
-                + NoteEntry.TIME + " TEXT, "
                 + NoteEntry.MESSAGE + " TEXT, "
-                + NoteEntry.LOCATION + " TEXT, "
                 + NoteEntry.COLOR + " TEXT);";
         db.execSQL(SQL_CREATE_TEMP_TABLE);
     }
@@ -73,11 +68,8 @@ public class NoteDBHelper extends SQLiteOpenHelper {
         String SQL_INSERT_NOTES_INTO_TEMPTABLE = "INSERT INTO " + intoTable
                 + " SELECT " + NoteEntry._ID + ", "
                 + NoteEntry.TYPE + ", "
-                + NoteEntry.DATE + ", "
-                + NoteEntry.TIME + ", "
                 + NoteEntry.MESSAGE + ", "
-                + NoteEntry.LOCATION + ", "
-                + NoteEntry.COLOR
+                + NoteEntry.COLOR + ", "
                 + " FROM " + fromTable;
         db.execSQL(SQL_INSERT_NOTES_INTO_TEMPTABLE);
     }

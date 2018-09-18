@@ -32,9 +32,7 @@ public class NotesLoaderManager implements LoaderManager.LoaderCallbacks<Cursor>
         String[] projection = {NoteEntry._ID,
                 NoteEntry.TYPE,
                 NoteEntry.COLOR,
-                NoteEntry.DATE,
-                NoteEntry.TIME,
-                NoteEntry.LOCATION,
+                NoteEntry.TEXT_COLOR,
                 NoteEntry.MESSAGE};
 
         return new CursorLoader(context,
@@ -49,17 +47,15 @@ public class NotesLoaderManager implements LoaderManager.LoaderCallbacks<Cursor>
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
         if (cursor.moveToFirst()) {
             int type = cursor.getInt(cursor.getColumnIndex(NoteEntry.TYPE));
-            String date = cursor.getString(cursor.getColumnIndex(NoteEntry.DATE));
-            String time = cursor.getString(cursor.getColumnIndex(NoteEntry.TIME));
             String message = cursor.getString(cursor.getColumnIndex(NoteEntry.MESSAGE));
-            String location = cursor.getString(cursor.getColumnIndex(NoteEntry.LOCATION));
             String color = cursor.getString(cursor.getColumnIndex(NoteEntry.COLOR));
+            String textColor = cursor.getString(cursor.getColumnIndex(NoteEntry.TEXT_COLOR));
 
             if (NoteEntry.TYPE_TODO == type) {
                 message = TodoJson.getMapFormatListString(message);
             }
 
-            callbacks.finishLoad(date, time, message, location, color);
+            callbacks.finishLoad( message, color, textColor);
         }
     }
 
@@ -69,8 +65,7 @@ public class NotesLoaderManager implements LoaderManager.LoaderCallbacks<Cursor>
     }
 
     public interface NoteCallbacks {
-        void finishLoad(String date, String time, String message, String location,
-                        String color);
+        void finishLoad(String message, String color, String textColor);
 
         void resetLoad();
     }
