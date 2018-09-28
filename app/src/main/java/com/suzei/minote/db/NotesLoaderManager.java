@@ -30,7 +30,8 @@ public class NotesLoaderManager implements LoaderManager.LoaderCallbacks<Cursor>
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
         String[] projection = {NoteEntry._ID,
-                NoteEntry.TYPE,
+                NoteEntry.TITLE,
+                NoteEntry.PASSWORD,
                 NoteEntry.COLOR,
                 NoteEntry.TEXT_COLOR,
                 NoteEntry.MESSAGE};
@@ -46,16 +47,17 @@ public class NotesLoaderManager implements LoaderManager.LoaderCallbacks<Cursor>
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
         if (cursor.moveToFirst()) {
-            int type = cursor.getInt(cursor.getColumnIndex(NoteEntry.TYPE));
+            String title = cursor.getString(cursor.getColumnIndex(NoteEntry.TITLE));
+            String password = cursor.getString(cursor.getColumnIndex(NoteEntry.PASSWORD));
             String message = cursor.getString(cursor.getColumnIndex(NoteEntry.MESSAGE));
             String color = cursor.getString(cursor.getColumnIndex(NoteEntry.COLOR));
             String textColor = cursor.getString(cursor.getColumnIndex(NoteEntry.TEXT_COLOR));
 
-            if (NoteEntry.TYPE_TODO == type) {
+            if (TodoJson.isValidJson(message)) {
                 message = TodoJson.getMapFormatListString(message);
             }
 
-            callbacks.finishLoad( message, color, textColor);
+            callbacks.finishLoad(title, password, message, color, textColor);
         }
     }
 
@@ -65,7 +67,9 @@ public class NotesLoaderManager implements LoaderManager.LoaderCallbacks<Cursor>
     }
 
     public interface NoteCallbacks {
-        void finishLoad(String message, String color, String textColor);
+
+        void finishLoad(String title, String password, String message,
+                        String color, String textColor);
 
         void resetLoad();
     }

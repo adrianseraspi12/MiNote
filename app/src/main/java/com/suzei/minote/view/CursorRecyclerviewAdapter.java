@@ -1,4 +1,4 @@
-package com.suzei.minote.adapter;
+package com.suzei.minote.view;
 
 import android.content.Context;
 import android.database.Cursor;

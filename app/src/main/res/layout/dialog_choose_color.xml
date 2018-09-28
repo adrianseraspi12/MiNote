@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:gravity="center_horizontal"
+    android:theme="@style/AlertDialog.AppCompat.Light">
+
+    <LinearLayout
+        android:id="@+id/dialog_note_color_layout"
+        style="@android:style/Widget.Holo.Spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp"
+        android:layout_marginEnd="8dp">
+
+        <View
+            android:id="@+id/dialog_note_color"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@color/colorRed" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Note" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dialog_text_color_layout"
+        style="@android:style/Widget.Holo.Spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/dialog_note_color_layout"
+        android:gravity="center_vertical"
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp">
+
+        <View
+            android:id="@+id/dialog_text_color"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@android:color/black" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Text" />
+
+    </LinearLayout>
+
+</RelativeLayout>

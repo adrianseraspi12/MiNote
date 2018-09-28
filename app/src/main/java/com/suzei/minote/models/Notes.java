@@ -3,7 +3,8 @@ package com.suzei.minote.models;
 public class Notes {
 
     private int _id;
-    private int type;
+    private String title;
+    private String password;
     private String message;
     private String color;
     private String textColor;
@@ -19,12 +20,20 @@ public class Notes {
         this._id = _id;
     }
 
-    public int getType() {
-        return type;
+    public String getTitle() {
+        return title;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getTextColor() {

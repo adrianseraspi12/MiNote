@@ -108,8 +108,6 @@ public class NoteProvider extends ContentProvider {
         // Get writable database
         SQLiteDatabase db = mDBHelper.getWritableDatabase();
 
-        sanityCheck(values);
-
         // Insert the new note for given values
         long id = db.insert(NoteEntry.TABLE_NAME, null, values);
 
@@ -170,10 +168,6 @@ public class NoteProvider extends ContentProvider {
             return 0;
         }
 
-        if (values.size() > 1) {
-            sanityCheck(values);
-        }
-
         int id = db.update(NoteEntry.TABLE_NAME, values, selection, selectionArgs);
 
         if (id != 0) {
@@ -185,17 +179,5 @@ public class NoteProvider extends ContentProvider {
         }
 
         return id;
-    }
-
-    private void sanityCheck(ContentValues values) {
-        Integer type = values.getAsInteger(NoteEntry.TYPE);
-        if (type == null || !NoteEntry.isValidType(type)) {
-            throw new IllegalArgumentException("Note requires a type");
-        }
-
-        String color = values.getAsString(NoteEntry.COLOR);
-        if (color == null) {
-            throw new IllegalArgumentException("Note requires a color");
-        }
     }
 }

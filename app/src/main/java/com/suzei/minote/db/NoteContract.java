@@ -27,34 +27,13 @@ public final class NoteContract {
 
         public static final String TABLE_NAME = "notes";
         public static final String _ID = BaseColumns._ID;
-        public static final String TYPE = "type";
+        public static final String TITLE = "title";
+        public static final String PASSWORD = "password";
         public static final String MESSAGE = "message";
         public static final String TEXT_COLOR = "text_color";
         public static final String COLOR ="color";
 
-        public static final int TYPE_REMINDER = 0;
-        public static final int TYPE_TODO = 1;
-        public static final int TYPE_LECTURE = 2;
-        public static final int TYPE_EVENTS = 3;
-
-        public static boolean isValidType(int type) {
-            return type == TYPE_REMINDER || type == TYPE_TODO || type == TYPE_LECTURE ||
-                    type == TYPE_EVENTS;
-        }
-
-        public static String getTypeString(int type) {
-            switch (type) {
-                case TYPE_REMINDER:
-                    return "Reminder";
-                case TYPE_TODO:
-                    return "To-do";
-                case TYPE_LECTURE:
-                    return "Lecture";
-                case TYPE_EVENTS:
-                    return "Events";
-                default:
-                    throw new IllegalArgumentException("Not valid type");
-            }
-        }
+        //  remove from the database
+        public static final String TYPE = "type";
     }
 }

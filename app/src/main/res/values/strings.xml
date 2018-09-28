@@ -13,13 +13,6 @@
     <!-- about/instruction -->
     <string name="dialog_about_title">About</string>
     <string name="dialog_about_message">Developed by: AJ Seraspi\nMiNote Version: </string>
-    <string name="dialog_instruction_title">Instructions</string>
-    <string name="dialog_instruction_message">
-        1. Press the (+) button at the top-right corner to add a note
-        \n2. Tap the note to flip.
-        \n3. Tap and hold the note to view.
-        \n4. Press the (⋮) to edit/delete a note
-    </string>
 
     <!--    note type   -->
     <string-array name="notes">

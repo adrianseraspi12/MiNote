@@ -14,6 +14,21 @@ public class TodoJson {
 
     private static final String TAG = "TodoJson";
 
+    public static boolean isValidJson(String str) {
+        try {
+            new JSONObject(str);
+        }  catch (JSONException e) {
+
+            try {
+                new JSONArray(str);
+            } catch (JSONException e1) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public static String getMapFormatListString(String str) {
 
         Log.i(TAG, "getMapFormatListString: structure= " + str);

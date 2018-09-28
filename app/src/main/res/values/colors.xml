@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#002071</color>
     <color name="colorPrimaryLight">#5471d2</color>
 
+    <color name="colorPrimaryTest">#525471d2</color>
+
     <color name="colorSecondary">#26c6da</color>
 
     <color name="colorPrimaryRipple">#420d46a0</color>
