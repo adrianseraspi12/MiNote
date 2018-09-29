@@ -1,4 +1,4 @@
-package com.suzei.minote.db;
+package com.suzei.minote.data;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -12,7 +12,7 @@ import android.support.v4.content.Loader;
 
 import com.suzei.minote.utils.TodoJson;
 
-import static com.suzei.minote.db.NoteContract.NoteEntry;
+import static com.suzei.minote.data.NoteContract.NoteEntry;
 
 public class NotesLoaderManager implements LoaderManager.LoaderCallbacks<Cursor> {
 

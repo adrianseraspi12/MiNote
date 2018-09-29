@@ -1,4 +1,4 @@
-package com.suzei.minote.db;
+package com.suzei.minote.data;
 
 import android.content.ContentResolver;
 import android.net.Uri;

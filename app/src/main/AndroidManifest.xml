@@ -16,12 +16,13 @@
             android:value="false" />
 
         <provider
-            android:name=".db.NoteProvider"
+            android:name=".data.NoteProvider"
             android:authorities="com.suzei.minote"
             android:exported="false" />
 
         <activity
             android:name=".view.EditorActivity"
+            android:theme="@style/EditorTheme"
             android:windowSoftInputMode="stateAlwaysVisible" />
 
         <activity android:name=".view.ListActivity">
@@ -31,6 +32,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".preference.SettingsActivity"
+            android:parentActivityName=".view.ListActivity"
+            android:label="About">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.ListActivity"/>
+        </activity>
+
     </application>
 
 </manifest>

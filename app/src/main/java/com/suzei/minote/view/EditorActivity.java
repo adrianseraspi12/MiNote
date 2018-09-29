@@ -22,8 +22,8 @@ import android.support.v4.app.LoaderManager;
 
 import com.suzei.minote.R;
 import com.suzei.minote.utils.Turing;
-import com.suzei.minote.db.NoteContract.NoteEntry;
-import com.suzei.minote.db.NotesLoaderManager;
+import com.suzei.minote.data.NoteContract.NoteEntry;
+import com.suzei.minote.data.NotesLoaderManager;
 import com.suzei.minote.utils.KeyboardUtils;
 
 import butterknife.BindView;

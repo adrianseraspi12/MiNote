@@ -1,4 +1,4 @@
-package com.suzei.minote.db;
+package com.suzei.minote.data;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -11,7 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import static com.suzei.minote.db.NoteContract.NoteEntry;
+import static com.suzei.minote.data.NoteContract.NoteEntry;
 
 public class NoteProvider extends ContentProvider {
 

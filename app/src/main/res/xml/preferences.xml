@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Preference
+        android:key="send_feedback"
+        android:title="Send Feedback"
+        android:summary="Need Improvements? Let me know" />
+
+    <Preference
+        android:key="more_from_dev"
+        android:title="More from Developer"
+        android:summary="Support my other apps" />
+
+    <Preference
+        android:key="app_version"
+        android:title="MiNote version" />
+
+    <Preference
+        android:key="privacy_policy"
+        android:title="Privacy Policy"
+        android:summary="See privacy policy"/>
+
+    <Preference
+        android:title="Developed by Adrian Seraspi"/>
+
+
+</PreferenceScreen>

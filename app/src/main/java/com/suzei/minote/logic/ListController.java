@@ -13,27 +13,27 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
-import com.suzei.minote.db.NoteContract.NoteEntry;
+import com.suzei.minote.data.DataSource;
+import com.suzei.minote.data.NoteContract.NoteEntry;
 import com.suzei.minote.utils.Turing;
 import com.suzei.minote.view.NotesView;
 import com.suzei.minote.view.PasswordDialog;
 
-public class ListController implements LoaderManager.LoaderCallbacks<Cursor> {
-
-    private static final int NOTE_LOADER = 0;
+public class ListController implements NoteListener {
 
     private NotesView notesView;
     private AppCompatActivity activity;
+    private DataSource dataSource;
 
     public ListController(AppCompatActivity activity, NotesView notesView) {
         this.notesView = notesView;
         this.activity = activity;
-        initLoaderManager();
+
+        dataSource = new DataSource(activity, NoteEntry.CONTENT_URI, this);
     }
 
-    private void initLoaderManager() {
-        LoaderManager loaderManager = activity.getSupportLoaderManager();
-        loaderManager.initLoader(NOTE_LOADER, null, this);
+    public void init() {
+        dataSource.initLoaderManager();
     }
 
     public void onItemClick(String uriString, String password) {
@@ -42,7 +42,6 @@ public class ListController implements LoaderManager.LoaderCallbacks<Cursor> {
         } else {
             notesView.startActivity(uriString);
         }
-
     }
 
     private void showPasswordDialog(final String uriString, final String password) {
@@ -97,30 +96,13 @@ public class ListController implements LoaderManager.LoaderCallbacks<Cursor> {
         alertDialog.show();
     }
 
-    @NonNull
     @Override
-    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        Uri uri = NoteEntry.CONTENT_URI;
-
-        String[] projection = {
-                NoteEntry._ID,
-                NoteEntry.TITLE,
-                NoteEntry.PASSWORD,
-                NoteEntry.MESSAGE,
-                NoteEntry.COLOR,
-                NoteEntry.TEXT_COLOR };
-
-        return new CursorLoader(activity, uri, projection, null, null,
-                null);
+    public void finished(Cursor cursor) {
+        notesView.setDataToAdapter(cursor);
     }
 
     @Override
-    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-        notesView.setDataToAdapter(data);
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+    public void reset() {
         notesView.resetLoader();
     }
 }

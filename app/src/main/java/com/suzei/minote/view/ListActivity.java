@@ -10,9 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -21,9 +21,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.suzei.minote.R;
-import com.suzei.minote.db.NoteContract.NoteEntry;
+import com.suzei.minote.data.NoteContract.NoteEntry;
 import com.suzei.minote.logic.ListController;
 import com.suzei.minote.models.Notes;
+import com.suzei.minote.preference.SettingsActivity;
 import com.suzei.minote.utils.AppRater;
 import com.suzei.minote.utils.RecyclerViewEmptySupport;
 import com.suzei.minote.utils.TodoJson;
@@ -37,7 +38,6 @@ public class ListActivity extends AppCompatActivity implements NotesView {
     private ListController controller;
     private NotesCursorAdapter adapter;
 
-    @BindView(R.id.list_toolbar) Toolbar toolbarView;
     @BindView(R.id.list_notes) RecyclerViewEmptySupport noteList;
     @BindView(R.id.list_empty_placeholder) AppCompatTextView emptyView;
 
@@ -52,9 +52,10 @@ public class ListActivity extends AppCompatActivity implements NotesView {
     private void initObjects() {
         AppRater.app_launched(this);
         ButterKnife.bind(this);
-        setSupportActionBar(toolbarView);
-        setTitle("All notes");
         controller = new ListController(ListActivity.this, this);
+        controller.init();
+
+        setTitle("All notes");
     }
 
     private void setUpRecyclerView() {
@@ -107,6 +108,16 @@ public class ListActivity extends AppCompatActivity implements NotesView {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_list, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.menu_about) {
+            startActivity(new Intent(ListActivity.this, SettingsActivity.class));
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public class NotesCursorAdapter extends CursorRecyclerviewAdapter<NotesCursorAdapter.ViewHolder> {

@@ -1,12 +1,10 @@
-package com.suzei.minote.db;
+package com.suzei.minote.data;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
-import static com.suzei.minote.db.NoteContract.NoteEntry;
+import static com.suzei.minote.data.NoteContract.NoteEntry;
 
 public class NoteDBHelper extends SQLiteOpenHelper {
 
