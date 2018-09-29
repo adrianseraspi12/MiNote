@@ -18,16 +18,16 @@
         android:layout_centerInParent="true"
         android:drawableTop="@drawable/empty"
         android:gravity="center"
-        android:text="No notes found"
+        android:text="@string/no_notes_found"
         android:textColor="@color/gray"
-        android:textSize="20sp" />
+        android:textSize="@dimen/text_size_large" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/list_add_note"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
         app:fabSize="normal"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"

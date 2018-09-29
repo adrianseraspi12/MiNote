@@ -1,25 +1,12 @@
 <resources>
     <string name="app_name">MiNote</string>
+    <string name="no_notes_found">No notes found</string>
+    <string name="title">Title</string>
+    <string name="delete">Delete</string>
+    <string name="back">back</string>
+    <string name="add_password">Add password</string>
+    <string name="save">Save</string>
+    <string name="write_something">Write Something...</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">MiNote</string>
-    <string name="nav_header_desc">Navigation header</string>
-
-    <!-- ascii code -->
-    <string name="ellipsis">⋮</string>
-    <string name="check">✔</string>
-
-    <!-- about/instruction -->
-    <string name="dialog_about_title">About</string>
-    <string name="dialog_about_message">Developed by: AJ Seraspi\nMiNote Version: </string>
-
-    <!--    note type   -->
-    <string-array name="notes">
-        <item name="note_reminder">Reminder</item>
-        <item name="note_todo">To-do list</item>
-        <item name="note_lecture">Lecture</item>
-        <item name="note_events">Events</item>
-    </string-array>
 
 </resources>
