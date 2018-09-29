@@ -14,7 +14,7 @@ import com.suzei.minote.logic.NoteListener;
 
 import static com.suzei.minote.data.NoteContract.NoteEntry;
 
-public class DataSource implements LoaderManager.LoaderCallbacks<Cursor> {
+public class NotesDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int NOTE_LOADER = 0;
 
@@ -23,7 +23,7 @@ public class DataSource implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private NoteListener noteListener;
 
-    public DataSource(AppCompatActivity activity, Uri uri, NoteListener noteListener) {
+    public NotesDataSource(AppCompatActivity activity, Uri uri, NoteListener noteListener) {
         this.activity = activity;
         this.uri = uri;
         this.noteListener = noteListener;

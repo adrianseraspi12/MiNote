@@ -3,12 +3,13 @@ package com.suzei.minote.view;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Window;
@@ -18,26 +19,27 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-import android.support.v4.app.LoaderManager;
 
 import com.suzei.minote.R;
-import com.suzei.minote.utils.Turing;
 import com.suzei.minote.data.NoteContract.NoteEntry;
-import com.suzei.minote.data.NotesLoaderManager;
+import com.suzei.minote.logic.Controller;
 import com.suzei.minote.utils.KeyboardUtils;
+import com.suzei.minote.utils.TodoJson;
+import com.suzei.minote.utils.Turing;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class EditorActivity extends AppCompatActivity implements NotesLoaderManager.NoteCallbacks {
+public class EditorActivity extends AppCompatActivity implements NotesView {
 
     private static final String TAG = "EditorActivity";
 
-    public static final int EXISTING_NOTE_LOADER = 0;
     public static final String EXTRA_NOTE_URI = "note_uri";
     public static final String EXTRA_NOTE_COLOR = "note_color";
     public static final String EXTRA_TEXT_COLOR = "text_color";
+
+    private Controller controller;
 
     private Uri currentNoteUri;
     private String mPassword;
@@ -78,6 +80,7 @@ public class EditorActivity extends AppCompatActivity implements NotesLoaderMana
         if (noteUri !=null) {
             currentNoteUri = Uri.parse(noteUri);
         }
+        controller = new Controller(EditorActivity.this, currentNoteUri, this);
     }
 
     private void initObjects() {
@@ -86,45 +89,16 @@ public class EditorActivity extends AppCompatActivity implements NotesLoaderMana
 
     private void initLoaderManager() {
         if (currentNoteUri != null) {
-            NotesLoaderManager mNoteManager = new NotesLoaderManager(
-                    EditorActivity.this,
-                    currentNoteUri, this);
-
-            LoaderManager loaderManager = getSupportLoaderManager();
-            loaderManager.initLoader(EXISTING_NOTE_LOADER, null, mNoteManager);
+            controller = new Controller(EditorActivity.this, currentNoteUri, this);
+            controller.init();
         } else {
             rootView.setBackgroundColor(Color.parseColor(noteColor));
             backView.setColorFilter(Color.parseColor(textColor));
             passwordView.setColorFilter(Color.parseColor(textColor));
             saveView.setColorFilter(Color.parseColor(textColor));
             textView.setTextColor(Color.parseColor(textColor));
+            titleView.setTextColor(Color.parseColor(textColor));
         }
-    }
-
-    @Override
-    public void finishLoad(String title, String password, String message, String color, String _textColor) {
-        this.noteColor = color;
-
-        rootView.setBackgroundColor(Color.parseColor(color));
-        titleView.setText(title);
-        textView.setText(message);
-
-        if (_textColor != null) {
-            this.textColor = _textColor;
-            backView.setColorFilter(Color.parseColor(_textColor));
-            saveView.setColorFilter(Color.parseColor(_textColor));
-            passwordView.setColorFilter(Color.parseColor(_textColor));
-            textView.setTextColor(Color.parseColor(_textColor));
-            titleView.setTextColor(Color.parseColor(_textColor));
-        } else {
-            this.textColor = "#000000";
-        }
-    }
-
-    @Override
-    public void resetLoad() {
-        textView.setText("");
-        rootView.setBackgroundColor(Color.WHITE);
     }
 
     @OnClick(R.id.editor_password)
@@ -176,13 +150,12 @@ public class EditorActivity extends AppCompatActivity implements NotesLoaderMana
 
         } else {
             Uri insertUri = getContentResolver().insert(NoteEntry.CONTENT_URI, values);
-            // Show a toast message depending on whether or not the insertion was successful
+
             if (insertUri == null) {
-                // If the new content URI is null, then there was an error with insertion.
                 Toast.makeText(EditorActivity.this, "Note not saved",
                         Toast.LENGTH_SHORT).show();
             } else {
-                // Otherwise, the insertion was successful and we can display a toast.
+
                 Toast.makeText(EditorActivity.this, "Note save", Toast.LENGTH_SHORT)
                         .show();
             }
@@ -204,4 +177,42 @@ public class EditorActivity extends AppCompatActivity implements NotesLoaderMana
 
         return values;
     }
+
+    @Override
+    public void showDataToUi(Cursor cursor) {
+        if (cursor.moveToFirst()) {
+            String title = cursor.getString(cursor.getColumnIndex(NoteEntry.TITLE));
+            String password = cursor.getString(cursor.getColumnIndex(NoteEntry.PASSWORD));
+            String message = cursor.getString(cursor.getColumnIndex(NoteEntry.MESSAGE));
+            noteColor = cursor.getString(cursor.getColumnIndex(NoteEntry.COLOR));
+            textColor = cursor.getString(cursor.getColumnIndex(NoteEntry.TEXT_COLOR));
+
+            mPassword = Turing.decrypt(password);
+
+            if (TodoJson.isValidJson(message)) {
+                message = TodoJson.getMapFormatListString(message);
+            }
+
+            rootView.setBackgroundColor(Color.parseColor(textColor));
+            titleView.setText(title);
+            textView.setText(message);
+
+            if (textColor != null) {
+                backView.setColorFilter(Color.parseColor(textColor));
+                saveView.setColorFilter(Color.parseColor(textColor));
+                passwordView.setColorFilter(Color.parseColor(textColor));
+                textView.setTextColor(Color.parseColor(textColor));
+                titleView.setTextColor(Color.parseColor(textColor));
+            } else {
+                this.textColor = "#000000";
+            }
+        }
+    }
+
+    @Override
+    public void resetLoader() {
+        textView.setText("");
+        rootView.setBackgroundColor(Color.WHITE);
+    }
+
 }

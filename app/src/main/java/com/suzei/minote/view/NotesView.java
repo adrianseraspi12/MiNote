@@ -4,16 +4,8 @@ import android.database.Cursor;
 
 public interface NotesView {
 
-    void setDataToAdapter(Cursor cursor);
-
-    void startActivity(String noteUri);
+    void showDataToUi(Cursor cursor);
 
     void resetLoader();
-
-    void onDeleteSuccess();
-
-    void onDeleteFailed();
-
-    void onPasswordisInvalid();
 
 }
