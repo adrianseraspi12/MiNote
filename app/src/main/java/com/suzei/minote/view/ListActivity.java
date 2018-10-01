@@ -14,7 +14,6 @@ import com.suzei.minote.adapter.NotesCursorAdapter;
 import com.suzei.minote.data.NoteContract.NoteEntry;
 import com.suzei.minote.logic.Controller;
 import com.suzei.minote.preference.SettingsActivity;
-import com.suzei.minote.utils.AppRater;
 import com.suzei.minote.utils.RecyclerViewEmptySupport;
 
 import butterknife.BindView;
@@ -37,9 +36,8 @@ public class ListActivity extends AppCompatActivity implements NotesView {
     }
 
     private void initObjects() {
-        AppRater.app_launched(this);
         ButterKnife.bind(this);
-        setTitle("All notes");
+        setTitle(getString(R.string.all_notes));
 
         Controller controller = new Controller(
                 ListActivity.this,

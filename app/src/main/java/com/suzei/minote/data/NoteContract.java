@@ -32,8 +32,5 @@ public final class NoteContract {
         public static final String MESSAGE = "message";
         public static final String TEXT_COLOR = "text_color";
         public static final String COLOR ="color";
-
-        //  remove from the database
-        public static final String TYPE = "type";
     }
 }

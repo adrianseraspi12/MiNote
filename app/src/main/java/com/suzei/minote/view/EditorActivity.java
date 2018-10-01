@@ -2,7 +2,6 @@ package com.suzei.minote.view;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -11,10 +10,8 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -23,8 +20,8 @@ import android.widget.Toast;
 import com.suzei.minote.R;
 import com.suzei.minote.data.NoteContract.NoteEntry;
 import com.suzei.minote.logic.Controller;
+import com.suzei.minote.utils.JsonConvert;
 import com.suzei.minote.utils.KeyboardUtils;
-import com.suzei.minote.utils.TodoJson;
 import com.suzei.minote.utils.Turing;
 
 import butterknife.BindView;
@@ -32,8 +29,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class EditorActivity extends AppCompatActivity implements NotesView {
-
-    private static final String TAG = "EditorActivity";
 
     public static final String EXTRA_NOTE_URI = "note_uri";
     public static final String EXTRA_NOTE_COLOR = "note_color";
@@ -80,6 +75,7 @@ public class EditorActivity extends AppCompatActivity implements NotesView {
         if (noteUri !=null) {
             currentNoteUri = Uri.parse(noteUri);
         }
+
         controller = new Controller(EditorActivity.this, currentNoteUri, this);
     }
 
@@ -103,18 +99,8 @@ public class EditorActivity extends AppCompatActivity implements NotesView {
 
     @OnClick(R.id.editor_password)
     public void onPasswordClick() {
-        //  showInputPassword;
         PasswordDialog passwordDialog = new PasswordDialog(EditorActivity.this);
-        passwordDialog.setOnClosePasswordDialog(new PasswordDialog.PasswordDialogListener() {
-
-            @Override
-            public void onClose(String password) {
-                mPassword = password;
-                Log.i(TAG, "onClose: " + mPassword);
-            }
-
-        });
-
+        passwordDialog.setOnClosePasswordDialog(password -> mPassword = password);
         passwordDialog.show();
     }
 
@@ -126,8 +112,7 @@ public class EditorActivity extends AppCompatActivity implements NotesView {
     @OnClick(R.id.editor_text_layout)
     public void onTextFieldClick() {
         textView.requestFocus();
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(textView, InputMethodManager.SHOW_IMPLICIT);
+        KeyboardUtils.showKeyboard(EditorActivity.this, textView);
     }
 
     @OnClick(R.id.editor_save)
@@ -144,24 +129,32 @@ public class EditorActivity extends AppCompatActivity implements NotesView {
             int rowsUpdated = getContentResolver().update(NoteEntry.CONTENT_URI, values,
                     selection, selectionArgs);
             if (rowsUpdated != 0) {
-                Toast.makeText(EditorActivity.this, "Note Updated", Toast.LENGTH_SHORT)
-                        .show();
+                Toast.makeText(
+                        EditorActivity.this,
+                        R.string.note_updated,
+                        Toast.LENGTH_SHORT).show();
             }
 
-        } else {
+        }
+
+        else {
             Uri insertUri = getContentResolver().insert(NoteEntry.CONTENT_URI, values);
 
             if (insertUri == null) {
-                Toast.makeText(EditorActivity.this, "Note not saved",
+                Toast.makeText(
+                        EditorActivity.this,
+                        R.string.note_not_saved,
                         Toast.LENGTH_SHORT).show();
             } else {
 
-                Toast.makeText(EditorActivity.this, "Note save", Toast.LENGTH_SHORT)
-                        .show();
+                Toast.makeText(
+                        EditorActivity.this,
+                        R.string.note_save,
+                        Toast.LENGTH_SHORT).show();
             }
         }
 
-        KeyboardUtils.hideKeyboardFrom(EditorActivity.this, rootView);
+        KeyboardUtils.hideKeyboard(EditorActivity.this, rootView);
     }
 
     private ContentValues getContentValues() {
@@ -189,21 +182,24 @@ public class EditorActivity extends AppCompatActivity implements NotesView {
 
             mPassword = Turing.decrypt(password);
 
-            if (TodoJson.isValidJson(message)) {
-                message = TodoJson.getMapFormatListString(message);
+            if (JsonConvert.isValidJson(message)) {
+                message = JsonConvert.getMapFormatListString(message);
             }
 
             rootView.setBackgroundColor(Color.parseColor(textColor));
             titleView.setText(title);
             textView.setText(message);
 
+            rootView.setBackgroundColor(Color.parseColor(noteColor));
+            backView.setColorFilter(Color.parseColor(textColor));
+            passwordView.setColorFilter(Color.parseColor(textColor));
+            saveView.setColorFilter(Color.parseColor(textColor));
+            titleView.setTextColor(Color.parseColor(textColor));
+
             if (textColor != null) {
-                backView.setColorFilter(Color.parseColor(textColor));
-                saveView.setColorFilter(Color.parseColor(textColor));
-                passwordView.setColorFilter(Color.parseColor(textColor));
                 textView.setTextColor(Color.parseColor(textColor));
-                titleView.setTextColor(Color.parseColor(textColor));
             } else {
+                textView.setTextColor(Color.parseColor("#000000"));
                 this.textColor = "#000000";
             }
         }
@@ -212,6 +208,7 @@ public class EditorActivity extends AppCompatActivity implements NotesView {
     @Override
     public void resetLoader() {
         textView.setText("");
+        titleView.setText("");
         rootView.setBackgroundColor(Color.WHITE);
     }
 

@@ -49,33 +49,15 @@ public class SettingsFragment extends BasePreferenceFragmentCompat implements
         switch (key) {
 
             case "send_feedback":
-                Intent feedbackEmail = new Intent(Intent.ACTION_SEND);
-
-                feedbackEmail.setType("text/email");
-                feedbackEmail.putExtra(Intent.EXTRA_EMAIL,
-                        new String[] {"adrianseraspi12@gmail.com"});
-                feedbackEmail.putExtra(Intent.EXTRA_SUBJECT, "Feedback");
-                startActivity(Intent.createChooser(feedbackEmail, "Send Feedback:"));
+                redirectToEmail();
                 return true;
 
             case "more_from_dev":
-                final String developerId = "developer?id=Adrian+Seraspi";
-                try {
-                    startActivity(new Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse("market://" + developerId)));
-                } catch (android.content.ActivityNotFoundException anfe) {
-                    startActivity(new Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse("https://play.google.com/store/apps/" + developerId)));
-                }
+                redirectToPlaystore();
                 return true;
 
             case "privacy_policy":
-                startActivity(new Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse("https://sites.google.com/view/minote-privacy-policy/home")
-                ));
+                redirectToPrivatePolicyWeb();
                 return true;
 
             default:
@@ -83,6 +65,36 @@ public class SettingsFragment extends BasePreferenceFragmentCompat implements
 
         }
 
+    }
+
+    private void redirectToEmail() {
+        Intent feedbackEmail = new Intent(Intent.ACTION_SEND);
+
+        feedbackEmail.setType("text/email");
+        feedbackEmail.putExtra(Intent.EXTRA_EMAIL,
+                new String[] {"adrianseraspi12@gmail.com"});
+        feedbackEmail.putExtra(Intent.EXTRA_SUBJECT, "Feedback");
+        startActivity(Intent.createChooser(feedbackEmail, "Send Feedback:"));
+    }
+
+    private void redirectToPlaystore() {
+        final String developerId = "developer?id=Adrian+Seraspi";
+        try {
+            startActivity(new Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("market://" + developerId)));
+        } catch (android.content.ActivityNotFoundException anfe) {
+            startActivity(new Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://play.google.com/store/apps/" + developerId)));
+        }
+    }
+
+    private void redirectToPrivatePolicyWeb() {
+        startActivity(new Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://sites.google.com/view/minote-privacy-policy/home")
+        ));
     }
 
 }

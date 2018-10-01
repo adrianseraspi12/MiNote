@@ -1,4 +1,5 @@
 <resources>
+
     <string name="app_name">MiNote</string>
     <string name="no_notes_found">No notes found</string>
     <string name="title">Title</string>
@@ -6,7 +7,30 @@
     <string name="back">back</string>
     <string name="add_password">Add password</string>
     <string name="save">Save</string>
-    <string name="write_something">Write Something...</string>
-
+    <string name="write_something">Write Something…</string>
+    <string name="wrong_password">Wrong Password</string>
+    <string name="delete_note_message">Are you sure want to delete this note?</string>
+    <string name="note_deleted">Note Deleted</string>
+    <string name="cancel">Cancel</string>
+    <string name="about">About</string>
+    <string name="note_updated">Note Updated</string>
+    <string name="note_not_saved">Note not saved</string>
+    <string name="note_save">Note save</string>
+    <string name="all_notes">All notes</string>
+    <string name="choose_color">Choose color</string>
+    <string name="choose">Choose</string>
+    <string name="choose_note_color">Choose note color</string>
+    <string name="choose_text_color">Choose text color</string>
+    <string name="send_feedback">Send Feedback</string>
+    <string name="send_feedback_summary">Need Improvements? Let me know</string>
+    <string name="more_from_dev">More from Developer</string>
+    <string name="more_from_dev_summary">Support my other apps</string>
+    <string name="minote_version">MiNote version</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="privacy_policy_summary">See privacy policy</string>
+    <string name="developed_by">Developed by Adrian Seraspi</string>
+    <string name="password">Password</string>
+    <string name="note">Note</string>
+    <string name="text">Text</string>
 
 </resources>

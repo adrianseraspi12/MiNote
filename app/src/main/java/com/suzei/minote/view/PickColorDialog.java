@@ -1,17 +1,14 @@
 package com.suzei.minote.view;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import com.flask.colorpicker.ColorPickerView;
-import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.suzei.minote.R;
-import com.suzei.minote.view.EditorActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,8 +19,8 @@ public class PickColorDialog {
     private String colorText = "#000000";
     private String colorNote = "#ef5350";
 
-    private Activity activity;
-    private AlertDialog.Builder alertDialogBuilder;
+    private final Activity activity;
+    private final AlertDialog.Builder alertDialogBuilder;
 
     @BindView(R.id.dialog_note_color)
     View noteColor;
@@ -42,26 +39,18 @@ public class PickColorDialog {
 
         ButterKnife.bind(this, convertView);
         alertDialogBuilder.setView(convertView);
-        alertDialogBuilder.setTitle("Choose color");
+        alertDialogBuilder.setTitle(R.string.choose_color);
 
-        alertDialogBuilder.setPositiveButton("Choose", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setPositiveButton(R.string.choose, (dialog, which) -> {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(activity, EditorActivity.class);
-                intent.putExtra(EditorActivity.EXTRA_TEXT_COLOR, colorText);
-                intent.putExtra(EditorActivity.EXTRA_NOTE_COLOR, colorNote);
-                activity.startActivity(intent);
-            }
+            Intent intent = new Intent(activity, EditorActivity.class);
+            intent.putExtra(EditorActivity.EXTRA_TEXT_COLOR, colorText);
+            intent.putExtra(EditorActivity.EXTRA_NOTE_COLOR, colorNote);
+            activity.startActivity(intent);
+
         });
 
-        alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+        alertDialogBuilder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
 
         alertDialogBuilder.show();
     }
@@ -70,27 +59,17 @@ public class PickColorDialog {
     public void onNoteColorPick() {
         ColorPickerDialogBuilder
                 .with(activity)
-                .setTitle("Choose note color")
+                .setTitle(R.string.choose_note_color)
                 .initialColor(R.color.colorRed)
                 .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
                 .density(6)
-                .setPositiveButton("Choose", new ColorPickerClickListener() {
+                .setPositiveButton(R.string.choose, (dialogInterface, _color, integers) -> {
 
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int _color, Integer[] integers) {
-                        colorNote = String.format("#%06X", (0xFFFFFF & _color));
-                        noteColor.setBackgroundColor(_color);
-                    }
+                    colorNote = String.format("#%06X", (0xFFFFFF & _color));
+                    noteColor.setBackgroundColor(_color);
 
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-
-                })
+                .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss())
                 .build()
                 .show();
     }
@@ -99,27 +78,15 @@ public class PickColorDialog {
     public void onTextColorPick() {
         ColorPickerDialogBuilder
                 .with(activity)
-                .setTitle("Choose text color")
+                .setTitle(R.string.choose_text_color)
                 .initialColor(R.color.black)
                 .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
                 .density(6)
-                .setPositiveButton("Choose", new ColorPickerClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int _color, Integer[] integers) {
-                        colorText = String.format("#%06X", (0xFFFFFF & _color));
-                        textColor.setBackgroundColor(_color);
-                    }
-
+                .setPositiveButton(R.string.choose, (dialogInterface, _color, integers) -> {
+                    colorText = String.format("#%06X", (0xFFFFFF & _color));
+                    textColor.setBackgroundColor(_color);
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-
-                })
+                .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss())
                 .build()
                 .show();
     }

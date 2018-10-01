@@ -2,11 +2,11 @@ package com.suzei.minote.adapter;
 
 import android.app.Activity;
 import android.content.ContentUris;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.suzei.minote.R;
 import com.suzei.minote.data.NoteContract.NoteEntry;
 import com.suzei.minote.models.Notes;
-import com.suzei.minote.utils.TodoJson;
+import com.suzei.minote.utils.JsonConvert;
 import com.suzei.minote.utils.Turing;
 import com.suzei.minote.view.EditorActivity;
 import com.suzei.minote.view.PasswordDialog;
@@ -30,24 +30,24 @@ import butterknife.ButterKnife;
 
 public class NotesCursorAdapter extends CursorRecyclerviewAdapter<NotesCursorAdapter.ViewHolder> {
 
-    private Activity activity;
+    private final Activity activity;
 
     public NotesCursorAdapter(Activity activity, Cursor cursor) {
-        super(activity, cursor);
+        super(cursor);
         this.activity = activity;
-    }
-
-    @Override
-    public NotesCursorAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_row_notes_default,
-                parent, false);
-        return new NotesCursorAdapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(NotesCursorAdapter.ViewHolder viewHolder, Cursor cursor) {
         Notes note = get(cursor);
         viewHolder.bind(note);
+    }
+
+    @Override
+    public ViewHolder onCreateVH(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_row_notes_default,
+                parent, false);
+        return new NotesCursorAdapter.ViewHolder(view);
     }
 
     private Notes get(Cursor cursor) {
@@ -89,8 +89,8 @@ public class NotesCursorAdapter extends CursorRecyclerviewAdapter<NotesCursorAda
         void bind(final Notes note) {
             colorNote.setBackgroundColor(Color.parseColor(note.getColor()));
 
-            if (TodoJson.isValidJson(note.getMessage())) {
-                String str = TodoJson.getMapFormatListString(note.getMessage());
+            if (JsonConvert.isValidJson(note.getMessage())) {
+                String str = JsonConvert.getMapFormatListString(note.getMessage());
                 messageView.setText(str);
             } else {
                 messageView.setText(note.getTitle());
@@ -100,47 +100,33 @@ public class NotesCursorAdapter extends CursorRecyclerviewAdapter<NotesCursorAda
                 passwordView.setVisibility(View.VISIBLE);
             }
 
-            deleteView.setOnClickListener(new View.OnClickListener() {
+            deleteView.setOnClickListener(v -> deleteNote(note.get_id()));
 
-                @Override
-                public void onClick(View v) {
-                    deleteNote(note.get_id());
+            itemView.setOnClickListener(v -> {
+
+                if (note.getPassword() != null) {
+                    showEnterPassword(note.get_id(), note.getPassword());
+                } else {
+                    startEditorActivity(note.get_id());
                 }
 
-            });
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if (note.getPassword() != null) {
-                        showEnterPassword(note.get_id(), note.getPassword());
-                    } else {
-                        startEditorActivity(note.get_id());
-                    }
-
-                }
             });
         }
 
         private void showEnterPassword(final int id, final String password) {
             PasswordDialog passwordDialog = new PasswordDialog(activity);
             passwordDialog.show();
-            passwordDialog.setOnClosePasswordDialog(new PasswordDialog.PasswordDialogListener() {
+            passwordDialog.setOnClosePasswordDialog(enteredPassword -> {
 
-                @Override
-                public void onClose(String enteredPassword) {
-
-                    if (!Turing.decrypt(password).equals(enteredPassword)) {
-                        Toast.makeText(activity,
-                                "Wrong Password",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        startEditorActivity(id);
-                    }
-
+                if (!Turing.decrypt(password).equals(enteredPassword)) {
+                    Toast.makeText(activity,
+                            R.string.wrong_password,
+                            Toast.LENGTH_SHORT).show();
                 }
+                else {
+                    startEditorActivity(id);
+                }
+
             });
         }
 
@@ -154,32 +140,24 @@ public class NotesCursorAdapter extends CursorRecyclerviewAdapter<NotesCursorAda
 
         private void deleteNote(final int id) {
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-            builder.setMessage("Are you sure want to delete this note?");
+            builder.setMessage(R.string.delete_note_message);
 
-            builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            builder.setPositiveButton(R.string.delete, (dialog, which) -> {
 
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Uri noteUri = ContentUris.withAppendedId(NoteEntry.CONTENT_URI, id);
-                    int deleteNoteRow = activity.getContentResolver().
-                            delete(noteUri, null, null);
+                Uri noteUri = ContentUris.withAppendedId(NoteEntry.CONTENT_URI, id);
+                int deleteNoteRow = activity.getContentResolver().
+                        delete(noteUri, null, null);
 
-                    if (deleteNoteRow != 0) {
-                        Toast.makeText(activity,
-                                "Note Deleted",
-                                Toast.LENGTH_SHORT).show();
-                    }
-
-                    dialog.dismiss();
+                if (deleteNoteRow != 0) {
+                    Toast.makeText(activity,
+                            R.string.note_deleted,
+                            Toast.LENGTH_SHORT).show();
                 }
+
+                dialog.dismiss();
             });
 
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
+            builder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
 
             builder.show();
         }

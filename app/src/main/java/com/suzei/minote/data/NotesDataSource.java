@@ -18,10 +18,10 @@ public class NotesDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int NOTE_LOADER = 0;
 
-    private AppCompatActivity activity;
-    private Uri uri;
+    private final AppCompatActivity activity;
+    private final Uri uri;
 
-    private NoteListener noteListener;
+    private final NoteListener noteListener;
 
     public NotesDataSource(AppCompatActivity activity, Uri uri, NoteListener noteListener) {
         this.activity = activity;

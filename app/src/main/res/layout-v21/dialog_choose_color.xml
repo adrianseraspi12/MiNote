@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
     android:orientation="horizontal"
     android:padding="@dimen/margin_medium"
-    android:gravity="center_horizontal"
     android:theme="@style/AlertDialog.AppCompat.Light">
 
     <LinearLayout
@@ -12,10 +12,10 @@
         style="@android:style/Widget.Material.Spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_small"
         android:gravity="center_vertical"
         android:paddingBottom="@dimen/margin_medium"
-        android:paddingTop="@dimen/margin_medium"
-        android:layout_marginEnd="@dimen/margin_small">
+        android:paddingTop="@dimen/margin_medium">
 
         <View
             android:id="@+id/dialog_note_color"
@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/margin_small"
-            android:text="Note" />
+            android:text="@string/note" />
 
     </LinearLayout>
 
@@ -51,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/margin_small"
-            android:text="Text" />
+            android:text="@string/text" />
 
     </LinearLayout>
 

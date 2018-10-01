@@ -7,12 +7,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
-public class TodoJson {
+public class JsonConvert {
 
-    private static final String TAG = "TodoJson";
+    private static final String TAG = "JsonConvert";
 
     public static boolean isValidJson(String str) {
         try {
@@ -54,13 +52,4 @@ public class TodoJson {
 
         return list.toString();
     }
-
-    public static List<String> getItemsArray(String str) {
-        String todo = str
-                .replaceAll("[\\[\\{\"]", "")
-                .replaceAll("[\\]\\}]","");
-        String[] items = todo.split(",");
-        return Arrays.asList(items);
-    }
-
 }

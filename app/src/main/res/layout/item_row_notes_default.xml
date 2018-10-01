@@ -45,6 +45,7 @@
                 android:id="@+id/item_notes_password"
                 style="@style/ImageButton"
                 android:layout_toStartOf="@id/item_notes_delete"
+                android:contentDescription="@string/password"
                 android:visibility="gone"
                 app:srcCompat="@drawable/lock_close" />
 
@@ -52,8 +53,8 @@
                 android:id="@+id/item_notes_delete"
                 style="@style/ImageButton.Selectable"
                 android:layout_alignParentEnd="true"
-                app:srcCompat="@drawable/delete"
-                android:contentDescription="@string/delete"/>
+                android:contentDescription="@string/delete"
+                app:srcCompat="@drawable/delete" />
 
         </RelativeLayout>
 

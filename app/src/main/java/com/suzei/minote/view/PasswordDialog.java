@@ -15,8 +15,6 @@ import butterknife.OnClick;
 
 public class PasswordDialog extends Dialog {
 
-    private static final String TAG = "PasswordDialog";
-
     private static final int PASSWORD_LENGTH = 4;
 
     private PasswordDialogListener listener;

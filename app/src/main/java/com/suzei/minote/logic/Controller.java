@@ -9,8 +9,8 @@ import com.suzei.minote.view.NotesView;
 
 public class Controller implements NoteListener {
 
-    private NotesView notesView;
-    private NotesDataSource notesDataSource;
+    private final NotesView notesView;
+    private final NotesDataSource notesDataSource;
 
     public Controller(AppCompatActivity activity, Uri uri, NotesView notesView) {
         this.notesView = notesView;

@@ -32,7 +32,7 @@ public class NoteDBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         switch (oldVersion) {
             case 1:
-                createTempTable(db, "Temptable");
+                createTempTable(db);
                 copy(db, "Temptable", NoteEntry.TABLE_NAME);
                 dropTable(db, NoteEntry.TABLE_NAME);
                 createTable(db, NoteEntry.TABLE_NAME);
@@ -55,8 +55,8 @@ public class NoteDBHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_TEMP_TABLE);
     }
 
-    private void createTempTable(SQLiteDatabase db, String tableName) {
-        String SQL_CREATE_TEMP_TABLE = "CREATE TEMPORARY TABLE " + tableName
+    private void createTempTable(SQLiteDatabase db) {
+        String SQL_CREATE_TEMP_TABLE = "CREATE TEMPORARY TABLE " + "Temptable"
                 + " (" + NoteEntry._ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
                 + NoteEntry.TITLE + " TEXT, "
                 + NoteEntry.MESSAGE + " TEXT, "

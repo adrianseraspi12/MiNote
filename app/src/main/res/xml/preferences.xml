@@ -3,25 +3,25 @@
 
     <Preference
         android:key="send_feedback"
-        android:title="Send Feedback"
-        android:summary="Need Improvements? Let me know" />
+        android:title="@string/send_feedback"
+        android:summary="@string/send_feedback_summary" />
 
     <Preference
         android:key="more_from_dev"
-        android:title="More from Developer"
-        android:summary="Support my other apps" />
+        android:title="@string/more_from_dev"
+        android:summary="@string/more_from_dev_summary" />
 
     <Preference
         android:key="app_version"
-        android:title="MiNote version" />
+        android:title="@string/minote_version" />
 
     <Preference
         android:key="privacy_policy"
-        android:title="Privacy Policy"
-        android:summary="See privacy policy"/>
+        android:title="@string/privacy_policy"
+        android:summary="@string/privacy_policy_summary"/>
 
     <Preference
-        android:title="Developed by Adrian Seraspi"/>
+        android:title="@string/developed_by"/>
 
 
 </PreferenceScreen>

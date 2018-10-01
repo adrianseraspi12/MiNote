@@ -1,14 +1,12 @@
 package com.suzei.minote.adapter;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 public abstract class CursorRecyclerviewAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
-
-    protected Context mContext;
 
     private Cursor mCursor;
 
@@ -16,10 +14,9 @@ public abstract class CursorRecyclerviewAdapter<VH extends RecyclerView.ViewHold
 
     private int mRowIdColumn;
 
-    private DataSetObserver mDataSetObserver;
+    private final DataSetObserver mDataSetObserver;
 
-    public CursorRecyclerviewAdapter(Context context, Cursor cursor) {
-        mContext = context;
+    CursorRecyclerviewAdapter(Cursor cursor) {
         mCursor = cursor;
         mDataValid = cursor != null;
         mRowIdColumn = mDataValid ? mCursor.getColumnIndex("_id") : -1;
@@ -54,17 +51,18 @@ public abstract class CursorRecyclerviewAdapter<VH extends RecyclerView.ViewHold
         super.setHasStableIds(true);
     }
 
-    public static final String TAG = CursorRecyclerviewAdapter.class.getSimpleName();
-
     public abstract void onBindViewHolder(VH viewHolder, Cursor cursor);
 
+    public abstract VH onCreateVH(@NonNull ViewGroup parent, int viewType);
+
+    @NonNull
     @Override
-    public VH onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+    public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return onCreateVH(parent, viewType);
     }
 
     @Override
-    public void onBindViewHolder(VH viewHolder, int position) {
+    public void onBindViewHolder(@NonNull VH viewHolder, int position) {
         if (!mDataValid) {
             throw new IllegalStateException("this should only be called when the cursor is valid");
         }
@@ -115,14 +113,14 @@ public abstract class CursorRecyclerviewAdapter<VH extends RecyclerView.ViewHold
         return oldCursor;
     }
 
-    public void setDataValid(boolean mDataValid) {
+    private void setDataValid(boolean mDataValid) {
         this.mDataValid = mDataValid;
     }
 
     private class NotifyingDataSetObserver extends DataSetObserver {
-        private RecyclerView.Adapter adapter;
+        private final RecyclerView.Adapter adapter;
 
-        public NotifyingDataSetObserver(RecyclerView.Adapter adapter) {
+        NotifyingDataSetObserver(RecyclerView.Adapter adapter) {
             this.adapter = adapter;
         }
 
