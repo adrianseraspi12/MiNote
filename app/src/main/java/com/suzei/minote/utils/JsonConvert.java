@@ -27,29 +27,13 @@ public class JsonConvert {
         return true;
     }
 
-    public static String getMapFormatListString(String str) {
+    public static String toString(String str) {
+        str = str.replaceAll("[\\[\\](){}:\"]","");
+        str = str.replaceAll(",", "\n");
+        str = str.replaceAll("false", "");
+        str = str.replaceAll("true", "");
+        str = str.replaceAll("Todo", "");
 
-        Log.i(TAG, "getMapFormatListString: structure= " + str);
-
-        ArrayList<String> list = new ArrayList<>();
-        JSONObject json = null;
-
-        try {
-            json = new JSONObject(str);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        JSONArray array = json.optJSONArray("Todo");
-        for (int i = 0; i < array.length(); i++) {
-
-            try {
-                list.add(array.getString(0));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return list.toString();
+        return str;
     }
 }

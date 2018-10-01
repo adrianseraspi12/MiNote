@@ -51,7 +51,7 @@ public class NoteDBHelper extends SQLiteOpenHelper {
                 + " (" + NoteEntry._ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
                 + NoteEntry.TITLE + " TEXT, "
                 + NoteEntry.MESSAGE + " TEXT, "
-                + NoteEntry.COLOR + " TEXT, ";
+                + NoteEntry.COLOR + " TEXT);";
         db.execSQL(SQL_CREATE_TEMP_TABLE);
     }
 

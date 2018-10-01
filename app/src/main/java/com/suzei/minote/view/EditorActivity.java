@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -183,23 +184,26 @@ public class EditorActivity extends AppCompatActivity implements NotesView {
             mPassword = Turing.decrypt(password);
 
             if (JsonConvert.isValidJson(message)) {
-                message = JsonConvert.getMapFormatListString(message);
+                message = JsonConvert.toString(message);
             }
 
-            rootView.setBackgroundColor(Color.parseColor(textColor));
-            titleView.setText(title);
             textView.setText(message);
+            titleView.setText(title);
 
             rootView.setBackgroundColor(Color.parseColor(noteColor));
-            backView.setColorFilter(Color.parseColor(textColor));
-            passwordView.setColorFilter(Color.parseColor(textColor));
-            saveView.setColorFilter(Color.parseColor(textColor));
-            titleView.setTextColor(Color.parseColor(textColor));
 
             if (textColor != null) {
                 textView.setTextColor(Color.parseColor(textColor));
+                backView.setColorFilter(Color.parseColor(textColor));
+                passwordView.setColorFilter(Color.parseColor(textColor));
+                saveView.setColorFilter(Color.parseColor(textColor));
+                titleView.setTextColor(Color.parseColor(textColor));
             } else {
                 textView.setTextColor(Color.parseColor("#000000"));
+                backView.setColorFilter(Color.parseColor("#000000"));
+                passwordView.setColorFilter(Color.parseColor("#000000"));
+                saveView.setColorFilter(Color.parseColor("#000000"));
+                titleView.setTextColor(Color.parseColor("#000000"));
                 this.textColor = "#000000";
             }
         }

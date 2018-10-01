@@ -88,13 +88,7 @@ public class NotesCursorAdapter extends CursorRecyclerviewAdapter<NotesCursorAda
 
         void bind(final Notes note) {
             colorNote.setBackgroundColor(Color.parseColor(note.getColor()));
-
-            if (JsonConvert.isValidJson(note.getMessage())) {
-                String str = JsonConvert.getMapFormatListString(note.getMessage());
-                messageView.setText(str);
-            } else {
-                messageView.setText(note.getTitle());
-            }
+            messageView.setText(note.getTitle());
 
             if (note.getPassword() != null) {
                 passwordView.setVisibility(View.VISIBLE);
