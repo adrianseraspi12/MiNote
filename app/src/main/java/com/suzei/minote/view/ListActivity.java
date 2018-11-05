@@ -3,11 +3,12 @@ package com.suzei.minote.view;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatTextView;
-import android.support.v7.widget.LinearLayoutManager;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 
 import com.suzei.minote.R;
 import com.suzei.minote.adapter.NotesCursorAdapter;
@@ -25,7 +26,7 @@ public class ListActivity extends AppCompatActivity implements NotesView {
     private NotesCursorAdapter adapter;
 
     @BindView(R.id.list_notes) RecyclerViewEmptySupport noteList;
-    @BindView(R.id.list_empty_placeholder) AppCompatTextView emptyView;
+    @BindView(R.id.list_empty_placeholder) LinearLayout emptyView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

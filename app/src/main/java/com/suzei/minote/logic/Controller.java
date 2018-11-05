@@ -2,7 +2,7 @@ package com.suzei.minote.logic;
 
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.suzei.minote.data.NotesDataSource;
 import com.suzei.minote.view.NotesView;

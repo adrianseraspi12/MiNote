@@ -3,7 +3,7 @@ package com.suzei.minote.preference;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.preference.Preference;
+import androidx.preference.Preference;
 
 import com.suzei.minote.BuildConfig;
 import com.suzei.minote.R;

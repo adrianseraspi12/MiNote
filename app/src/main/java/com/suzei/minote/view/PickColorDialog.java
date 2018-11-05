@@ -2,7 +2,6 @@ package com.suzei.minote.view;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -10,11 +9,12 @@ import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.suzei.minote.R;
 
+import androidx.appcompat.app.AlertDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class PickColorDialog {
+class PickColorDialog {
 
     private String colorText = "#000000";
     private String colorNote = "#ef5350";

@@ -1,7 +1,7 @@
 package com.suzei.minote.utils;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatButton;
 import android.util.AttributeSet;
 
 public class SquareView extends AppCompatButton {

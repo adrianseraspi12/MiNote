@@ -1,7 +1,7 @@
 package com.suzei.minote.preference;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.suzei.minote.R;
 
