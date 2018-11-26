@@ -13,9 +13,7 @@
         android:theme="@style/AppTheme"
         tools:targetApi="m">
 
-        <meta-data
-            android:name="firebase_crashlytics_collection_enabled"
-            android:value="false" />
+        <!--TODO  remove this after debugging-->
 
         <provider
             android:name=".data.NoteProvider"

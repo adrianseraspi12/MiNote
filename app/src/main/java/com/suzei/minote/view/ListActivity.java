@@ -12,62 +12,34 @@ import android.widget.LinearLayout;
 
 import com.suzei.minote.R;
 import com.suzei.minote.adapter.NotesCursorAdapter;
+import com.suzei.minote.data.DataSourceImpl;
 import com.suzei.minote.data.NoteContract.NoteEntry;
+import com.suzei.minote.data.Notes;
 import com.suzei.minote.logic.Controller;
 import com.suzei.minote.preference.SettingsActivity;
 import com.suzei.minote.utils.RecyclerViewEmptySupport;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ListActivity extends AppCompatActivity implements NotesView {
-
-    private NotesCursorAdapter adapter;
-
-    @BindView(R.id.list_notes) RecyclerViewEmptySupport noteList;
-    @BindView(R.id.list_empty_placeholder) LinearLayout emptyView;
+public class ListActivity extends AppCompatActivity  {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        initObjects();
-        setUpRecyclerView();
-    }
 
-    private void initObjects() {
-        ButterKnife.bind(this);
-        setTitle(getString(R.string.all_notes));
+        ListFragment listFragment = ListFragment.newInstance();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.list_container, listFragment)
+                .commit();
 
-        Controller controller = new Controller(
-                ListActivity.this,
-                NoteEntry.CONTENT_URI,
-                this);
-        controller.init();
-    }
-
-    private void setUpRecyclerView() {
-        noteList.setEmptyView(emptyView);
-        noteList.setLayoutManager(new LinearLayoutManager(this));
-        noteList.setHasFixedSize(true);
-    }
-
-    @Override
-    public void showDataToUi(Cursor cursor) {
-        adapter = new NotesCursorAdapter(ListActivity.this, cursor);
-        noteList.setAdapter(adapter);
-    }
-
-    @Override
-    public void resetLoader() {
-        adapter.swapCursor(null);
-    }
-
-    @OnClick(R.id.list_add_note)
-    public void onAddNoteClick() {
-        PickColorDialog pickColorDialog = new PickColorDialog(ListActivity.this);
-        pickColorDialog.show();
+        new Presenter(
+                new DataSourceImpl(getApplicationContext()),
+                listFragment);
     }
 
     @Override
@@ -85,5 +57,4 @@ public class ListActivity extends AppCompatActivity implements NotesView {
 
         return super.onOptionsItemSelected(item);
     }
-
 }
