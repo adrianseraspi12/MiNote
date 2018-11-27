@@ -11,6 +11,7 @@ public class Presenter implements ListContract.Presenter {
     public Presenter(DataSourceImpl dataSourceImpl, ListContract.View mView) {
         this.dataSourceImpl = dataSourceImpl;
         this.mView = mView;
+        mView.setPresenter(this);
     }
 
     @Override

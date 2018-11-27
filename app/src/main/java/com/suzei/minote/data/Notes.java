@@ -4,6 +4,7 @@ import java.util.Random;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "notes")
@@ -33,6 +34,7 @@ public class Notes {
         this.color = color;
     }
 
+    @Ignore
     public Notes(int id, String title, String password, String message, String textColor, String color) {
         this.id = id;
         this.title = title;
