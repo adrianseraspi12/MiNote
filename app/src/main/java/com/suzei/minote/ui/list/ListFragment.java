@@ -1,6 +1,7 @@
 package com.suzei.minote.ui.list;
 
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import com.google.android.material.snackbar.Snackbar;
 import com.suzei.minote.R;
 import com.suzei.minote.data.Notes;
+import com.suzei.minote.ui.editor.EditorActivity;
 import com.suzei.minote.utils.RecyclerViewEmptySupport;
 import com.suzei.minote.view.PickColorDialog;
 
@@ -109,6 +111,13 @@ public class ListFragment extends Fragment implements ListContract.View {
         listAdapter.notifyItemInserted(position);
     }
 
+    @Override
+    public void redirectToEditorActivity(int itemId) {
+        Intent intent = new Intent(getContext(), EditorActivity.class);
+        intent.putExtra(EditorActivity.EXTRA_NOTE_ID, itemId);
+        startActivity(intent);
+    }
+
     class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder> {
 
         @NonNull
@@ -156,6 +165,12 @@ public class ListFragment extends Fragment implements ListContract.View {
 
                 presenter.moveToTempContainer(note, position);
                 showSnackbar();
+            }
+
+            @OnClick(R.id.item_rootview)
+            public void onItemNoteClick() {
+                Notes note = listOfNotes.get(getAdapterPosition());
+                presenter.showNoteEditor(note.getId());
             }
 
             private void showSnackbar() {

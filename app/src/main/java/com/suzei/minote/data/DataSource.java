@@ -4,15 +4,17 @@ import java.util.List;
 
 public interface DataSource {
 
-    interface Listener {
+    interface Listener<T> {
 
-        void onDataAvailable(List<Notes> listOfNotes);
+        void onDataAvailable(T result);
 
         void onDataUnavailable();
 
     }
 
-    void getListOfNotes(DataSource.Listener listener);
+    void getNote(int itemId, DataSource.Listener<Notes> listener);
+
+    void getListOfNotes(DataSource.Listener<List<Notes>> listener);
 
     void deleteNote(Notes note);
 

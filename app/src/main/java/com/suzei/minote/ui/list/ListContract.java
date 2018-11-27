@@ -17,6 +17,8 @@ public interface ListContract {
 
         void insertNoteToList(Notes note, int position);
 
+        void redirectToEditorActivity(int itemId);
+
     }
 
     interface Presenter {
@@ -28,6 +30,8 @@ public interface ListContract {
         void undoDeletion();
 
         void moveToTempContainer(Notes note, int position);
+
+        void showNoteEditor(int itemId);
 
     }
 

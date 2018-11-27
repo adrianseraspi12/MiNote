@@ -12,6 +12,9 @@ public interface NotesDao {
     @Query("SELECT * FROM NOTES")
     List<Notes> findAllNotes();
 
+    @Query("SELECT * FROM NOTES WHERE _id=:itemId")
+    Notes findNoteById(int itemId);
+
     @Delete
     void deleteNote(Notes note);
 

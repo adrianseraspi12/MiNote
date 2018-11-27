@@ -52,17 +52,22 @@ public class ListPresenter implements ListContract.Presenter {
         this.tempPosition = position;
     }
 
+    @Override
+    public void showNoteEditor(int itemId) {
+        mView.redirectToEditorActivity(itemId);
+    }
+
     private void showListOfNotes() {
-        dataSourceImpl.getListOfNotes(new DataSource.Listener() {
+        dataSourceImpl.getListOfNotes(new DataSource.Listener<List<Notes>>() {
 
             @Override
-            public void onDataAvailable(List<Notes> listOfNotes) {
-                mView.showListOfNotes(listOfNotes);
+            public void onDataAvailable(List<Notes> result) {
+                mView.showListOfNotes(result);
             }
 
             @Override
             public void onDataUnavailable() {
-                mView.showListUnavailable();
+
             }
 
         });

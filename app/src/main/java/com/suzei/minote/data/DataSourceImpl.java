@@ -20,13 +20,31 @@ public class DataSourceImpl implements DataSource {
     }
 
     @Override
+    public void getNote(int itemId, Listener<Notes> listener) {
+        Runnable runnable = () -> {
+            Notes note = notesDao.findNoteById(itemId);
+
+            appExecutor.getMainThread().execute(() -> {
+                if (note == null) {
+                    listener.onDataUnavailable();
+                }
+                else {
+                    listener.onDataAvailable(note);
+                }
+            });
+        };
+
+        appExecutor.getDiskIO().execute(runnable);
+    }
+
+    @Override
     public void deleteNote(Notes note) {
         Runnable runnable = () -> notesDao.deleteNote(note);
         appExecutor.getDiskIO().execute(runnable);
     }
 
     @Override
-    public void getListOfNotes(Listener listener) {
+    public void getListOfNotes(Listener<List<Notes>> listener) {
         Runnable runnable = () -> {
 
             List<Notes> listOfNotes = notesDao.findAllNotes();

@@ -45,8 +45,8 @@ public class PickColorDialog {
         alertDialogBuilder.setPositiveButton(R.string.choose, (dialog, which) -> {
 
             Intent intent = new Intent(activity, EditorActivity.class);
-            intent.putExtra(EditorActivity.EXTRA_TEXT_COLOR, colorText);
-            intent.putExtra(EditorActivity.EXTRA_NOTE_COLOR, colorNote);
+//            intent.putExtra(EditorActivity.EXTRA_TEXT_COLOR, colorText);
+//            intent.putExtra(EditorActivity.EXTRA_NOTE_COLOR, colorNote);
             activity.startActivity(intent);
 
         });
