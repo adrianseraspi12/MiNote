@@ -1,4 +1,4 @@
-package com.suzei.minote.view;
+package com.suzei.minote.ui.list;
 
 
 import android.graphics.Color;
@@ -21,9 +21,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.suzei.minote.R;
 import com.suzei.minote.data.Notes;
 import com.suzei.minote.utils.RecyclerViewEmptySupport;
+import com.suzei.minote.view.PickColorDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +43,7 @@ public class ListFragment extends Fragment implements ListContract.View {
 
     @BindView(R.id.list_notes) RecyclerViewEmptySupport noteList;
     @BindView(R.id.list_empty_placeholder) LinearLayout emptyView;
+    @BindView(R.id.list_root) View rootView;
 
     static ListFragment newInstance() {
         return new ListFragment();
@@ -95,6 +98,17 @@ public class ListFragment extends Fragment implements ListContract.View {
         listAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void showListUnavailable() {
+
+    }
+
+    @Override
+    public void insertNoteToList(Notes note, int position) {
+        listOfNotes.add(note);
+        listAdapter.notifyItemInserted(position);
+    }
+
     class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder> {
 
         @NonNull
@@ -131,6 +145,37 @@ public class ListFragment extends Fragment implements ListContract.View {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
             }
+
+            @OnClick(R.id.item_notes_delete)
+            public void onDeleteNoteClick() {
+                int position = getAdapterPosition();
+                Notes note = listOfNotes.get(position);
+
+                listOfNotes.remove(note);
+                listAdapter.notifyItemRemoved(position);
+
+                presenter.moveToTempContainer(note, position);
+                showSnackbar();
+            }
+
+            private void showSnackbar() {
+                Snackbar.make(
+                        rootView,
+                        "Note Deleted",
+                        Snackbar.LENGTH_LONG)
+                        .setAction("Undo", v -> presenter.undoDeletion())
+                        .addCallback(new Snackbar.Callback() {
+
+                            @Override
+                            public void onDismissed(Snackbar transientBottomBar, int event) {
+                                super.onDismissed(transientBottomBar, event);
+                                presenter.deleteNote();
+                            }
+
+                        })
+                        .show();
+            }
+
         }
 
     }

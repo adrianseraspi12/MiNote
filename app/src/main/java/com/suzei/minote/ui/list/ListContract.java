@@ -1,4 +1,4 @@
-package com.suzei.minote.view;
+package com.suzei.minote.ui.list;
 
 
 import com.suzei.minote.data.Notes;
@@ -13,11 +13,21 @@ public interface ListContract {
 
         void showListOfNotes(List<Notes> listOfNotes);
 
+        void showListUnavailable();
+
+        void insertNoteToList(Notes note, int position);
+
     }
 
     interface Presenter {
 
         void start();
+
+        void deleteNote();
+
+        void undoDeletion();
+
+        void moveToTempContainer(Notes note, int position);
 
     }
 

@@ -1,4 +1,4 @@
-package com.suzei.minote.view;
+package com.suzei.minote.ui.editor;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -10,7 +10,6 @@ import android.os.Bundle;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -24,6 +23,8 @@ import com.suzei.minote.logic.Controller;
 import com.suzei.minote.utils.JsonConvert;
 import com.suzei.minote.utils.KeyboardUtils;
 import com.suzei.minote.utils.Turing;
+import com.suzei.minote.view.NotesView;
+import com.suzei.minote.view.PasswordDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

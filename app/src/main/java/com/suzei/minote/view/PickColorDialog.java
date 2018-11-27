@@ -8,13 +8,14 @@ import android.view.View;
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.suzei.minote.R;
+import com.suzei.minote.ui.editor.EditorActivity;
 
 import androidx.appcompat.app.AlertDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-class PickColorDialog {
+public class PickColorDialog {
 
     private String colorText = "#000000";
     private String colorNote = "#ef5350";
@@ -28,7 +29,7 @@ class PickColorDialog {
     @BindView(R.id.dialog_text_color)
     View textColor;
 
-    PickColorDialog(Activity activity) {
+    public PickColorDialog(Activity activity) {
         this.activity = activity;
         alertDialogBuilder = new AlertDialog.Builder(activity);
     }
