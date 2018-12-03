@@ -4,7 +4,6 @@
     <style name="ImageButton">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:padding">@dimen/margin_small</item>
     </style>
 
     <style name="ImageButton.Selectable">

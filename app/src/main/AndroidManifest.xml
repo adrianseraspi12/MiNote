@@ -13,21 +13,17 @@
         android:theme="@style/AppTheme"
         tools:targetApi="m">
 
+        <!--TODO  remove this after debugging-->
         <meta-data
             android:name="firebase_crashlytics_collection_enabled"
             android:value="false" />
-
-        <provider
-            android:name=".data.NoteProvider"
-            android:authorities="com.suzei.minote"
-            android:exported="false" />
-
+    
         <activity
-            android:name=".view.EditorActivity"
+            android:name=".ui.editor.EditorActivity"
             android:theme="@style/EditorTheme"
             android:windowSoftInputMode="stateAlwaysVisible" />
 
-        <activity android:name=".view.ListActivity">
+        <activity android:name=".ui.list.ListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,11 +31,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".preference.SettingsActivity"
-            android:parentActivityName=".view.ListActivity"
-            android:label="About">
+        <activity android:name=".ui.settings.SettingsActivity"
+            android:parentActivityName=".ui.list.ListActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".view.ListActivity"/>
+                android:value=".ui.list.ListActivity"/>
         </activity>
 
     </application>

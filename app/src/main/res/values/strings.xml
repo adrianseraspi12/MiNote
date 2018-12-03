@@ -33,4 +33,12 @@
     <string name="note">Note</string>
     <string name="text">Text</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="menu">Menu</string>
+    <string name="edit_password">Edit Password</string>
+    <string name="change_note_color">Change note color</string>
+    <string name="change_text_color">Change text color</string>
+    <string name="settings">Settings</string>
+
 </resources>
