@@ -29,8 +29,8 @@ public class AppExecutor {
         if (sInstance == null) {
             sInstance = new AppExecutor(
                     new DiskIOThreadExecutor(),
-                    Executors.newFixedThreadPool(THREAD_COUNT),
-                    new MainThreadExecutor());
+                    new MainThreadExecutor(),
+                    Executors.newFixedThreadPool(THREAD_COUNT));
         }
 
         return sInstance;

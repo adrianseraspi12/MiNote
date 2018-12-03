@@ -3,9 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/editor_root"
+    android:paddingTop="24dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    
     <RelativeLayout
         android:id="@+id/editor_nav_layout"
         android:layout_width="match_parent"
@@ -13,7 +14,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
+        
         <ImageButton
             android:id="@+id/editor_back_arrow"
             style="@style/ImageButton.Selectable"
@@ -22,7 +23,7 @@
             android:layout_marginStart="@dimen/margin_medium"
             android:contentDescription="@string/back"
             app:srcCompat="@drawable/back" />
-
+        
         <EditText
             android:id="@+id/editor_title"
             android:layout_width="wrap_content"
@@ -38,7 +39,7 @@
             android:layout_centerVertical="true"
             android:paddingTop="@dimen/margin_small"
             android:paddingBottom="@dimen/margin_small"/>
-
+        
         <ImageButton
             android:id="@+id/editor_save"
             style="@style/ImageButton.Selectable"
@@ -47,7 +48,7 @@
             android:layout_toStartOf="@id/editor_menu"
             android:contentDescription="@string/save"
             app:srcCompat="@drawable/save" />
-
+        
         <ImageButton
             android:id="@+id/editor_menu"
             style="@style/ImageButton.Selectable"
@@ -56,9 +57,9 @@
             android:layout_marginEnd="@dimen/margin_medium"
             android:contentDescription="@string/menu"
             app:srcCompat="@drawable/menu" />
-
+    
     </RelativeLayout>
-
+    
     <androidx.core.widget.NestedScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -67,12 +68,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editor_nav_layout">
-
+        
         <LinearLayout
             android:id="@+id/editor_text_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
+            
             <EditText
                 android:id="@+id/editor_text"
                 android:layout_width="match_parent"
@@ -82,9 +83,9 @@
                 android:background="@android:color/transparent"
                 android:hint="@string/write_something"
                 android:inputType="textMultiLine" />
-
+        
         </LinearLayout>
-
-    </androidx.core.widget.NestedScrollView>
     
+    </androidx.core.widget.NestedScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

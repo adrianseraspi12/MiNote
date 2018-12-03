@@ -1,19 +1,23 @@
-package com.suzei.minote.view;
+package com.suzei.minote.utils.dialogs;
 
-import android.app.Dialog;
-import android.content.Context;
-import androidx.annotation.NonNull;
+import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.suzei.minote.R;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class PasswordDialog extends Dialog {
+public class PasswordDialog extends DialogFragment {
 
     private static final int PASSWORD_LENGTH = 4;
 
@@ -23,10 +27,27 @@ public class PasswordDialog extends Dialog {
 
     @BindView(R.id.password_dots) EditText passwordView;
 
-    public PasswordDialog(@NonNull Context context) {
-        super(context, R.style.Theme_AppCompat_Light_DialogWhenLarge);
-        setContentView(R.layout.fullscreen_dialog_password);
-        ButterKnife.bind(this, this);
+    public static PasswordDialog getInstance() {
+        return new PasswordDialog();
+    }
+
+    public PasswordDialog() {
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.PasswordDialogStyle);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fullscreen_dialog_password, container, false);
+        ButterKnife.bind(this, view);
+        return view;
     }
 
     @OnClick({R.id.buttonOne, R.id.buttonTwo, R.id.buttonThree, R.id.buttonFour, R.id.buttonFive,

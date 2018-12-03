@@ -1,4 +1,4 @@
-package com.suzei.minote.utils;
+package com.suzei.minote.utils.widgets;
 
 import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;

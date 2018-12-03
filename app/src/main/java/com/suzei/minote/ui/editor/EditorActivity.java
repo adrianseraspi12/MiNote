@@ -1,11 +1,13 @@
 package com.suzei.minote.ui.editor;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.suzei.minote.R;
 import com.suzei.minote.data.DataSourceImpl;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 public class EditorActivity extends AppCompatActivity {
 
@@ -23,9 +25,18 @@ public class EditorActivity extends AppCompatActivity {
                 .replace(R.id.editor_container, editorFragment)
                 .commit();
 
-        new EditorPresenter(itemId,
-                new DataSourceImpl(getApplicationContext()),
-                editorFragment);
+        if (itemId != -1) {
+            new EditorPresenter(itemId,
+                    new DataSourceImpl(getApplicationContext()),
+                    editorFragment);
+        }
+        else {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            new EditorPresenter(prefs,
+                    new DataSourceImpl(getApplicationContext()),
+                    editorFragment);
+        }
+
     }
 
 }

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.list.ListActivity">
 
-    <com.suzei.minote.utils.RecyclerViewEmptySupport
+    <com.suzei.minote.utils.widgets.RecyclerViewEmptySupport
         android:id="@+id/list_notes"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

@@ -39,6 +39,7 @@
                 android:layout_toStartOf="@id/item_notes_password"
                 android:ellipsize="end"
                 android:maxLines="2"
+                android:layout_marginEnd="@dimen/margin_medium"
                 android:textColor="@color/black" />
 
             <ImageView
@@ -47,11 +48,14 @@
                 android:layout_toStartOf="@id/item_notes_delete"
                 android:contentDescription="@string/password"
                 android:visibility="gone"
+                android:layout_marginEnd="@dimen/margin_medium"
+                android:layout_centerVertical="true"
                 app:srcCompat="@drawable/lock_close" />
 
             <ImageButton
                 android:id="@+id/item_notes_delete"
                 style="@style/ImageButton.Selectable"
+                android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
                 android:contentDescription="@string/delete"
                 app:srcCompat="@drawable/delete" />

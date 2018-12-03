@@ -1,7 +1,7 @@
 package com.suzei.minote.ui.list;
 
 
-import com.suzei.minote.data.Notes;
+import com.suzei.minote.data.entity.Notes;
 
 import java.util.List;
 
@@ -25,11 +25,8 @@ public interface ListContract {
 
         void start();
 
-        void deleteNote();
+        void deleteNote(Notes note);
 
-        void undoDeletion();
-
-        void moveToTempContainer(Notes note, int position);
 
         void showNoteEditor(int itemId);
 

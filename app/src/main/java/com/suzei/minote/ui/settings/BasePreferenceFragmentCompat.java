@@ -1,4 +1,4 @@
-package com.suzei.minote.preference;
+package com.suzei.minote.ui.settings;
 
 import android.annotation.SuppressLint;
 import androidx.preference.Preference;

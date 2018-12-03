@@ -1,5 +1,7 @@
 package com.suzei.minote.data;
 
+import com.suzei.minote.data.entity.Notes;
+
 import java.util.List;
 
 public interface DataSource {
@@ -11,6 +13,8 @@ public interface DataSource {
         void onDataUnavailable();
 
     }
+
+    void saveNote(Notes note);
 
     void getNote(int itemId, DataSource.Listener<Notes> listener);
 

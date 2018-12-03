@@ -1,4 +1,4 @@
-package com.suzei.minote.data;
+package com.suzei.minote.data.entity;
 
 import java.util.Random;
 

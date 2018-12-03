@@ -14,6 +14,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,13 +22,16 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.suzei.minote.R;
-import com.suzei.minote.data.Notes;
+import com.suzei.minote.data.entity.Notes;
 import com.suzei.minote.ui.editor.EditorActivity;
-import com.suzei.minote.utils.RecyclerViewEmptySupport;
-import com.suzei.minote.view.PickColorDialog;
+import com.suzei.minote.utils.Turing;
+import com.suzei.minote.utils.widgets.RecyclerViewEmptySupport;
+import com.suzei.minote.utils.dialogs.PasswordDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,9 +47,16 @@ public class ListFragment extends Fragment implements ListContract.View {
 
     private ListAdapter listAdapter;
 
-    @BindView(R.id.list_notes) RecyclerViewEmptySupport noteList;
-    @BindView(R.id.list_empty_placeholder) LinearLayout emptyView;
-    @BindView(R.id.list_root) View rootView;
+    private Notes tempNote;
+    private Notes consecutiveNote;
+    private int tempPosition;
+
+    @BindView(R.id.list_notes)
+    RecyclerViewEmptySupport noteList;
+    @BindView(R.id.list_empty_placeholder)
+    LinearLayout emptyView;
+    @BindView(R.id.list_root)
+    View rootView;
 
     static ListFragment newInstance() {
         return new ListFragment();
@@ -85,8 +96,7 @@ public class ListFragment extends Fragment implements ListContract.View {
 
     @OnClick(R.id.list_add_note)
     public void onAddNoteClick() {
-        PickColorDialog pickColorDialog = new PickColorDialog(getActivity());
-        pickColorDialog.show();
+        startActivity(new Intent(getContext(), EditorActivity.class));
     }
 
     @Override
@@ -109,6 +119,7 @@ public class ListFragment extends Fragment implements ListContract.View {
     public void insertNoteToList(Notes note, int position) {
         listOfNotes.add(note);
         listAdapter.notifyItemInserted(position);
+
     }
 
     @Override
@@ -135,7 +146,33 @@ public class ListFragment extends Fragment implements ListContract.View {
         public void onBindViewHolder(@NonNull ListViewHolder holder, int position) {
             Notes note = listOfNotes.get(position);
             holder.colorNote.setBackgroundColor(Color.parseColor(note.getColor()));
-            holder.messageView.setText(note.getMessage());
+            holder.messageView.setText(note.getTitle());
+
+            if (note.getPassword() != null) {
+                holder.passwordView.setVisibility(View.VISIBLE);
+                holder.itemView.setOnClickListener(v -> showPasswordDialog(note));
+            } else {
+                holder.passwordView.setVisibility(View.GONE);
+                holder.itemView.setOnClickListener(v -> presenter.showNoteEditor(note.getId()));
+            }
+
+        }
+
+        private void showPasswordDialog(Notes note) {
+            String decryptedPassword = Turing.decrypt(note.getPassword());
+            PasswordDialog passwordDialog = PasswordDialog.getInstance();
+            passwordDialog.setOnClosePasswordDialog(password -> {
+
+                if (!decryptedPassword.equals(password)) {
+                    Toast.makeText(getContext(),
+                            "Wrong Password, Please Try again",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    presenter.showNoteEditor(note.getId());
+                }
+
+            });
+            passwordDialog.show(getFragmentManager(), "PasswordDialog");
         }
 
         @Override
@@ -145,46 +182,59 @@ public class ListFragment extends Fragment implements ListContract.View {
 
         class ListViewHolder extends RecyclerView.ViewHolder {
 
-            @BindView(R.id.item_notes_color) View colorNote;
-            @BindView(R.id.item_notes_title) TextView messageView;
-            @BindView(R.id.item_notes_delete) ImageButton deleteView;
-            @BindView(R.id.item_notes_password) ImageView passwordView;
+            @BindView(R.id.item_notes_color)
+            View colorNote;
+            @BindView(R.id.item_notes_title)
+            TextView messageView;
+            @BindView(R.id.item_notes_delete)
+            ImageButton deleteView;
+            @BindView(R.id.item_notes_password)
+            ImageView passwordView;
 
             ListViewHolder(@NonNull View itemView) {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
+
             }
 
             @OnClick(R.id.item_notes_delete)
             public void onDeleteNoteClick() {
-                int position = getAdapterPosition();
-                Notes note = listOfNotes.get(position);
+                tempPosition = getAdapterPosition();
+                tempNote = listOfNotes.get(tempPosition);
 
-                listOfNotes.remove(note);
-                listAdapter.notifyItemRemoved(position);
+                listOfNotes.remove(tempNote);
+                listAdapter.notifyItemRemoved(tempPosition);
 
-                presenter.moveToTempContainer(note, position);
                 showSnackbar();
             }
 
-            @OnClick(R.id.item_rootview)
-            public void onItemNoteClick() {
-                Notes note = listOfNotes.get(getAdapterPosition());
-                presenter.showNoteEditor(note.getId());
-            }
-
             private void showSnackbar() {
-                Snackbar.make(
-                        rootView,
-                        "Note Deleted",
-                        Snackbar.LENGTH_LONG)
-                        .setAction("Undo", v -> presenter.undoDeletion())
+                Snackbar.make(rootView, "Note Deleted", Snackbar.LENGTH_LONG)
+                        .setAction("Undo", v -> insertNoteToList(tempNote, tempPosition))
                         .addCallback(new Snackbar.Callback() {
+
+                            @Override
+                            public void onShown(Snackbar sb) {
+                                super.onShown(sb);
+                                consecutiveNote = tempNote;
+                            }
 
                             @Override
                             public void onDismissed(Snackbar transientBottomBar, int event) {
                                 super.onDismissed(transientBottomBar, event);
-                                presenter.deleteNote();
+                                switch (event) {
+
+                                    case BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_CONSECUTIVE:
+                                        presenter.deleteNote(consecutiveNote);
+                                        break;
+                                    case BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_TIMEOUT:
+                                        presenter.deleteNote(tempNote);
+                                        consecutiveNote = null;
+                                        tempNote = null;
+                                        tempPosition = -1;
+                                        break;
+                                }
+
                             }
 
                         })

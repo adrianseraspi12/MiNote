@@ -1,6 +1,7 @@
 package com.suzei.minote.ui.editor;
 
-import com.suzei.minote.data.Notes;
+import com.suzei.minote.data.entity.Notes;
+import com.suzei.minote.utils.ColorWheel;
 
 public interface EditorContract {
 
@@ -10,15 +11,32 @@ public interface EditorContract {
 
         void showNoteDetails(Notes note);
 
+        void noteColor(int noteColor);
+
+        void textColor(int textColor);
+
+        void showNoteSave();
+
+        void showColorWheel(String title, int initialColor, ColorWheel colorWheel);
+
+        void showPasswordDialog();
     }
 
     interface Presenter {
 
         void start();
 
-        void saveNote(Notes note);
+        void saveNote(String title,
+                      String message,
+                      String noteColor,
+                      String textColor,
+                      String password);
 
-        void addPasswordToNote(Notes note);
+        void passwordDialog();
+
+        void noteColorWheel(int initialColor);
+
+        void textColorWheel(int initialColor);
 
     }
 

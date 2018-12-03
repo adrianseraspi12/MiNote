@@ -2,6 +2,9 @@ package com.suzei.minote.data;
 
 import android.content.Context;
 
+import com.suzei.minote.data.dao.NotesDao;
+import com.suzei.minote.data.entity.Notes;
+
 import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
