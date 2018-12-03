@@ -12,18 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="m">
-
-        <!--TODO  remove this after debugging-->
-        <meta-data
-            android:name="firebase_crashlytics_collection_enabled"
-            android:value="false" />
     
         <activity
             android:name=".ui.editor.EditorActivity"
             android:theme="@style/EditorTheme"
-            android:windowSoftInputMode="stateAlwaysVisible" />
+            android:windowSoftInputMode="stateAlwaysVisible"
+            android:screenOrientation="portrait"/>
 
-        <activity android:name=".ui.list.ListActivity">
+        <activity android:name=".ui.list.ListActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

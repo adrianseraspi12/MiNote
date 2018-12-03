@@ -22,6 +22,8 @@ import com.suzei.minote.utils.Turing;
 import com.suzei.minote.utils.dialogs.BottomSheetFragment;
 import com.suzei.minote.utils.dialogs.PasswordDialog;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import butterknife.BindView;

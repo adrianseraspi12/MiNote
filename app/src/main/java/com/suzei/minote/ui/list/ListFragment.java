@@ -117,7 +117,7 @@ public class ListFragment extends Fragment implements ListContract.View {
 
     @Override
     public void insertNoteToList(Notes note, int position) {
-        listOfNotes.add(note);
+        listOfNotes.add(position, note);
         listAdapter.notifyItemInserted(position);
 
     }
