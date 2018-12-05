@@ -35,3 +35,4 @@ Write something on your note
 4. [**Butterknife (Jake Wharton)**](https://github.com/JakeWharton/butterknife) for Android binding views
 5. [**ColorPicker (QuadFlask)**](https://github.com/QuadFlask/colorpicker) for colorwheel
 6. [**Encryption**](https://github.com/simbiose/Encryption) for encrypting/decrypting of password
+7. **Design Pattern (MVP - Model View Presenter)**
