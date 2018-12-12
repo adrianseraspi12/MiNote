@@ -19,8 +19,7 @@
             android:windowSoftInputMode="stateAlwaysVisible"
             android:screenOrientation="portrait"/>
 
-        <activity android:name=".ui.list.ListActivity"
-            android:screenOrientation="portrait">
+        <activity android:name=".ui.list.ListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

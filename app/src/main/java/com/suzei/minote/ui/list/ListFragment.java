@@ -4,17 +4,6 @@ package com.suzei.minote.ui.list;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,15 +19,21 @@ import com.suzei.minote.R;
 import com.suzei.minote.data.entity.Notes;
 import com.suzei.minote.ui.editor.EditorActivity;
 import com.suzei.minote.utils.Turing;
-import com.suzei.minote.utils.widgets.RecyclerViewEmptySupport;
 import com.suzei.minote.utils.dialogs.PasswordDialog;
+import com.suzei.minote.utils.widgets.RecyclerViewEmptySupport;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class ListFragment extends Fragment implements ListContract.View {
 
     private ListContract.Presenter presenter;
@@ -69,6 +64,7 @@ public class ListFragment extends Fragment implements ListContract.View {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         listOfNotes = new ArrayList<>();
         listAdapter = new ListAdapter();
     }
@@ -119,7 +115,6 @@ public class ListFragment extends Fragment implements ListContract.View {
     public void insertNoteToList(Notes note, int position) {
         listOfNotes.add(position, note);
         listAdapter.notifyItemInserted(position);
-
     }
 
     @Override

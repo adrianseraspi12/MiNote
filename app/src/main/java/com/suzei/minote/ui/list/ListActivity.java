@@ -3,8 +3,10 @@ package com.suzei.minote.ui.list;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.preference.PreferenceManager;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -14,6 +16,10 @@ import com.suzei.minote.ui.settings.SettingsActivity;
 
 public class ListActivity extends AppCompatActivity  {
 
+    private static final String TAG = "ListActivity";
+
+    private static final String FRAGMENT_TAG = "LIST_FRAGMENT";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,14 +28,24 @@ public class ListActivity extends AppCompatActivity  {
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
-        ListFragment listFragment = ListFragment.newInstance();
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.list_container, listFragment)
-                .commit();
+        FragmentManager fm = getSupportFragmentManager();
+        ListFragment listFragment = (ListFragment) fm.findFragmentByTag(FRAGMENT_TAG);
 
-        new ListPresenter(
-                new DataSourceImpl(getApplicationContext()),
-                listFragment);
+        if (listFragment == null) {
+            listFragment = ListFragment.newInstance();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.list_container, listFragment, FRAGMENT_TAG)
+                    .commit();
+
+            new ListPresenter(
+                    new DataSourceImpl(getApplicationContext()),
+                    listFragment);
+
+            Log.i(TAG, "onCreate: ListFragment is null");
+        } else {
+            Log.i(TAG, "onCreate: ListFragment is not null");
+        }
+
     }
 
     @Override
