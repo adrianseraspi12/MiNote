@@ -37,6 +37,7 @@ public class PasswordDialog extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.PasswordDialogStyle);
     }
 
@@ -74,6 +75,14 @@ public class PasswordDialog extends DialogFragment {
 
     public void setOnClosePasswordDialog(PasswordDialogListener listener) {
         this.listener = listener;
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (getDialog() != null && getRetainInstance()) {
+            getDialog().setOnDismissListener(null);
+        }
+        super.onDestroyView();
     }
 
     public interface PasswordDialogListener {

@@ -32,6 +32,7 @@
             android:layout_toStartOf="@id/editor_save"
             android:background="@android:color/transparent"
             android:hint="@string/title"
+            android:imeOptions="flagNoExtractUi"
             android:layout_marginStart="@dimen/margin_medium"
             android:layout_marginEnd="@dimen/margin_medium"
             android:inputType="text"
@@ -82,7 +83,8 @@
                 android:layout_marginRight="@dimen/margin_medium"
                 android:background="@android:color/transparent"
                 android:hint="@string/write_something"
-                android:inputType="textMultiLine" />
+                android:inputType="textMultiLine"
+                android:imeOptions="flagNoExtractUi"/>
         
         </LinearLayout>
     

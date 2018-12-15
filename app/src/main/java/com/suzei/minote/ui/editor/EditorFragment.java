@@ -30,14 +30,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class EditorFragment extends Fragment implements EditorContract.View {
+
+    private static final String EXTRA_PASSWORD = "EXTRA_PASSWORD";
+    private static final String EXTRA_NOTE_COLOR = "EXTRA_NOTE_COLOR";
+    private static final String EXTRA_TEXT_COLOR = "EXTRA_TEXT_COLOR";
 
     private EditorContract.Presenter presenter;
 
     private String mPassword;
+    private int noteColor = -1;
+    private int textColor = -1;
 
     @BindView(R.id.editor_root) ConstraintLayout rootView;
     @BindView(R.id.editor_title) EditText titleView;
@@ -56,11 +59,24 @@ public class EditorFragment extends Fragment implements EditorContract.View {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_editor, container, false);
         ButterKnife.bind(this, view);
+
+        if (savedInstanceState != null) {
+            noteColor = savedInstanceState.getInt(EXTRA_NOTE_COLOR, -1);
+            textColor = savedInstanceState.getInt(EXTRA_TEXT_COLOR, -1);
+            mPassword = savedInstanceState.getString(EXTRA_NOTE_COLOR);
+        }
+
         return view;
     }
 
@@ -68,6 +84,25 @@ public class EditorFragment extends Fragment implements EditorContract.View {
     public void onStart() {
         super.onStart();
         presenter.start();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (noteColor != -1 || textColor != -1) {
+            noteColor(noteColor);
+            textColor(textColor);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        int noteColor = ((ColorDrawable) rootView.getBackground()).getColor();
+        int textColor = textView.getCurrentTextColor();
+        outState.putString(EXTRA_PASSWORD, mPassword);
+        outState.putInt(EXTRA_NOTE_COLOR, noteColor);
+        outState.putInt(EXTRA_TEXT_COLOR, textColor);
     }
 
     @OnClick(R.id.editor_back_arrow)
@@ -84,6 +119,7 @@ public class EditorFragment extends Fragment implements EditorContract.View {
     @OnClick(R.id.editor_menu)
     public void onMenuClick() {
         BottomSheetFragment bottomSheetFragment = new BottomSheetFragment();
+        bottomSheetFragment.setRetainInstance(true);
         bottomSheetFragment.setClickListener(new BottomSheetFragment.ClickListener() {
 
             @Override

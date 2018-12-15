@@ -35,6 +35,7 @@
             android:layout_marginEnd="@dimen/margin_medium"
             android:inputType="text"
             android:maxLines="1"
+            android:imeOptions="flagNoExtractUi"
             android:layout_centerVertical="true"
             android:paddingTop="@dimen/margin_small"
             android:paddingBottom="@dimen/margin_small"/>
@@ -81,6 +82,7 @@
                 android:layout_marginRight="@dimen/margin_medium"
                 android:background="@android:color/transparent"
                 android:hint="@string/write_something"
+                android:imeOptions="flagNoExtractUi"
                 android:inputType="textMultiLine" />
 
         </LinearLayout>
