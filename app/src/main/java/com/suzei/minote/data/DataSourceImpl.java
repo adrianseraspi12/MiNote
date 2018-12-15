@@ -1,7 +1,5 @@
 package com.suzei.minote.data;
 
-import android.content.Context;
-
 import com.suzei.minote.data.dao.NotesDao;
 import com.suzei.minote.data.entity.Notes;
 import com.suzei.minote.utils.executors.AppExecutor;
@@ -10,13 +8,23 @@ import java.util.List;
 
 public class DataSourceImpl implements DataSource {
 
+    private static DataSourceImpl sInstance = null;
+
     private NotesDao notesDao;
 
     private AppExecutor appExecutor;
 
-    public DataSourceImpl(Context context) {
-        notesDao = NotesDatabase.getDatabase(context).notesDao();
-        appExecutor = AppExecutor.getInstance();
+    public DataSourceImpl(AppExecutor appExecutor, NotesDao notesDao) {
+        this.appExecutor = appExecutor;
+        this.notesDao = notesDao;
+    }
+
+    public static DataSourceImpl getInstance(AppExecutor appExecutor, NotesDao notesDao) {
+        if (sInstance == null) {
+            sInstance = new DataSourceImpl(appExecutor, notesDao);
+        }
+
+        return sInstance;
     }
 
     @Override
@@ -26,7 +34,7 @@ public class DataSourceImpl implements DataSource {
     }
 
     @Override
-    public void getNote(int itemId, Listener<Notes> listener) {
+    public void getNote(int itemId, NoteListener listener) {
         Runnable runnable = () -> {
             Notes note = notesDao.findNoteById(itemId);
 
@@ -44,13 +52,7 @@ public class DataSourceImpl implements DataSource {
     }
 
     @Override
-    public void deleteNote(Notes note) {
-        Runnable runnable = () -> notesDao.deleteNote(note);
-        appExecutor.getDiskIO().execute(runnable);
-    }
-
-    @Override
-    public void getListOfNotes(Listener<List<Notes>> listener) {
+    public void getListOfNotes(ListNoteListener listener) {
         Runnable runnable = () -> {
 
             List<Notes> listOfNotes = notesDao.findAllNotes();
@@ -70,6 +72,10 @@ public class DataSourceImpl implements DataSource {
         appExecutor.getDiskIO().execute(runnable);
     }
 
-
+    @Override
+    public void deleteNote(Notes note) {
+        Runnable runnable = () -> notesDao.deleteNote(note);
+        appExecutor.getDiskIO().execute(runnable);
+    }
 
 }

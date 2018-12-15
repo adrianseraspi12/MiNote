@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.suzei.minote.Injection;
 import com.suzei.minote.R;
 import com.suzei.minote.data.DataSourceImpl;
 import com.suzei.minote.ui.settings.SettingsActivity;
@@ -38,7 +39,7 @@ public class ListActivity extends AppCompatActivity  {
                     .commit();
 
             new ListPresenter(
-                    new DataSourceImpl(getApplicationContext()),
+                    Injection.provideDataSourceImpl(getApplicationContext()),
                     listFragment);
 
             Log.i(TAG, "onCreate: ListFragment is null");

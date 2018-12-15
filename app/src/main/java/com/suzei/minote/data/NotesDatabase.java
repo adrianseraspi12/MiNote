@@ -18,7 +18,11 @@ public abstract class NotesDatabase extends RoomDatabase {
 
     private static final String DATABASE_NAME = "notes_storage.db";
 
-    abstract NotesDao notesDao();
+    private static NotesDatabase sInstance;
+
+    public abstract NotesDao notesDao();
+
+    private static final Object sLock = new Object();
 
     static final Migration MIGRATION_2_3 = new Migration(2, 3) {
 
@@ -29,13 +33,18 @@ public abstract class NotesDatabase extends RoomDatabase {
 
     };
 
-    static NotesDatabase getDatabase(Context context) {
-        return Room.databaseBuilder(
-                context.getApplicationContext(),
-                NotesDatabase.class,
-                DATABASE_NAME)
-                .addMigrations(MIGRATION_2_3)
-                .build();
+    public static NotesDatabase getInstance(Context context) {
+        synchronized (sLock) {
+            if (sInstance == null) {
+                sInstance = Room.databaseBuilder(
+                        context.getApplicationContext(),
+                        NotesDatabase.class,
+                        DATABASE_NAME)
+                        .addMigrations(MIGRATION_2_3)
+                        .build();
+            }
+            return sInstance;
+        }
     }
 
 }

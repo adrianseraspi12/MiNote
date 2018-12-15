@@ -10,9 +10,9 @@ public class ListPresenter implements ListContract.Presenter {
 
     private ListContract.View mView;
 
-    private DataSourceImpl dataSourceImpl;
+    private DataSource dataSourceImpl;
 
-    ListPresenter(DataSourceImpl dataSourceImpl, ListContract.View mView) {
+    ListPresenter(DataSource dataSourceImpl, ListContract.View mView) {
         this.dataSourceImpl = dataSourceImpl;
         this.mView = mView;
         mView.setPresenter(this);
@@ -34,18 +34,16 @@ public class ListPresenter implements ListContract.Presenter {
     }
 
     private void showListOfNotes() {
-        dataSourceImpl.getListOfNotes(new DataSource.Listener<List<Notes>>() {
-
+        dataSourceImpl.getListOfNotes(new DataSource.ListNoteListener() {
             @Override
-            public void onDataAvailable(List<Notes> result) {
-                mView.showListOfNotes(result);
+            public void onDataAvailable(List<Notes> listOfNote) {
+                mView.showListOfNotes(listOfNote);
             }
 
             @Override
             public void onDataUnavailable() {
 
             }
-
         });
     }
 

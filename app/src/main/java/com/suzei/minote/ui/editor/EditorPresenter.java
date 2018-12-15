@@ -97,11 +97,11 @@ public class EditorPresenter implements EditorContract.Presenter {
     }
 
     private void showNote() {
-        dataSourceImpl.getNote(itemId, new DataSource.Listener<Notes>() {
+        dataSourceImpl.getNote(itemId, new DataSource.NoteListener() {
 
             @Override
-            public void onDataAvailable(Notes result) {
-                mView.showNoteDetails(result);
+            public void onDataAvailable(Notes note) {
+                mView.showNoteDetails(note);
             }
 
             @Override

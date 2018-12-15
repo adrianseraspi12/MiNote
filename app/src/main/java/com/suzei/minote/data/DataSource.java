@@ -6,9 +6,17 @@ import java.util.List;
 
 public interface DataSource {
 
-    interface Listener<T> {
+    interface NoteListener {
 
-        void onDataAvailable(T result);
+        void onDataAvailable(Notes note);
+
+        void onDataUnavailable();
+
+    }
+
+    interface ListNoteListener {
+
+        void onDataAvailable(List<Notes> listOfNote);
 
         void onDataUnavailable();
 
@@ -16,9 +24,9 @@ public interface DataSource {
 
     void saveNote(Notes note);
 
-    void getNote(int itemId, DataSource.Listener<Notes> listener);
+    void getNote(int itemId, NoteListener listener);
 
-    void getListOfNotes(DataSource.Listener<List<Notes>> listener);
+    void getListOfNotes(ListNoteListener listener);
 
     void deleteNote(Notes note);
 

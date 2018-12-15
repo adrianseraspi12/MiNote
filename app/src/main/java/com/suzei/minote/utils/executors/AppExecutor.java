@@ -6,6 +6,8 @@ import android.os.Looper;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import androidx.annotation.VisibleForTesting;
+
 public class AppExecutor {
 
     private static final int THREAD_COUNT = 3;
@@ -18,7 +20,8 @@ public class AppExecutor {
 
     private final Executor mNetworkIO;
 
-    private AppExecutor(Executor mDiskIO, Executor mMainThread, Executor mNetworkIO) {
+    @VisibleForTesting
+    AppExecutor(Executor mDiskIO, Executor mMainThread, Executor mNetworkIO) {
         this.mDiskIO = mDiskIO;
         this.mMainThread = mMainThread;
         this.mNetworkIO = mNetworkIO;
