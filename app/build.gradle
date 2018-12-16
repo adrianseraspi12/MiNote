@@ -45,7 +45,6 @@ android {
 dependencies {
     def butterknife_version = "9.0.0-rc1"
     def room_version = "2.1.0-alpha02"
-
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'com.google.android.material:material:1.0.0'
@@ -54,10 +53,13 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.preference:preference:1.0.0'
 
+    //  Unit test Junit/Mockito
     testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-all:2.0.2-beta'
+
+    //  Instrumentation Test Espresso
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
-    testImplementation 'org.mockito:mockito-all:1.10.19'
 
     //  Room
     implementation "androidx.room:room-runtime:$room_version"
@@ -66,11 +68,14 @@ dependencies {
     //  Firebase
     implementation 'com.google.firebase:firebase-core:16.0.1'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
+
     //  Butterknife
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterknife_version"
     implementation "com.jakewharton:butterknife:$butterknife_version"
+
     //  ColorPicker
     implementation 'com.github.QuadFlask:colorpicker:0.0.13'
+    
     //  Encrypt/Decrypt String
     implementation 'com.github.simbiose:Encryption:2.0.1'
 }

@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import com.suzei.minote.Injection;
 import com.suzei.minote.R;
-import com.suzei.minote.data.DataSourceImpl;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;

@@ -62,6 +62,11 @@ public class ListPresenterTest {
     }
 
     @Test
+    public void createListPresenter() {
+        verify(mView).setPresenter(listPresenter);
+    }
+
+    @Test
     public void showListOfNotes() {
         //  Listeners are fired
         listPresenter.start();

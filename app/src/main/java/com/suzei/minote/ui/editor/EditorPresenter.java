@@ -9,7 +9,7 @@ import com.suzei.minote.data.entity.Notes;
 
 public class EditorPresenter implements EditorContract.Presenter {
 
-    private DataSourceImpl dataSourceImpl;
+    private DataSource dataSourceImpl;
 
     private EditorContract.View mView;
 
