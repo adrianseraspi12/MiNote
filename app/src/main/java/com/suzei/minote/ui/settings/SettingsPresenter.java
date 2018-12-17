@@ -26,6 +26,7 @@ public class SettingsPresenter implements SettingsContract.Presenter {
                     String hexColor = String.format("#%06X", (0xFFFFFF & color));
                     saveSharedPrefs("default_note_color", hexColor);
                 });
+
     }
 
     @Override

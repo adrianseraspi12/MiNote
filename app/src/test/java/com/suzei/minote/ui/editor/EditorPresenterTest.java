@@ -1,6 +1,7 @@
 package com.suzei.minote.ui.editor;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
 
 import com.suzei.minote.data.DataSource;
 import com.suzei.minote.data.DataSourceImpl;
@@ -17,6 +18,7 @@ import org.mockito.MockitoAnnotations;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class EditorPresenterTest {
 
@@ -74,8 +76,18 @@ public class EditorPresenterTest {
     @Test
     public void showNewNote() {
         editorPresenterNewNote.start();
-        verify(mView).textColor(any(Integer.class));
-        verify(mView).noteColor(any(Integer.class));
+
+        //  Create constant for testing
+        String noteColor = "#ef5350";
+        String textColor = "#000000";
+
+        when(sharedPrefs.getString(eq("default_note_color"), eq("#ef5350")))
+                .thenReturn(noteColor);
+        when(sharedPrefs.getString(eq("default_text_color"), eq("#000000")))
+                .thenReturn(textColor);
+
+        verify(mView).textColor(Color.parseColor(noteColor));
+        verify(mView).noteColor(Color.parseColor(textColor));
     }
 
     @Test
