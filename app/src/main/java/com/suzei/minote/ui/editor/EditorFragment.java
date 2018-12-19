@@ -125,18 +125,21 @@ public class EditorFragment extends Fragment implements EditorContract.View {
             @Override
             public void onEditPasswordClick() {
                 presenter.passwordDialog();
+                bottomSheetFragment.dismiss();
             }
 
             @Override
             public void onChangeNoteColorClick() {
                 int noteColor = ((ColorDrawable) rootView.getBackground()).getColor();
                 presenter.noteColorWheel(noteColor);
+                bottomSheetFragment.dismiss();
             }
 
             @Override
             public void onChangeTextColorClick() {
                 int textColor = textView.getCurrentTextColor();
                 presenter.textColorWheel(textColor);
+                bottomSheetFragment.dismiss();
             }
         });
 
