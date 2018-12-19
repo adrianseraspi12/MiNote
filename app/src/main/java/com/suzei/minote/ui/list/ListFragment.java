@@ -204,7 +204,7 @@ public class ListFragment extends Fragment implements ListContract.View {
             }
 
             private void showSnackbar() {
-                Snackbar.make(rootView, "Note Deleted", Snackbar.LENGTH_LONG)
+                Snackbar.make(rootView, "Note Deleted", Snackbar.LENGTH_SHORT)
                         .setAction("Undo", v -> insertNoteToList(tempNote, tempPosition))
                         .addCallback(new Snackbar.Callback() {
 
@@ -222,12 +222,14 @@ public class ListFragment extends Fragment implements ListContract.View {
                                     case BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_CONSECUTIVE:
                                         presenter.deleteNote(consecutiveNote);
                                         break;
+
                                     case BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_TIMEOUT:
                                         presenter.deleteNote(tempNote);
                                         consecutiveNote = null;
                                         tempNote = null;
                                         tempPosition = -1;
                                         break;
+
                                 }
 
                             }
