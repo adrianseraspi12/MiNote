@@ -47,7 +47,6 @@
                 style="@style/ImageButton"
                 android:layout_toStartOf="@id/item_notes_delete"
                 android:contentDescription="@string/password"
-                android:visibility="gone"
                 android:layout_marginEnd="@dimen/margin_medium"
                 android:layout_centerVertical="true"
                 app:srcCompat="@drawable/lock_close" />

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/list_root"
@@ -14,16 +15,15 @@
 
     <LinearLayout
         android:id="@+id/list_empty_placeholder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_centerInParent="true"
         android:gravity="center">
-
+    
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/empty"/>
+            app:srcCompat="@drawable/empty" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="wrap_content"
@@ -33,16 +33,16 @@
             android:textSize="@dimen/text_size_large" />
 
     </LinearLayout>
-
+    
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/list_add_note"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="@dimen/margin_medium"
         android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/margin_medium"
         app:fabSize="normal"
+        app:layout_anchor="@+id/list_empty_placeholder"
+        app:layout_anchorGravity="right|bottom"
         app:srcCompat="@drawable/add" />
 
-</RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,6 +1,5 @@
 package com.suzei.minote.ui.list;
 
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
