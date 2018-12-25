@@ -1,9 +1,10 @@
 package com.suzei.minote.utils.widgets;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class RecyclerViewEmptySupport extends RecyclerView {
     private View emptyView;

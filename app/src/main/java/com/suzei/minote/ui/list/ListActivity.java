@@ -2,18 +2,17 @@ package com.suzei.minote.ui.list;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.preference.PreferenceManager;
-
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.suzei.minote.Injection;
 import com.suzei.minote.R;
-import com.suzei.minote.data.DataSourceImpl;
 import com.suzei.minote.ui.settings.SettingsActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.preference.PreferenceManager;
 
 public class ListActivity extends AppCompatActivity  {
 

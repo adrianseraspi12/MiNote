@@ -1,7 +1,6 @@
 package com.suzei.minote.ui.list;
 
 import com.suzei.minote.data.DataSource;
-import com.suzei.minote.data.DataSourceImpl;
 import com.suzei.minote.data.entity.Notes;
 
 import java.util.List;
