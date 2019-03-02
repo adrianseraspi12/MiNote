@@ -156,8 +156,8 @@ class EditorFragment : Fragment(), EditorContract.View {
         editor_menu.setColorFilter(textColor)
     }
 
-    override fun showNoteSave() {
-        Toast.makeText(context, "Note saved", Toast.LENGTH_SHORT).show()
+    override fun showToastMessage(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun showColorWheel(title: String, initialColor: Int, colorWheel: ColorWheel) {

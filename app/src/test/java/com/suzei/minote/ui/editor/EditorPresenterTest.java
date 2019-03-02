@@ -100,7 +100,7 @@ public class EditorPresenterTest {
                 note.getPassword());
 
         verify(mDataSourceImpl).saveNote(any(Notes.class));
-        verify(mView).showNoteSave();
+        verify(mView).showToastMessage("Note updated");
     }
 
     @Test
@@ -113,7 +113,7 @@ public class EditorPresenterTest {
                 note.getPassword());
 
         verify(mDataSourceImpl).saveNote(any(Notes.class));
-        verify(mView).showNoteSave();
+        verify(mView).showToastMessage("Note created");
     }
 
     @Test

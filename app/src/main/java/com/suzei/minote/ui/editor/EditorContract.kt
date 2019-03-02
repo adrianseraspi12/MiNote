@@ -15,7 +15,7 @@ interface EditorContract {
 
         fun textColor(textColor: Int)
 
-        fun showNoteSave()
+        fun showToastMessage(message: String)
 
         fun showColorWheel(title: String, initialColor: Int, colorWheel: ColorWheel)
 

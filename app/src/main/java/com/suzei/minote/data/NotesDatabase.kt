@@ -10,7 +10,7 @@ import com.suzei.minote.data.dao.NotesDao
 import com.suzei.minote.data.entity.Notes
 
 //  If the database updated, Increment version by 1
-@Database(entities = [Notes::class], version = 3)
+@Database(entities = [Notes::class], version = 4)
 abstract class NotesDatabase : RoomDatabase() {
 
     abstract fun notesDao(): NotesDao
@@ -32,7 +32,7 @@ abstract class NotesDatabase : RoomDatabase() {
             }
         }
 
-        internal val MIGRATION_2_3: Migration = object : Migration(2, 3) {
+        private val MIGRATION_2_3: Migration = object : Migration(2, 3) {
 
             override fun migrate(database: SupportSQLiteDatabase) {
                 // Since we didn't alter the table, there's nothing else to do here.

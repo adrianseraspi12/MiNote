@@ -7,6 +7,7 @@ import com.suzei.minote.data.DataSource
 import com.suzei.minote.data.DataSourceImpl
 import com.suzei.minote.data.entity.Notes
 import com.suzei.minote.utils.ColorWheel
+import com.suzei.minote.utils.LogMe
 
 class EditorPresenter : EditorContract.Presenter {
 
@@ -16,7 +17,7 @@ class EditorPresenter : EditorContract.Presenter {
 
     private lateinit var prefs: SharedPreferences
 
-    private var itemId: Int = 0
+    private var itemId: Int = -1
 
     internal constructor(itemId: Int, dataSourceImpl: DataSourceImpl, mView: EditorContract.View) {
         this.dataSourceImpl = dataSourceImpl
@@ -32,7 +33,6 @@ class EditorPresenter : EditorContract.Presenter {
         this.dataSourceImpl = dataSourceImpl
         this.mView = mView
         this.prefs = prefs
-        this.itemId = -1
 
         mView.setPresenter(this)
     }
@@ -50,16 +50,30 @@ class EditorPresenter : EditorContract.Presenter {
                           noteColor: String,
                           textColor: String,
                           password: String?) {
-        val note: Notes = if (itemId != -1) {
+        LogMe.info("Item Id = $itemId")
 
-            Notes(itemId, title, password, message, textColor, noteColor)
+        if (itemId == -1) {
+            val note = Notes(
+                    title,
+                    password,
+                    message,
+                    textColor,
+                    noteColor)
 
+            createNote(note)
         }
         else {
-            Notes(title, password, message, textColor, noteColor)
+            val note = Notes(
+                    itemId,
+                    title,
+                    password,
+                    message,
+                    textColor,
+                    noteColor)
+
+            updateNote(note)
         }
 
-        saveNote(note)
     }
 
     private fun showNewNote() {
@@ -100,9 +114,14 @@ class EditorPresenter : EditorContract.Presenter {
                 })
     }
 
-    private fun saveNote(note: Notes) {
+    private fun createNote(note: Notes) {
         dataSourceImpl.saveNote(note)
-        mView.showNoteSave()
+        mView.showToastMessage("Note created")
+    }
+
+    private fun updateNote(note: Notes) {
+        dataSourceImpl.updateNote(note)
+        mView.showToastMessage("Note updated")
     }
 
     private fun showNote() {

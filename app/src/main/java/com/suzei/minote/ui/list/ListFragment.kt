@@ -137,7 +137,11 @@ class ListFragment : Fragment(), ListContract.View {
                 }
                 else {
                     itemView.item_notes_password.visibility = View.GONE
-                    itemView.setOnClickListener { presenter.showNoteEditor(note.id) }
+                    itemView.setOnClickListener {
+                        note.id?.let {
+                            it1 -> presenter.showNoteEditor(it1)
+                        }
+                    }
                 }
             }
 
@@ -153,7 +157,9 @@ class ListFragment : Fragment(), ListContract.View {
                                     "Wrong Password, Please Try again",
                                     Toast.LENGTH_SHORT).show()
                         } else {
-                            presenter.showNoteEditor(note.id)
+                            note.id?.let {
+                                presenter.showNoteEditor(it)
+                            }
                         }
                     }
 

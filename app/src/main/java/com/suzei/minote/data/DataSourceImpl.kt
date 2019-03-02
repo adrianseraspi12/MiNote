@@ -16,8 +16,18 @@ class DataSourceImpl private constructor(
 
     }
 
+    override fun updateNote(note: Notes) {
+        val runnable = { notesDao.updateNote(note) }
+        appExecutor.diskIO.execute(runnable)
+    }
+
     override fun saveNote(note: Notes) {
         val runnable = { notesDao.saveNote(note) }
+        appExecutor.diskIO.execute(runnable)
+    }
+
+    override fun deleteNote(note: Notes) {
+        val runnable = { notesDao.deleteNote(note) }
         appExecutor.diskIO.execute(runnable)
     }
 
@@ -50,11 +60,6 @@ class DataSourceImpl private constructor(
 
         }
 
-        appExecutor.diskIO.execute(runnable)
-    }
-
-    override fun deleteNote(note: Notes) {
-        val runnable = { notesDao.deleteNote(note) }
         appExecutor.diskIO.execute(runnable)
     }
 

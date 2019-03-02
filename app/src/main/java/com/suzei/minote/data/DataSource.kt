@@ -22,6 +22,8 @@ interface DataSource {
 
     fun saveNote(note: Notes)
 
+    fun updateNote(note: Notes)
+
     fun getNote(itemId: Int, listener: NoteListener)
 
     fun getListOfNotes(listener: ListNoteListener)
