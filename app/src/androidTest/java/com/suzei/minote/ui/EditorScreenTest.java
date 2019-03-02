@@ -71,7 +71,7 @@ public class EditorScreenTest {
     @Before
     public void setUpEditor() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        dataSourceImpl = Injection.provideDataSourceImpl(context);
+        dataSourceImpl = Injection.INSTANCE.provideDataSourceImpl(context);
     }
 
     public static Matcher<View> withTextColor(String textColor) {
@@ -113,7 +113,7 @@ public class EditorScreenTest {
         dataSourceImpl.saveNote(NOTE);
 
         Intent intent = new Intent();
-        intent.putExtra(EditorActivity.EXTRA_NOTE_ID, NOTE.getId());
+        intent.putExtra(EditorActivity.Companion.getEXTRA_NOTE_ID(), NOTE.getId());
         editorActivityTestRule.launchActivity(intent);
     }
 

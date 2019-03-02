@@ -1,4 +1,7 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 
 
@@ -9,8 +12,8 @@ android {
         applicationId "com.suzei.minote"
         minSdkVersion 18
         targetSdkVersion 28
-        versionCode 6
-        versionName "1.0.5"
+        versionCode 7
+        versionName "1.0.6"
 //        testInstrumentationRunner "android.support.dialog_choose_color.runner.AndroidJUnitRunner"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -44,12 +47,10 @@ android {
 }
 
 dependencies {
-    def butterknife_version = "9.0.0-rc1"
-    def room_version = "2.1.0-alpha02"
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'com.google.android.material:material:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.preference:preference:1.0.0'
@@ -61,7 +62,6 @@ dependencies {
     //  Instrumentation Test Espresso
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     androidTestImplementation "androidx.test.espresso:espresso-contrib:3.1.1"
     androidTestImplementation "androidx.test.espresso:espresso-intents:3.1.1"
     androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:3.1.1"
@@ -69,20 +69,20 @@ dependencies {
 
     //  Room
     implementation "androidx.room:room-runtime:$room_version"
-    annotationProcessor "androidx.room:room-compiler:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
 
     //  Firebase
-    implementation 'com.google.firebase:firebase-core:16.0.1'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
-
-    //  Butterknife
-    annotationProcessor "com.jakewharton:butterknife-compiler:$butterknife_version"
-    implementation "com.jakewharton:butterknife:$butterknife_version"
+    implementation 'com.google.firebase:firebase-core:16.0.7'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
 
     //  ColorPicker
     implementation 'com.github.QuadFlask:colorpicker:0.0.13'
     
     //  Encrypt/Decrypt String
     implementation 'com.github.simbiose:Encryption:2.0.1'
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
+
 apply plugin: 'com.google.gms.google-services'
+
