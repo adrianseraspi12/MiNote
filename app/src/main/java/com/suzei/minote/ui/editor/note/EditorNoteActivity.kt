@@ -1,4 +1,4 @@
-package com.suzei.minote.ui.editor
+package com.suzei.minote.ui.editor.note
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -6,13 +6,13 @@ import androidx.preference.PreferenceManager
 import com.suzei.minote.Injection
 import com.suzei.minote.R
 
-class EditorActivity : AppCompatActivity() {
+class EditorNoteActivity : AppCompatActivity() {
 
     companion object {
 
         val EXTRA_NOTE_ID = "EXTRA_NOTE_ID"
 
-        val FRAGMENT_EDITOR_TAG = "EDITOR_FRAGMENT"
+        val FRAGMENT_EDITOR_NOTE_TAG = "EDITOR_NOTE_FRAGMENT"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,23 +23,23 @@ class EditorActivity : AppCompatActivity() {
 
         val fm = supportFragmentManager
 
-        var editorFragment = fm.findFragmentByTag(FRAGMENT_EDITOR_TAG) as EditorFragment?
+        var editorFragment = fm.findFragmentByTag(FRAGMENT_EDITOR_NOTE_TAG) as EditorNoteFragment?
 
         if (editorFragment == null) {
 
-            editorFragment = EditorFragment.newInstance()
+            editorFragment = EditorNoteFragment.newInstance()
 
             fm.beginTransaction()
-                    .replace(R.id.editor_container, editorFragment!!, FRAGMENT_EDITOR_TAG)
+                    .replace(R.id.editor_container, editorFragment, FRAGMENT_EDITOR_NOTE_TAG)
                     .commit()
 
             if (itemId != -1) {
-                EditorPresenter(itemId,
+                EditorNotePresenter(itemId,
                         Injection.provideDataSourceImpl(applicationContext),
                         editorFragment)
             } else {
                 val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-                EditorPresenter(prefs,
+                EditorNotePresenter(prefs,
                         Injection.provideDataSourceImpl(applicationContext),
                         editorFragment)
             }

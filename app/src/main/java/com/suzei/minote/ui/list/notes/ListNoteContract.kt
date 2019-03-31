@@ -1,9 +1,9 @@
-package com.suzei.minote.ui.list
+package com.suzei.minote.ui.list.notes
 
 
 import com.suzei.minote.data.entity.Notes
 
-interface ListContract {
+interface ListNoteContract {
 
     interface View {
 

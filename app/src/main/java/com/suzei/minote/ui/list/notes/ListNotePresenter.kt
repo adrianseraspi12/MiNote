@@ -1,13 +1,13 @@
-package com.suzei.minote.ui.list
+package com.suzei.minote.ui.list.notes
 
 import com.suzei.minote.data.DataSource
 import com.suzei.minote.data.entity.Notes
 
-class ListPresenter internal constructor(
+class ListNotePresenter internal constructor(
         private val dataSourceImpl:
         DataSource,
-        private val mView: ListContract.View):
-        ListContract.Presenter {
+        private val mView: ListNoteContract.View):
+        ListNoteContract.Presenter {
 
     init {
         mView.setPresenter(this)

@@ -7,13 +7,17 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.suzei.minote.data.dao.NotesDao
+import com.suzei.minote.data.dao.TodoDao
 import com.suzei.minote.data.entity.Notes
+import com.suzei.minote.data.entity.Todo
+import com.suzei.minote.data.entity.TodoItem
 
 //  If the database updated, Increment version by 1
-@Database(entities = [Notes::class], version = 4)
+@Database(entities = [Notes::class, Todo::class, TodoItem::class], version = 5)
 abstract class NotesDatabase : RoomDatabase() {
 
     abstract fun notesDao(): NotesDao
+    abstract fun todoDao(): TodoDao
 
     companion object {
 
@@ -27,7 +31,7 @@ abstract class NotesDatabase : RoomDatabase() {
                         context.applicationContext,
                         NotesDatabase::class.java,
                         DATABASE_NAME)
-                        .addMigrations(MIGRATION_2_3)
+                        .addMigrations(MIGRATION_2_3, MIGRATION_4_5)
                         .build()
             }
         }
@@ -36,6 +40,14 @@ abstract class NotesDatabase : RoomDatabase() {
 
             override fun migrate(database: SupportSQLiteDatabase) {
                 // Since we didn't alter the table, there's nothing else to do here.
+            }
+
+        }
+
+        private val MIGRATION_4_5: Migration = object: Migration(4, 5) {
+
+            override fun migrate(database: SupportSQLiteDatabase) {
+
             }
 
         }

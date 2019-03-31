@@ -1,6 +1,7 @@
 package com.suzei.minote.data
 
 import com.suzei.minote.data.entity.Notes
+import com.suzei.minote.data.entity.Todo
 
 interface DataSource {
 
@@ -15,6 +16,14 @@ interface DataSource {
     interface ListNoteListener {
 
         fun onDataAvailable(listOfNote: MutableList<Notes>)
+
+        fun onDataUnavailable()
+
+    }
+
+    interface TodoListener {
+
+        fun onDataAvailable(todo: Todo)
 
         fun onDataUnavailable()
 

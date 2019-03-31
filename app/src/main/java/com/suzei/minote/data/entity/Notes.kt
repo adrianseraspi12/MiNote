@@ -41,9 +41,4 @@ class Notes {
         this.color = color
     }
 
-//    private fun generateId(): Int {
-//        val r = Random(System.currentTimeMillis())
-//        return 10000 + r.nextInt(20000)
-//    }
-
 }

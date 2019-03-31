@@ -4,16 +4,25 @@ import android.content.Context
 
 import com.suzei.minote.data.DataSourceImpl
 import com.suzei.minote.data.NotesDatabase
+import com.suzei.minote.data.repository.TodoRepository
 import com.suzei.minote.utils.executors.AppExecutor
 
 object Injection {
 
     fun provideDataSourceImpl(context: Context): DataSourceImpl {
-        val notesDatabase = NotesDatabase.getInstance(context)
-
         return DataSourceImpl.getInstance(
                 AppExecutor.instance,
-                notesDatabase.notesDao())
+                getDatabase(context).notesDao())
+    }
+
+    fun provideTodoRepository(context: Context): TodoRepository {
+        return TodoRepository.getInstance(
+                AppExecutor.instance,
+                getDatabase(context).todoDao())
+    }
+
+    private fun getDatabase(context: Context): NotesDatabase {
+        return NotesDatabase.getInstance(context)
     }
 
 }

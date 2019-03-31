@@ -6,6 +6,8 @@ import android.graphics.Color;
 import com.suzei.minote.data.DataSource;
 import com.suzei.minote.data.DataSourceImpl;
 import com.suzei.minote.data.entity.Notes;
+import com.suzei.minote.ui.editor.note.EditorNoteContract;
+import com.suzei.minote.ui.editor.note.EditorNotePresenter;
 import com.suzei.minote.utils.ColorWheel;
 
 import org.junit.Before;
@@ -27,11 +29,11 @@ public class EditorPresenterTest {
             "Password 1", "Message 1",
             "#FFFFFF", "#0d46a0");
 
-    private EditorPresenter editorPresenterWithId;
-    private EditorPresenter editorPresenterNewNote;
+    private EditorNotePresenter editorPresenterWithId;
+    private EditorNotePresenter editorPresenterNewNote;
 
     @Mock
-    private EditorContract.View mView;
+    private EditorNoteContract.View mView;
 
     @Mock
     private DataSourceImpl mDataSourceImpl;
@@ -48,8 +50,8 @@ public class EditorPresenterTest {
     @Before
     public void setUpEditorPresenter() {
         MockitoAnnotations.initMocks(this);
-        editorPresenterWithId = new EditorPresenter(note.getId(), mDataSourceImpl, mView);
-        editorPresenterNewNote = new EditorPresenter(sharedPrefs, mDataSourceImpl, mView);
+        editorPresenterWithId = new EditorNotePresenter(note.getId(), mDataSourceImpl, mView);
+        editorPresenterNewNote = new EditorNotePresenter(sharedPrefs, mDataSourceImpl, mView);
     }
 
     @Test

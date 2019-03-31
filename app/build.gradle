@@ -72,17 +72,19 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
 
     //  Firebase
-    implementation 'com.google.firebase:firebase-core:16.0.7'
+    implementation 'com.google.firebase:firebase-core:16.0.8'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
 
     //  ColorPicker
     implementation 'com.github.QuadFlask:colorpicker:0.0.13'
-    
+
     //  Encrypt/Decrypt String
     implementation 'com.github.simbiose:Encryption:2.0.1'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    //  Fab button
+    implementation 'uk.co.markormesher:android-fab:2.5.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
-

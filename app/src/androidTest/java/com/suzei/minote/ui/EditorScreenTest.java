@@ -11,7 +11,7 @@ import com.suzei.minote.Injection;
 import com.suzei.minote.R;
 import com.suzei.minote.data.DataSourceImpl;
 import com.suzei.minote.data.entity.Notes;
-import com.suzei.minote.ui.editor.EditorActivity;
+import com.suzei.minote.ui.editor.note.EditorNoteActivity;
 import com.suzei.minote.utils.ScreenOrientationUtils;
 
 import org.hamcrest.Description;
@@ -57,14 +57,14 @@ public class EditorScreenTest {
     private DataSourceImpl dataSourceImpl;
 
     /**
-     *  Lazily start the activity so we can control the Intent to start this activity(EditorActivity)
-     *  Since we have two ways to use the EditorActivity
+     *  Lazily start the activity so we can control the Intent to start this activity(EditorNoteActivity)
+     *  Since we have two ways to use the EditorNoteActivity
      *  1st is to create a new note
      *  2nd is to edit a note therefore we need to pass the note id
      */
     @Rule
-    public ActivityTestRule<EditorActivity> editorActivityTestRule = new ActivityTestRule<>(
-            EditorActivity.class,
+    public ActivityTestRule<EditorNoteActivity> editorActivityTestRule = new ActivityTestRule<>(
+            EditorNoteActivity.class,
             true,
             false);
 
@@ -113,7 +113,7 @@ public class EditorScreenTest {
         dataSourceImpl.saveNote(NOTE);
 
         Intent intent = new Intent();
-        intent.putExtra(EditorActivity.Companion.getEXTRA_NOTE_ID(), NOTE.getId());
+        intent.putExtra(EditorNoteActivity.Companion.getEXTRA_NOTE_ID(), NOTE.getId());
         editorActivityTestRule.launchActivity(intent);
     }
 

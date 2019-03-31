@@ -1,4 +1,4 @@
-package com.suzei.minote.ui.list
+package com.suzei.minote.ui.list.notes
 
 import android.content.Intent
 import android.graphics.Color
@@ -14,16 +14,16 @@ import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.suzei.minote.R
 import com.suzei.minote.data.entity.Notes
-import com.suzei.minote.ui.editor.EditorActivity
+import com.suzei.minote.ui.editor.note.EditorNoteActivity
 import com.suzei.minote.utils.Turing
 import com.suzei.minote.utils.dialogs.PasswordDialog
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.item_row_notes_default.view.*
 import java.util.*
 
-class ListFragment : Fragment(), ListContract.View {
+class ListNoteFragment : Fragment(), ListNoteContract.View {
 
-    private lateinit var presenter: ListContract.Presenter
+    private lateinit var presenter: ListNoteContract.Presenter
 
     private lateinit var listOfNotes: MutableList<Notes>
 
@@ -35,8 +35,8 @@ class ListFragment : Fragment(), ListContract.View {
 
     companion object {
 
-        internal fun newInstance(): ListFragment {
-            return ListFragment()
+        internal fun newInstance(): ListNoteFragment {
+            return ListNoteFragment()
         }
     }
 
@@ -56,11 +56,6 @@ class ListFragment : Fragment(), ListContract.View {
         super.onViewCreated(view, savedInstanceState)
         list_notes.layoutManager = LinearLayoutManager(context)
         list_notes.adapter = listAdapter
-
-        list_add_note.setOnClickListener {
-            startActivity(Intent(context,
-                    EditorActivity::class.java))
-        }
     }
 
     override fun onStart() {
@@ -68,7 +63,7 @@ class ListFragment : Fragment(), ListContract.View {
         presenter.start()
     }
 
-    override fun setPresenter(presenter: ListContract.Presenter) {
+    override fun setPresenter(presenter: ListNoteContract.Presenter) {
         this.presenter = presenter
     }
 
@@ -88,8 +83,8 @@ class ListFragment : Fragment(), ListContract.View {
     }
 
     override fun redirectToEditorActivity(itemId: Int) {
-        val intent = Intent(context, EditorActivity::class.java)
-        intent.putExtra(EditorActivity.EXTRA_NOTE_ID, itemId)
+        val intent = Intent(context, EditorNoteActivity::class.java)
+        intent.putExtra(EditorNoteActivity.EXTRA_NOTE_ID, itemId)
         startActivity(intent)
     }
 

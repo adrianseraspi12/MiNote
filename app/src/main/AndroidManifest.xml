@@ -13,16 +13,18 @@
         android:theme="@style/AppTheme"
         tools:targetApi="m">
 
+        <activity android:name=".ui.editor.todo.EditorTodoActivity"
+            android:theme="@style/EditorTheme"
+            android:windowSoftInputMode="stateVisible" />
+
         <meta-data
             android:name="firebase_crashlytics_collection_enabled"
             android:value="false" />
-        
-        <activity
-            android:name=".ui.editor.EditorActivity"
-            android:theme="@style/EditorTheme"
-            android:windowSoftInputMode="stateVisible"
-            />
 
+        <activity
+            android:name=".ui.editor.note.EditorNoteActivity"
+            android:theme="@style/EditorTheme"
+            android:windowSoftInputMode="stateVisible" />
         <activity android:name=".ui.list.ListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,13 +32,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".ui.settings.SettingsActivity"
+        <activity
+            android:name=".ui.settings.SettingsActivity"
             android:parentActivityName=".ui.list.ListActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.list.ListActivity"/>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.list.ListActivity" />
         </activity>
-
     </application>
 
 </manifest>

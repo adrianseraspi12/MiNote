@@ -1,4 +1,4 @@
-package com.suzei.minote.ui.editor
+package com.suzei.minote.ui.editor.note
 
 
 import android.graphics.Color
@@ -20,9 +20,9 @@ import com.suzei.minote.utils.dialogs.BottomSheetFragment
 import com.suzei.minote.utils.dialogs.PasswordDialog
 import kotlinx.android.synthetic.main.fragment_editor.*
 
-class EditorFragment : Fragment(), EditorContract.View {
+class EditorNoteFragment : Fragment(), EditorNoteContract.View {
 
-    private lateinit var presenter: EditorContract.Presenter
+    private lateinit var presenter: EditorNoteContract.Presenter
 
     private var mPassword: String? = null
     private var noteColor = -1
@@ -35,8 +35,8 @@ class EditorFragment : Fragment(), EditorContract.View {
         private val EXTRA_NOTE_COLOR = "EXTRA_NOTE_COLOR"
         private val EXTRA_TEXT_COLOR = "EXTRA_TEXT_COLOR"
 
-        internal fun newInstance(): EditorFragment {
-            return EditorFragment()
+        internal fun newInstance(): EditorNoteFragment {
+            return EditorNoteFragment()
         }
     }
 
@@ -133,7 +133,7 @@ class EditorFragment : Fragment(), EditorContract.View {
         outState.putInt(EXTRA_TEXT_COLOR, textColor)
     }
 
-    override fun setPresenter(presenter: EditorContract.Presenter) {
+    override fun setPresenter(presenter: EditorNoteContract.Presenter) {
         this.presenter = presenter
     }
 

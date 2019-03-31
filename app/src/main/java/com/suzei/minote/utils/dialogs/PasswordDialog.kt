@@ -69,7 +69,7 @@ open class PasswordDialog : DialogFragment(), View.OnClickListener {
 
     override fun onDestroyView() {
         if (dialog != null && retainInstance) {
-            dialog.setOnDismissListener(null)
+            dialog!!.setOnDismissListener(null)
         }
         super.onDestroyView()
     }
