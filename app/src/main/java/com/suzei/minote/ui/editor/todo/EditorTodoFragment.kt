@@ -2,23 +2,27 @@ package com.suzei.minote.ui.editor.todo
 
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.Toast
-import kotlinx.android.synthetic.main.fragment_editor_todo.*
-
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.suzei.minote.R
+import com.suzei.minote.data.entity.TodoItem
+import com.suzei.minote.utils.LogMe
 import com.suzei.minote.utils.dialogs.InputDialog
 import com.suzei.minote.utils.dialogs.InputDialogListener
+import kotlinx.android.synthetic.main.fragment_editor_todo.*
+import kotlinx.android.synthetic.main.item_row_edit_todo.view.*
 
 /**
  * A simple [Fragment] subclass.
  *
  */
-class EditorTodoFragment : Fragment(), View.OnClickListener {
+
+//  Pass the ID
+class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.View {
 
     companion object {
 
@@ -30,6 +34,20 @@ class EditorTodoFragment : Fragment(), View.OnClickListener {
 
     }
 
+    private lateinit var presenter: EditorTodoContract.Presenter
+
+    private lateinit var todoItemList: MutableList<TodoItem>
+
+    private lateinit var todoItemListAdapter: TodoItemAdapter
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
+        todoItemList = ArrayList()
+        todoItemListAdapter = TodoItemAdapter()
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -39,27 +57,91 @@ class EditorTodoFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         editor_todo_add_item.setOnClickListener(this)
+        editor_todo_save.setOnClickListener(this)
+        editor_todo_list.layoutManager = LinearLayoutManager(context)
+        editor_todo_list.adapter = todoItemListAdapter
+    }
+
+    override fun onStart() {
+        super.onStart()
+        presenter.start()
+    }
+
+    override fun setPresenter(presenter: EditorTodoContract.Presenter) {
+        this.presenter = presenter
+    }
+
+    override fun showListOfTodo(todoItemList: MutableList<TodoItem>) {
+        this.todoItemList = todoItemList
+        todoItemListAdapter.notifyDataSetChanged()
+    }
+
+    override fun showAddTodoItem(todoItem: TodoItem) {
+        print("TODO ITEM = ${todoItem.task})")
+        todoItemList.add(todoItem)
+        todoItemListAdapter.notifyDataSetChanged()
+    }
+
+    override fun showAddItemDialog() {
+        val inputDialog = InputDialog.instance
+
+        inputDialog.setOnAddClickListener(object: InputDialogListener {
+
+            override fun onAddClick(message: String?) {
+
+                if (message != null) {
+                    print("TODO = $message")
+                    presenter.addTask(message)
+                }
+
+            }
+
+        })
+
+        inputDialog.show(fragmentManager!!, INPUT_DIALOG_TAG)
     }
 
     override fun onClick(v: View?) {
-        val button = v as Button
-        val id = button.id
 
-        when (id) {
+        when (v?.id) {
 
             R.id.editor_todo_add_item -> {
-                val inputDialog = InputDialog.instance
+                showAddItemDialog()
+            }
 
-                inputDialog.setOnAddClickListener(object: InputDialogListener {
+            R.id.editor_todo_save -> {
+                LogMe.info("Fragment =  Save")
+                val title = editor_todo_title.text.toString()
+                presenter.saveTodo(title, todoItemList)
+            }
 
-                    override fun onAddClick(message: String?) {
-                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                        //TODO:  Add Item to RecyclerView convert it to TodoItem
-                    }
+        }
 
-                })
+    }
 
-                inputDialog.show(fragmentManager!!, INPUT_DIALOG_TAG)
+    inner class TodoItemAdapter: RecyclerView.Adapter<TodoItemAdapter.TodoItemViewHolder>() {
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoItemViewHolder {
+            val view = layoutInflater.inflate(R.layout.item_row_edit_todo, parent, false)
+            return TodoItemViewHolder(view)
+        }
+
+        override fun getItemCount(): Int {
+            return todoItemList.size
+        }
+
+        override fun onBindViewHolder(holder: TodoItemViewHolder, position: Int) {
+            val todoItem = todoItemList[position]
+            holder.bind(todoItem)
+        }
+
+
+        inner class TodoItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+            fun bind(todoItem: TodoItem) {
+                val position = adapterPosition + 1
+                itemView.item_edit_todo_text.text = todoItem.task
+                itemView.item_edit_todo_number.text = "$position.)"
             }
 
         }

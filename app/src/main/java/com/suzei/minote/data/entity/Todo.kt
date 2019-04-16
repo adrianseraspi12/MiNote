@@ -6,7 +6,7 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "todo")
-class Todo {
+class Todo() {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "_id")
@@ -21,5 +21,21 @@ class Todo {
     var textColor: String? = null
 
     var color: String? = null
+
+    constructor(title: String, todoItem: List<TodoItem>, textColor: String, color: String) : this() {
+        this.title = title
+        this.todoItems = todoItem
+        this.textColor = textColor
+        this.color = color
+    }
+
+    @Ignore
+    constructor(id: Int, title: String, todoItem: List<TodoItem>, textColor: String,color: String) : this() {
+        this.id = id
+        this.title = title
+        this.todoItems = todoItem
+        this.textColor = textColor
+        this.color = color
+    }
 
 }

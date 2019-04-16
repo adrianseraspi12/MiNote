@@ -2,6 +2,7 @@ package com.suzei.minote.ui.editor.todo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.suzei.minote.Injection
 import com.suzei.minote.R
 
 class EditorTodoActivity : AppCompatActivity() {
@@ -26,6 +27,10 @@ class EditorTodoActivity : AppCompatActivity() {
             fm.beginTransaction()
                     .replace(R.id.editor_todo_container, editorFragment, FRAGMENT_EDITOR_NOTE_TAG)
                     .commit()
+
+            EditorTodoPresenter(
+                    Injection.provideTodoRepository(applicationContext),
+                    editorFragment)
 
         }
     }

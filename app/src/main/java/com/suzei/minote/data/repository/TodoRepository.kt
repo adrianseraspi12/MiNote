@@ -2,6 +2,7 @@ package com.suzei.minote.data.repository
 
 import com.suzei.minote.data.dao.TodoDao
 import com.suzei.minote.data.entity.Todo
+import com.suzei.minote.utils.LogMe
 import com.suzei.minote.utils.executors.AppExecutor
 
 class TodoRepository private constructor(
@@ -17,6 +18,7 @@ class TodoRepository private constructor(
     }
 
     override fun save(data: Todo) {
+        LogMe.info("TodoRepository =  Save")
         val runnable = { todoDao.insertTodoWithTasks(data) }
         appExecutor.diskIO.execute(runnable)
     }

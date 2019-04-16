@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import com.suzei.minote.data.entity.Todo
 import com.suzei.minote.data.entity.TodoItem
+import com.suzei.minote.utils.LogMe
 
 @Dao
 abstract class TodoDao {
@@ -45,6 +46,7 @@ abstract class TodoDao {
         val todoItems = todo.todoItems
 
         if (todoItems != null) {
+            LogMe.info("TodoDao =  Save")
 
             for (item in todoItems) {
                 item.todoId = todo.id
