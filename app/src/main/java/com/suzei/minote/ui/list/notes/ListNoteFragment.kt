@@ -15,15 +15,16 @@ import com.google.android.material.snackbar.Snackbar
 import com.suzei.minote.R
 import com.suzei.minote.data.entity.Notes
 import com.suzei.minote.ui.editor.note.EditorNoteActivity
+import com.suzei.minote.ui.list.ListContract
 import com.suzei.minote.utils.Turing
 import com.suzei.minote.utils.dialogs.PasswordDialog
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.item_row_notes_default.view.*
 import java.util.*
 
-class ListNoteFragment : Fragment(), ListNoteContract.View {
+class ListNoteFragment : Fragment(), ListContract.View<Notes> {
 
-    private lateinit var presenter: ListNoteContract.Presenter
+    private lateinit var presenter: ListContract.Presenter<Notes>
 
     private lateinit var listOfNotes: MutableList<Notes>
 
@@ -63,7 +64,7 @@ class ListNoteFragment : Fragment(), ListNoteContract.View {
         presenter.start()
     }
 
-    override fun setPresenter(presenter: ListNoteContract.Presenter) {
+    override fun setPresenter(presenter: ListContract.Presenter<Notes>) {
         this.presenter = presenter
     }
 

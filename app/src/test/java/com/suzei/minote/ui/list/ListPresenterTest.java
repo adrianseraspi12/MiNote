@@ -3,7 +3,6 @@ package com.suzei.minote.ui.list;
 import com.suzei.minote.data.DataSource;
 import com.suzei.minote.data.DataSourceImpl;
 import com.suzei.minote.data.entity.Notes;
-import com.suzei.minote.ui.list.notes.ListNoteContract;
 import com.suzei.minote.ui.list.notes.ListNotePresenter;
 
 import org.junit.Before;
@@ -36,7 +35,7 @@ public class ListPresenterTest {
     private DataSourceImpl dataSourceImpl;
 
     @Mock
-    private ListNoteContract.View mView;
+    private ListContract.View mView;
 
     @Captor
     private ArgumentCaptor<DataSource.ListNoteListener> listNoteCaptor;

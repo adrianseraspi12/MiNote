@@ -20,6 +20,7 @@ import com.suzei.minote.ui.editor.todo.EditorTodoActivity
 import com.suzei.minote.ui.list.notes.ListNoteFragment
 import com.suzei.minote.ui.list.notes.ListNotePresenter
 import com.suzei.minote.ui.list.todo.ListTodoFragment
+import com.suzei.minote.ui.list.todo.ListTodoPresenter
 
 import kotlinx.android.synthetic.main.activity_list.*
 import uk.co.markormesher.android_fab.SpeedDialMenuAdapter
@@ -98,9 +99,13 @@ class ListActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         var listTodoFragment = fm.findFragmentByTag(LIST_TODO_FRAGMENT_TAG) as ListTodoFragment?
 
         if (listTodoFragment == null) {
-            //  instance of listtodo fragment
-            //  showFragment
-            //  initialize presenter
+            listTodoFragment = ListTodoFragment.newInstance()
+            showFragment(listTodoFragment, LIST_TODO_FRAGMENT_TAG)
+
+            ListTodoPresenter(
+                    Injection.provideTodoRepository(applicationContext),
+                    listTodoFragment)
+
         }
 
     }
