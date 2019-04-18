@@ -4,24 +4,29 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.suzei.minote.data.converter.DateTimeTypeConverter
 import com.suzei.minote.data.dao.NotesDao
 import com.suzei.minote.data.dao.TodoDao
+import com.suzei.minote.data.dao.TodoItemDao
 import com.suzei.minote.data.entity.Notes
 import com.suzei.minote.data.entity.Todo
 import com.suzei.minote.data.entity.TodoItem
 
 //  If the database updated, Increment version by 1
-@Database(entities = [Notes::class, Todo::class, TodoItem::class], version = 5)
+@Database(entities = [Notes::class, Todo::class, TodoItem::class], version = 6)
+@TypeConverters(DateTimeTypeConverter::class)
 abstract class NotesDatabase : RoomDatabase() {
 
     abstract fun notesDao(): NotesDao
     abstract fun todoDao(): TodoDao
+    abstract fun todoItemDao(): TodoItemDao
 
     companion object {
 
-        private val DATABASE_NAME = "notes_storage.db"
+        private const val DATABASE_NAME = "notes_storage.db"
 
         private val sLock = Any()
 
@@ -47,7 +52,7 @@ abstract class NotesDatabase : RoomDatabase() {
         private val MIGRATION_4_5: Migration = object: Migration(4, 5) {
 
             override fun migrate(database: SupportSQLiteDatabase) {
-
+                // Since we didn't alter the table, there's nothing else to do here.
             }
 
         }

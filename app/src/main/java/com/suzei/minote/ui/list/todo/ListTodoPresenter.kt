@@ -32,8 +32,8 @@ class ListTodoPresenter(
 
     }
 
-    override fun showNoteEditor(itemId: Int) {
-
+    override fun showEditor(itemId: String) {
+        mView.redirectToEditorActivity(itemId)
     }
 
 }

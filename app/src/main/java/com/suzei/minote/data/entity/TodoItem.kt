@@ -12,7 +12,7 @@ class TodoItem {
     @ColumnInfo(name = "_id")
     var id: Int? = null
 
-    var todoId: Int? = null
+    var todoId: String? = null
 
     var task: String? = null
 
@@ -24,7 +24,7 @@ class TodoItem {
     }
 
     @Ignore
-    constructor(id: Int, todoId: Int, task: String, completed: Boolean) {
+    constructor(id: Int, todoId: String, task: String, completed: Boolean) {
         this.id = id
         this.todoId = todoId
         this.task = task

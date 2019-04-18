@@ -88,7 +88,7 @@ public class ListPresenterTest {
 
     @Test
     public void showNoteEditor() {
-        listPresenter.showNoteEditor(note.getId());
+        listPresenter.showEditor(note.getId());
         verify(mView).redirectToEditorActivity(note.getId());
     }
 }

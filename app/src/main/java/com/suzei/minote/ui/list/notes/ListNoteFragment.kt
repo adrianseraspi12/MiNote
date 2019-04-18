@@ -43,7 +43,6 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        retainInstance = true
         listOfNotes = ArrayList()
         listAdapter = ListAdapter()
     }
@@ -83,7 +82,7 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
         listAdapter.notifyItemInserted(position)
     }
 
-    override fun redirectToEditorActivity(itemId: Int) {
+    override fun redirectToEditorActivity(itemId: String) {
         val intent = Intent(context, EditorNoteActivity::class.java)
         intent.putExtra(EditorNoteActivity.EXTRA_NOTE_ID, itemId)
         startActivity(intent)
@@ -135,7 +134,7 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
                     itemView.item_notes_password.visibility = View.GONE
                     itemView.setOnClickListener {
                         note.id?.let {
-                            it1 -> presenter.showNoteEditor(it1)
+                            it1 -> presenter.showEditor(it1)
                         }
                     }
                 }
@@ -154,7 +153,7 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
                                     Toast.LENGTH_SHORT).show()
                         } else {
                             note.id?.let {
-                                presenter.showNoteEditor(it)
+                                presenter.showEditor(it)
                             }
                         }
                     }
@@ -181,7 +180,7 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
                                     BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_CONSECUTIVE -> presenter.deleteNote(consecutiveNote!!)
 
                                     BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_TIMEOUT -> {
-                                        presenter!!.deleteNote(tempNote!!)
+                                        presenter.deleteNote(tempNote!!)
                                         consecutiveNote = null
                                         tempNote = null
                                         tempPosition = -1

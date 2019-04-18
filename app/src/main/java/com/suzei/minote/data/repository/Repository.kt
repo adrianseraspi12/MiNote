@@ -22,7 +22,7 @@ interface Repository<T> {
 
     fun update(data: T)
 
-    fun getData(itemId: Int, listener: Listener<T>)
+    fun getData(itemId: String, listener: Listener<T>)
 
     fun getListOfData(listener: ListListener<T>)
 

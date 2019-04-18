@@ -3,6 +3,7 @@ package com.suzei.minote.ui.list
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.Menu
 import android.view.MenuItem
 
@@ -21,6 +22,7 @@ import com.suzei.minote.ui.list.notes.ListNoteFragment
 import com.suzei.minote.ui.list.notes.ListNotePresenter
 import com.suzei.minote.ui.list.todo.ListTodoFragment
 import com.suzei.minote.ui.list.todo.ListTodoPresenter
+import com.suzei.minote.utils.LogMe
 
 import kotlinx.android.synthetic.main.activity_list.*
 import uk.co.markormesher.android_fab.SpeedDialMenuAdapter
@@ -37,6 +39,8 @@ class ListActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     private lateinit var fm: FragmentManager
+    private var listNoteFragment: ListNoteFragment? = null
+    private var listTodoFragment: ListTodoFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,12 +49,11 @@ class ListActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
 
+        LogMe.info("Instance = New Activity")
         fm = supportFragmentManager
-
-        list_fab.speedDialMenuAdapter = speedDialAdapter
-
         selectFragment(bottomNavigationView.menu.getItem(0))
         bottomNavigationView.setOnNavigationItemSelectedListener(this)
+        list_fab.speedDialMenuAdapter = speedDialAdapter
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -96,37 +99,43 @@ class ListActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     private fun showListOfTodo() {
-        var listTodoFragment = fm.findFragmentByTag(LIST_TODO_FRAGMENT_TAG) as ListTodoFragment?
+//        var listTodoFragment = fm.findFragmentByTag(LIST_TODO_FRAGMENT_TAG) as ListTodoFragment?
 
         if (listTodoFragment == null) {
             listTodoFragment = ListTodoFragment.newInstance()
-            showFragment(listTodoFragment, LIST_TODO_FRAGMENT_TAG)
+
+        }
+
+        listTodoFragment?.let {
+            showFragment(it, LIST_TODO_FRAGMENT_TAG)
 
             ListTodoPresenter(
                     Injection.provideTodoRepository(applicationContext),
-                    listTodoFragment)
-
+                    it)
         }
 
     }
 
     private fun showListOfNote() {
-        var listNoteFragment = fm.findFragmentByTag(LIST_NOTE_FRAGMENT_TAG) as ListNoteFragment?
+//        var listNoteFragment = fm.findFragmentByTag(LIST_NOTE_FRAGMENT_TAG) as ListNoteFragment?
 
         if (listNoteFragment == null) {
             listNoteFragment = ListNoteFragment.newInstance()
-            showFragment(listNoteFragment, LIST_NOTE_FRAGMENT_TAG)
+        }
+
+        listNoteFragment?.let {
+            showFragment(it, LIST_NOTE_FRAGMENT_TAG)
 
             ListNotePresenter(
                     Injection.provideDataSourceImpl(applicationContext),
-                    listNoteFragment)
+                    it)
         }
     }
 
     private fun showFragment(fragment: Fragment, fragmentTag: String) {
         fm.beginTransaction()
                 .replace(R.id.list_container,
-                         fragment, fragmentTag)
+                         fragment)
                 .commit()
     }
 

@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.suzei.minote.R
+import com.suzei.minote.data.entity.Todo
 import com.suzei.minote.data.entity.TodoItem
 import com.suzei.minote.utils.LogMe
 import com.suzei.minote.utils.dialogs.InputDialog
@@ -20,8 +21,6 @@ import kotlinx.android.synthetic.main.item_row_edit_todo.view.*
  * A simple [Fragment] subclass.
  *
  */
-
-//  Pass the ID
 class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.View {
 
     companion object {
@@ -71,9 +70,16 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
         this.presenter = presenter
     }
 
-    override fun showListOfTodo(todoItemList: MutableList<TodoItem>) {
-        this.todoItemList = todoItemList
+    override fun showTodoDetails(todo: Todo) {
+
+        for (singleTodo in todo.todoItems!!) {
+            LogMe.info("TODO ITEM = ${singleTodo.task}")
+        }
+
+        this.todoItemList = todo.todoItems?.toMutableList() ?: ArrayList()
         todoItemListAdapter.notifyDataSetChanged()
+
+        editor_todo_title.setText(todo.title)
     }
 
     override fun showAddTodoItem(todoItem: TodoItem) {

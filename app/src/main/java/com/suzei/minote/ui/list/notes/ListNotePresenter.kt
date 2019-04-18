@@ -22,7 +22,7 @@ class ListNotePresenter internal constructor(
         dataSourceImpl.deleteNote(note)
     }
 
-    override fun showNoteEditor(itemId: Int) {
+    override fun showEditor(itemId: String) {
         mView.redirectToEditorActivity(itemId)
     }
 

@@ -13,7 +13,7 @@ interface ListContract {
 
         fun insertNoteToList(data: T, position: Int)
 
-        fun redirectToEditorActivity(itemId: Int)
+        fun redirectToEditorActivity(itemId: String)
 
     }
 
@@ -23,7 +23,7 @@ interface ListContract {
 
         fun deleteNote(data: T)
 
-        fun showNoteEditor(itemId: Int)
+        fun showEditor(itemId: String)
 
     }
 

@@ -1,5 +1,6 @@
 package com.suzei.minote.ui.editor.todo
 
+import com.suzei.minote.data.entity.Todo
 import com.suzei.minote.data.entity.TodoItem
 
 interface EditorTodoContract {
@@ -8,7 +9,7 @@ interface EditorTodoContract {
 
         fun setPresenter(presenter: Presenter)
 
-        fun showListOfTodo(todoItemList: MutableList<TodoItem>)
+        fun showTodoDetails(todo: Todo)
 
         fun showAddItemDialog()
 

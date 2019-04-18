@@ -16,9 +16,12 @@ object Injection {
     }
 
     fun provideTodoRepository(context: Context): TodoRepository {
+        val database = getDatabase(context)
+
         return TodoRepository.getInstance(
                 AppExecutor.instance,
-                getDatabase(context).todoDao())
+                database.todoDao(),
+                database.todoItemDao())
     }
 
     private fun getDatabase(context: Context): NotesDatabase {

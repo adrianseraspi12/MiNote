@@ -1,5 +1,6 @@
 package com.suzei.minote.ui.list.todo
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,8 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.suzei.minote.R
 import com.suzei.minote.data.entity.Todo
+import com.suzei.minote.ui.editor.todo.EditorTodoActivity
 import com.suzei.minote.ui.list.ListContract
-import com.suzei.minote.ui.list.notes.ListNoteFragment
 import kotlinx.android.synthetic.main.item_row_notes_default.view.*
 import kotlinx.android.synthetic.main.fragment_list.*
 
@@ -68,8 +69,10 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
 
     }
 
-    override fun redirectToEditorActivity(itemId: Int) {
-
+    override fun redirectToEditorActivity(itemId: String) {
+        val intent = Intent(context, EditorTodoActivity::class.java)
+        intent.putExtra(EditorTodoActivity.EXTRA_TODO_ID, itemId)
+        startActivity(intent)
     }
 
     inner class ListAdapter: RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
@@ -92,6 +95,11 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
 
             fun bind(todo: Todo) {
                 itemView.item_notes_title.text = todo.title
+                itemView.setOnClickListener {
+                    todo.id?.let {
+                        presenter.showEditor(it)
+                    }
+                }
             }
 
         }

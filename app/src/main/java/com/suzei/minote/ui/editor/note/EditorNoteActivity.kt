@@ -10,16 +10,16 @@ class EditorNoteActivity : AppCompatActivity() {
 
     companion object {
 
-        val EXTRA_NOTE_ID = "EXTRA_NOTE_ID"
+        const val EXTRA_NOTE_ID = "EXTRA_NOTE_ID"
 
-        val FRAGMENT_EDITOR_NOTE_TAG = "EDITOR_NOTE_FRAGMENT"
+        const val FRAGMENT_EDITOR_NOTE_TAG = "EDITOR_NOTE_FRAGMENT"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editor)
 
-        val itemId = intent.getIntExtra(EXTRA_NOTE_ID, -1)
+        val itemId = intent.getStringExtra(EXTRA_NOTE_ID)
 
         val fm = supportFragmentManager
 
@@ -33,7 +33,7 @@ class EditorNoteActivity : AppCompatActivity() {
                     .replace(R.id.editor_container, editorFragment, FRAGMENT_EDITOR_NOTE_TAG)
                     .commit()
 
-            if (itemId != -1) {
+            if (itemId != null) {
                 EditorNotePresenter(itemId,
                         Injection.provideDataSourceImpl(applicationContext),
                         editorFragment)

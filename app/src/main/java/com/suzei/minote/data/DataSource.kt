@@ -33,7 +33,7 @@ interface DataSource {
 
     fun updateNote(note: Notes)
 
-    fun getNote(itemId: Int, listener: NoteListener)
+    fun getNote(itemId: String, listener: NoteListener)
 
     fun getListOfNotes(listener: ListNoteListener)
 
