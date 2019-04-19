@@ -113,7 +113,7 @@ public class EditorScreenTest {
         dataSourceImpl.saveNote(NOTE);
 
         Intent intent = new Intent();
-        intent.putExtra(EditorNoteActivity.Companion.getEXTRA_NOTE_ID(), NOTE.getId());
+        intent.putExtra(EditorNoteActivity.EXTRA_NOTE_ID, NOTE.getId());
         editorActivityTestRule.launchActivity(intent);
     }
 

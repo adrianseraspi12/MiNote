@@ -21,11 +21,14 @@ class InputDialog: DialogFragment(), View.OnClickListener {
     }
 
     var inputDialogListener: InputDialogListener? = null
+    var title = "Add Task"
+    var actionTitle = "Add"
+    var message = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.InputDialogStyle)
+        setStyle(STYLE_NORMAL, R.style.InputDialogStyle)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -36,13 +39,15 @@ class InputDialog: DialogFragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
         dialog_todo_add.setOnClickListener(this)
         dialog_todo_cancel.setOnClickListener(this)
+        dialog_todo_message.setText(message)
+        dialog_todo_add.text = actionTitle
+        dialog_todo_title.text = title
     }
 
     override fun onClick(v: View?) {
         val button = v as Button
-        val id = button.id
 
-        when (id) {
+        when (val id = button.id) {
 
             R.id.dialog_todo_add -> {
                 val message = dialog_todo_message.text.toString()
@@ -61,8 +66,12 @@ class InputDialog: DialogFragment(), View.OnClickListener {
         this.inputDialogListener = inputDialogListener
     }
 
+    fun removeOnAddClickListener() {
+        this.inputDialogListener = null
+    }
+
     override fun dismiss() {
-        inputDialogListener = null
+        removeOnAddClickListener()
         super.dismiss()
     }
 

@@ -26,7 +26,9 @@ class TodoRepository private constructor(
     }
 
     override fun update(data: Todo) {
-
+        LogMe.info("TodoRepository =  Updating")
+        val runnable = { todoDao.updateTodoWithTasks(data, todoItemDao) }
+        appExecutor.diskIO.execute(runnable)
     }
 
     override fun getData(itemId: String, listener: Repository.Listener<Todo>) {

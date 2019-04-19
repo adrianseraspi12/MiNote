@@ -6,6 +6,7 @@ import com.suzei.minote.data.entity.TodoItem
 import com.suzei.minote.data.repository.Repository
 import com.suzei.minote.data.repository.TodoRepository
 import com.suzei.minote.utils.LogMe
+import org.threeten.bp.OffsetDateTime
 
 class EditorTodoPresenter: EditorTodoContract.Presenter {
 
@@ -16,6 +17,8 @@ class EditorTodoPresenter: EditorTodoContract.Presenter {
     private lateinit var mPrefs: SharedPreferences
 
     private var itemId: String? = null
+
+    private var createdDate: OffsetDateTime? = null
 
     internal constructor(itemId: String,
                          repository:
@@ -53,21 +56,51 @@ class EditorTodoPresenter: EditorTodoContract.Presenter {
 
     override fun saveTodo(title: String, todoItems: List<TodoItem>) {
         //  Add note color, text color
-        LogMe.info("Presenter =  Save")
-        val todo = Todo(title, todoItems, "#FFF", "#000")
-        repository.save(todo)
+
+        if (itemId != null) {
+            LogMe.info("Presenter = Updating")
+
+            val todo = Todo(
+                    itemId!!,
+                    title,
+                    todoItems,
+                    "#FFF",
+                    "#000",
+                    createdDate!!)
+
+            repository.update(todo)
+            mView.showToastMessage("Todo Updated")
+        }
+        else {
+            LogMe.info("Presenter =  Save")
+
+            val todo = Todo(
+                    title,
+                    todoItems,
+                    "#FFF",
+                    "#000")
+
+            repository.save(todo)
+            mView.showToastMessage("Todo Created")
+        }
+
     }
 
     override fun addTask(task: String) {
-        mView.showAddTodoItem(
+        mView.showAddTask(
                 TodoItem(task, false)
         )
+    }
+
+    override fun updateTask(position: Int, task: TodoItem) {
+        mView.showUpdatedTask(position, task)
     }
 
     private fun showTodo() {
         repository.getData(itemId!!, object: Repository.Listener<Todo> {
 
             override fun onDataAvailable(data: Todo) {
+                createdDate = data.createdDate
                 mView.showTodoDetails(data)
             }
 

@@ -13,8 +13,11 @@ interface EditorTodoContract {
 
         fun showAddItemDialog()
 
-        fun showAddTodoItem(todoItem: TodoItem)
+        fun showAddTask(todoItem: TodoItem)
 
+        fun showUpdatedTask(position: Int, todoItem: TodoItem)
+
+        fun showToastMessage(message: String)
         // note color
         // text color
 
@@ -28,6 +31,8 @@ interface EditorTodoContract {
                      todoItems: List<TodoItem>)
 
         fun addTask(task: String)
+
+        fun updateTask(position: Int, todoItem: TodoItem)
 
     }
 

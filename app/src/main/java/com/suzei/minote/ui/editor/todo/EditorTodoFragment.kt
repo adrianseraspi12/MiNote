@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -39,6 +40,7 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
 
     private lateinit var todoItemListAdapter: TodoItemAdapter
 
+    private val inputDialog = InputDialog.instance
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +59,7 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
         super.onViewCreated(view, savedInstanceState)
         editor_todo_add_item.setOnClickListener(this)
         editor_todo_save.setOnClickListener(this)
+
         editor_todo_list.layoutManager = LinearLayoutManager(context)
         editor_todo_list.adapter = todoItemListAdapter
     }
@@ -71,40 +74,28 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
     }
 
     override fun showTodoDetails(todo: Todo) {
-
-        for (singleTodo in todo.todoItems!!) {
-            LogMe.info("TODO ITEM = ${singleTodo.task}")
-        }
-
-        this.todoItemList = todo.todoItems?.toMutableList() ?: ArrayList()
+        todoItemList = todo.todoItems?.toMutableList() ?: ArrayList()
         todoItemListAdapter.notifyDataSetChanged()
 
         editor_todo_title.setText(todo.title)
     }
 
-    override fun showAddTodoItem(todoItem: TodoItem) {
-        print("TODO ITEM = ${todoItem.task})")
+    override fun showAddTask(todoItem: TodoItem) {
         todoItemList.add(todoItem)
         todoItemListAdapter.notifyDataSetChanged()
     }
 
+    override fun showUpdatedTask(position: Int, todoItem: TodoItem) {
+        todoItemList[position] = todoItem
+        todoItemListAdapter.notifyDataSetChanged()
+    }
+
     override fun showAddItemDialog() {
-        val inputDialog = InputDialog.instance
-
-        inputDialog.setOnAddClickListener(object: InputDialogListener {
-
-            override fun onAddClick(message: String?) {
-
-                if (message != null) {
-                    print("TODO = $message")
-                    presenter.addTask(message)
-                }
-
-            }
-
-        })
-
         inputDialog.show(fragmentManager!!, INPUT_DIALOG_TAG)
+    }
+
+    override fun showToastMessage(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onClick(v: View?) {
@@ -112,6 +103,21 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
         when (v?.id) {
 
             R.id.editor_todo_add_item -> {
+                inputDialog.title = "Add Task"
+                inputDialog.actionTitle = "Add"
+                inputDialog.removeOnAddClickListener()
+                inputDialog.setOnAddClickListener(object: InputDialogListener {
+
+                    override fun onAddClick(message: String?) {
+
+                        if (message!!.isNotEmpty()) {
+                            presenter.addTask(message)
+                        }
+
+                    }
+
+                })
+
                 showAddItemDialog()
             }
 
@@ -146,8 +152,31 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
 
             fun bind(todoItem: TodoItem) {
                 val position = adapterPosition + 1
+
                 itemView.item_edit_todo_text.text = todoItem.task
                 itemView.item_edit_todo_number.text = "$position.)"
+
+                itemView.item_edit_todo_edit.setOnClickListener {
+                    inputDialog.message = todoItem.task!!
+                    inputDialog.title = "Edit Task"
+                    inputDialog.actionTitle = "Edit"
+                    inputDialog.removeOnAddClickListener()
+                    inputDialog.setOnAddClickListener(object: InputDialogListener {
+
+                        override fun onAddClick(message: String?) {
+
+                            if (message!!.isNotEmpty()) {
+                                todoItem.task = message
+                                presenter.updateTask(adapterPosition, todoItem)
+                            }
+
+                        }
+
+                    })
+
+                    showAddItemDialog()
+                }
+
             }
 
         }

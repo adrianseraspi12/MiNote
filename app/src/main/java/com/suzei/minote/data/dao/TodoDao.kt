@@ -3,6 +3,7 @@ package com.suzei.minote.data.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.suzei.minote.data.entity.Todo
 import com.suzei.minote.data.entity.TodoItem
 import com.suzei.minote.utils.LogMe
@@ -12,6 +13,9 @@ abstract class TodoDao {
 
     @Insert
     abstract fun insertTodo(todo: Todo)
+
+    @Update
+    abstract fun updateTodo(todo: Todo)
 
     @Query("SELECT * FROM TODO")
     abstract fun getAllTodo(): List<Todo>
@@ -39,25 +43,35 @@ abstract class TodoDao {
     fun insertTodoWithTasks(todo: Todo, todoItemDao: TodoItemDao) {
         val todoItems = todo.todoItems
 
-        if (todoItems != null) {
-            insertTodo(todo)
-            LogMe.info("TodoDao =  Save")
+        insertTodo(todo)
+        LogMe.info("TodoDao =  Save")
 
-            for (item in todoItems) {
-                LogMe.info("TodoItemDao =  Save")
-                item.todoId = todo.id
+        insertTask(todo.id!!, todoItems, todoItemDao)
+    }
 
-                //  Not saving because todoid doesnt have an id
-                //  generate an id
-                //  add date attribute to tod0
+    //  Delete all todoitem then add all task
+    fun updateTodoWithTasks(todo: Todo, todoItemDao: TodoItemDao) {
+        val todoItems = todo.todoItems
 
-                LogMe.info("TODO ID = ${todo.id}")
-                LogMe.info("TODO ITEM ID = ${item.todoId}")
+        updateTodo(todo)
+        todoItemDao.deleteAllTodoItem(todo.id!!)
+
+        LogMe.info("TodoDao = Updating")
+
+        insertTask(todo.id!!, todoItems, todoItemDao)
+    }
+
+    private fun insertTask(id: String, todoItems: List<TodoItem>?, todoItemDao: TodoItemDao) {
+        todoItems?.let {
+
+            for (item in it) {
+                item.todoId = id
+                LogMe.info("TodoItemDao = Updating")
+
                 todoItemDao.insertTodoItem(item)
             }
 
         }
-
     }
 
     private fun getAllTasksById(id: String, todoItemDao: TodoItemDao): List<TodoItem> {
