@@ -28,8 +28,8 @@ class ListTodoPresenter(
         })
     }
 
-    override fun deleteNote(data: Todo) {
-
+    override fun delete(data: Todo) {
+        repository.delete(data)
     }
 
     override fun showEditor(itemId: String) {

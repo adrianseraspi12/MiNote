@@ -8,12 +8,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 import com.suzei.minote.R
 import com.suzei.minote.data.entity.Todo
 import com.suzei.minote.ui.editor.todo.EditorTodoActivity
 import com.suzei.minote.ui.list.ListContract
-import kotlinx.android.synthetic.main.item_row_notes_default.view.*
+import com.suzei.minote.utils.LogMe
 import kotlinx.android.synthetic.main.fragment_list.*
+import kotlinx.android.synthetic.main.item_row_notes_default.view.*
 
 class ListTodoFragment : Fragment(), ListContract.View<Todo> {
 
@@ -29,6 +32,10 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
     private lateinit var listOfTodo: MutableList<Todo>
 
     private lateinit var adapter: ListAdapter
+
+    private var tempTodo: Todo? = null
+    private var consecutiveTodo: Todo? = null
+    private var tempPosition: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +73,8 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
     }
 
     override fun insertNoteToList(data: Todo, position: Int) {
-
+        listOfTodo.add(position, data)
+        adapter.notifyItemInserted(position)
     }
 
     override fun redirectToEditorActivity(itemId: String) {
@@ -100,6 +108,47 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
                         presenter.showEditor(it)
                     }
                 }
+
+                itemView.item_notes_delete.setOnClickListener {
+                    tempPosition = adapterPosition
+                    tempTodo = listOfTodo[tempPosition]
+
+                    listOfTodo.remove(tempTodo!!)
+                    adapter.notifyItemRemoved(tempPosition)
+
+                    showSnackbar()
+                }
+            }
+
+            private fun showSnackbar() {
+                Snackbar.make(list_root, "Todo Deleted", Snackbar.LENGTH_SHORT)
+                        .setAction("Undo") { insertNoteToList(tempTodo!!, tempPosition) }
+                        .addCallback(object : Snackbar.Callback() {
+
+                            override fun onShown(sb: Snackbar?) {
+                                super.onShown(sb)
+                                consecutiveTodo = tempTodo
+                            }
+
+                            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                                super.onDismissed(transientBottomBar, event)
+                                when (event) {
+
+                                    BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_CONSECUTIVE ->
+                                        presenter.delete(consecutiveTodo!!)
+
+                                    BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_TIMEOUT -> {
+                                        presenter.delete(tempTodo!!)
+                                        consecutiveTodo = null
+                                        tempTodo = null
+                                        tempPosition = -1
+                                    }
+                                }
+
+                            }
+
+                        })
+                        .show()
             }
 
         }

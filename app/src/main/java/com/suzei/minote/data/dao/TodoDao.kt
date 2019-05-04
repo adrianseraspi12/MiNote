@@ -1,9 +1,6 @@
 package com.suzei.minote.data.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.suzei.minote.data.entity.Todo
 import com.suzei.minote.data.entity.TodoItem
 import com.suzei.minote.utils.LogMe
@@ -13,6 +10,9 @@ abstract class TodoDao {
 
     @Insert
     abstract fun insertTodo(todo: Todo)
+
+    @Delete
+    abstract fun deleteTodo(todo: Todo)
 
     @Update
     abstract fun updateTodo(todo: Todo)
@@ -61,6 +61,13 @@ abstract class TodoDao {
         insertTask(todo.id!!, todoItems, todoItemDao)
     }
 
+    fun deleteTodoWithTasks(todo: Todo, todoItemDao: TodoItemDao) {
+        val todoId = todo.id
+        deleteTodo(todo)
+        todoItemDao.deleteAllTodoItem(todoId!!)
+        LogMe.info("TodoDao = Delete")
+    }
+
     private fun insertTask(id: String, todoItems: List<TodoItem>?, todoItemDao: TodoItemDao) {
         todoItems?.let {
 
@@ -75,17 +82,7 @@ abstract class TodoDao {
     }
 
     private fun getAllTasksById(id: String, todoItemDao: TodoItemDao): List<TodoItem> {
-        LogMe.info("TODO ID = $id")
-
-        val todoItem = todoItemDao.getTodoItems(id)
-
-        LogMe.info("TODO COUNT = ${todoItem.size}")
-
-        for (todo in todoItem) {
-            LogMe.info("TODO = ${todo.task}")
-        }
-
-        return todoItem
+        return todoItemDao.getTodoItems(id)
     }
 
 }

@@ -21,7 +21,7 @@ interface ListContract {
 
         fun start()
 
-        fun deleteNote(data: T)
+        fun delete(data: T)
 
         fun showEditor(itemId: String)
 

@@ -177,10 +177,11 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
                                 super.onDismissed(transientBottomBar, event)
                                 when (event) {
 
-                                    BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_CONSECUTIVE -> presenter.deleteNote(consecutiveNote!!)
+                                    BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_CONSECUTIVE ->
+                                        presenter.delete(consecutiveNote!!)
 
                                     BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_TIMEOUT -> {
-                                        presenter.deleteNote(tempNote!!)
+                                        presenter.delete(tempNote!!)
                                         consecutiveNote = null
                                         tempNote = null
                                         tempPosition = -1

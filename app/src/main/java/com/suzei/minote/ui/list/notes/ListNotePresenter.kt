@@ -18,7 +18,7 @@ class ListNotePresenter internal constructor(
         showListOfNotes()
     }
 
-    override fun deleteNote(note: Notes) {
+    override fun delete(note: Notes) {
         dataSourceImpl.deleteNote(note)
     }
 

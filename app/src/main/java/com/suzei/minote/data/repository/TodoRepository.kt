@@ -31,6 +31,12 @@ class TodoRepository private constructor(
         appExecutor.diskIO.execute(runnable)
     }
 
+    override fun delete(data: Todo) {
+        LogMe.info("TodoRepository =  Deleting")
+        val runnable = { todoDao.deleteTodoWithTasks(data, todoItemDao) }
+        appExecutor.diskIO.execute(runnable)
+    }
+
     override fun getData(itemId: String, listener: Repository.Listener<Todo>) {
 
         val runnable = {
@@ -65,10 +71,6 @@ class TodoRepository private constructor(
         }
 
         appExecutor.diskIO.execute(runnable)
-    }
-
-    override fun delete(data: Todo) {
-
     }
 
 }
