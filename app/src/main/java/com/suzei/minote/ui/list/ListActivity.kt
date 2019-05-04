@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 
 import com.suzei.minote.Injection
 import com.suzei.minote.R
@@ -14,7 +15,9 @@ import com.suzei.minote.ui.settings.SettingsActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 import androidx.preference.PreferenceManager
+import androidx.viewpager.widget.PagerAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.suzei.minote.ui.editor.note.EditorNoteActivity
 import com.suzei.minote.ui.editor.todo.EditorTodoActivity
@@ -29,30 +32,23 @@ import uk.co.markormesher.android_fab.SpeedDialMenuAdapter
 import uk.co.markormesher.android_fab.SpeedDialMenuItem
 import java.lang.IllegalArgumentException
 
-class ListActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
-
-    companion object {
-
-        private const val LIST_NOTE_FRAGMENT_TAG = "LIST_NOTE_FRAGMENT"
-
-        private const val LIST_TODO_FRAGMENT_TAG = "LIST_TODO_FRAGMENT"
-    }
+class ListActivity : AppCompatActivity() {
 
     private lateinit var fm: FragmentManager
-    private var listNoteFragment: ListNoteFragment? = null
-    private var listTodoFragment: ListTodoFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list)
-        setTitle(R.string.all_notes)
-
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
+
+        setSupportActionBar(list_toolbar)
 
         LogMe.info("Instance = New Activity")
         fm = supportFragmentManager
-        selectFragment(bottomNavigationView.menu.getItem(0))
-        bottomNavigationView.setOnNavigationItemSelectedListener(this)
+
+        list_view_pager.adapter = ListTabPagerAdapter()
+        list_tab_layout.setupWithViewPager(list_view_pager)
+
         list_fab.speedDialMenuAdapter = speedDialAdapter
     }
 
@@ -70,73 +66,6 @@ class ListActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         }
 
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        selectFragment(item)
-        return true
-    }
-
-    private fun selectFragment(item: MenuItem) {
-
-        item.isChecked = true
-
-        when (item.itemId) {
-
-            R.id.nav_note -> {
-                showListOfNote()
-            }
-
-            R.id.nav_todo -> {
-                showListOfTodo()
-            }
-
-            else -> {
-                throw IllegalArgumentException("Invalid Menu Id = ${item.itemId}")
-            }
-
-        }
-    }
-
-    private fun showListOfTodo() {
-//        var listTodoFragment = fm.findFragmentByTag(LIST_TODO_FRAGMENT_TAG) as ListTodoFragment?
-
-        if (listTodoFragment == null) {
-            listTodoFragment = ListTodoFragment.newInstance()
-
-        }
-
-        listTodoFragment?.let {
-            showFragment(it, LIST_TODO_FRAGMENT_TAG)
-
-            ListTodoPresenter(
-                    Injection.provideTodoRepository(applicationContext),
-                    it)
-        }
-
-    }
-
-    private fun showListOfNote() {
-//        var listNoteFragment = fm.findFragmentByTag(LIST_NOTE_FRAGMENT_TAG) as ListNoteFragment?
-
-        if (listNoteFragment == null) {
-            listNoteFragment = ListNoteFragment.newInstance()
-        }
-
-        listNoteFragment?.let {
-            showFragment(it, LIST_NOTE_FRAGMENT_TAG)
-
-            ListNotePresenter(
-                    Injection.provideDataSourceImpl(applicationContext),
-                    it)
-        }
-    }
-
-    private fun showFragment(fragment: Fragment, fragmentTag: String) {
-        fm.beginTransaction()
-                .replace(R.id.list_container,
-                         fragment)
-                .commit()
     }
 
     private val speedDialAdapter = object: SpeedDialMenuAdapter() {
@@ -178,5 +107,52 @@ class ListActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     }
 
+    inner class ListTabPagerAdapter: FragmentPagerAdapter(supportFragmentManager) {
+
+        override fun getItem(position: Int): Fragment {
+            when (position) {
+
+                0 -> {
+                    val listNoteFragment = ListNoteFragment.newInstance()
+
+                    ListNotePresenter(
+                            Injection.provideDataSourceImpl(applicationContext),
+                            listNoteFragment)
+
+                    return listNoteFragment
+                }
+
+                1 -> {
+                    val listTodoFragment = ListTodoFragment.newInstance()
+
+                    ListTodoPresenter(
+                            Injection.provideTodoRepository(applicationContext),
+                            listTodoFragment)
+
+                    return listTodoFragment
+                }
+
+            }
+
+            throw IllegalArgumentException("Invalid Position $position")
+        }
+
+        override fun getPageTitle(position: Int): CharSequence? {
+            when (position) {
+
+                0 -> return "Notes"
+
+                1 -> return "Todo"
+
+            }
+
+            return super.getPageTitle(position)
+        }
+
+        override fun getCount(): Int {
+            return 2
+        }
+
+    }
 
 }

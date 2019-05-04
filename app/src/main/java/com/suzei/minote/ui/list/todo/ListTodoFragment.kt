@@ -14,7 +14,6 @@ import com.suzei.minote.R
 import com.suzei.minote.data.entity.Todo
 import com.suzei.minote.ui.editor.todo.EditorTodoActivity
 import com.suzei.minote.ui.list.ListContract
-import com.suzei.minote.utils.LogMe
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.item_row_notes_default.view.*
 
