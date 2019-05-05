@@ -7,16 +7,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.list.ListActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/list_toolbar"
-        android:layout_width="match_parent"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/list_app_bar"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        app:title="@string/all_notes"
-        app:titleTextColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/list_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            app:title="@string/all_notes"
+            app:titleTextColor="@color/white" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/list_tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            app:tabBackground="?android:selectableItemBackground"
+            app:tabIndicatorColor="@color/white"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="@color/white"
+            app:tabTextColor="@android:color/darker_gray"
+            app:tabRippleColor="@color/colorPrimaryDark" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/list_view_pager"
@@ -25,15 +44,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/list_toolbar">
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/list_tab_layout"
-            style="@style/Widget.MaterialComponents.TabLayout.Colored"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </androidx.viewpager.widget.ViewPager>
+        app:layout_constraintTop_toBottomOf="@+id/list_app_bar" />
 
     <uk.co.markormesher.android_fab.FloatingActionButton
         android:id="@+id/list_fab"
@@ -41,6 +52,7 @@
         android:layout_height="0dp"
         app:buttonIcon="@drawable/add"
         app:buttonPosition="bottom|end"
+        app:buttonBackgroundColour="@color/colorSecondary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -3,34 +3,26 @@ package com.suzei.minote.ui.list
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-
-import com.suzei.minote.Injection
-import com.suzei.minote.R
-import com.suzei.minote.ui.settings.SettingsActivity
-
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.preference.PreferenceManager
-import androidx.viewpager.widget.PagerAdapter
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.suzei.minote.Injection
+import com.suzei.minote.R
 import com.suzei.minote.ui.editor.note.EditorNoteActivity
 import com.suzei.minote.ui.editor.todo.EditorTodoActivity
 import com.suzei.minote.ui.list.notes.ListNoteFragment
 import com.suzei.minote.ui.list.notes.ListNotePresenter
 import com.suzei.minote.ui.list.todo.ListTodoFragment
 import com.suzei.minote.ui.list.todo.ListTodoPresenter
+import com.suzei.minote.ui.settings.SettingsActivity
 import com.suzei.minote.utils.LogMe
-
 import kotlinx.android.synthetic.main.activity_list.*
 import uk.co.markormesher.android_fab.SpeedDialMenuAdapter
 import uk.co.markormesher.android_fab.SpeedDialMenuItem
-import java.lang.IllegalArgumentException
 
 class ListActivity : AppCompatActivity() {
 
