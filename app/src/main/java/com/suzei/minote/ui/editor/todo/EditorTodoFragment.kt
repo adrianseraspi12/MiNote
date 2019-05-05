@@ -171,6 +171,7 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
 
     private fun showMenu() {
         val bottomSheetFragment = BottomSheetFragment()
+        bottomSheetFragment.setPasswordVisibility(false)
         bottomSheetFragment.retainInstance = true
         bottomSheetFragment.setClickListener(object: BottomSheetFragment.ClickListener {
 

@@ -3,6 +3,7 @@ package com.suzei.minote.utils.dialogs
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -12,10 +13,11 @@ import kotlinx.android.synthetic.main.bottom_sheet_dialog.*
 class BottomSheetFragment : BottomSheetDialogFragment() {
 
     private var listener: ClickListener? = null
+    private var isEditPasswordVisible = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.BottomSheetDialogStyle)
+        setStyle(STYLE_NORMAL, R.style.BottomSheetDialogStyle)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -27,6 +29,10 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         bsd_change_note_color.setOnClickListener(buttonClickListener)
         bsd_change_text_color.setOnClickListener(buttonClickListener)
         bsd_edit_password.setOnClickListener(buttonClickListener)
+
+        if (!isEditPasswordVisible) {
+            bsd_edit_password.visibility = GONE
+        }
     }
 
     private val buttonClickListener: View.OnClickListener = View.OnClickListener { v ->
@@ -55,6 +61,10 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
     fun setClickListener(listener: ClickListener) {
         this.listener = listener
+    }
+
+    fun setPasswordVisibility(isPasswordVisible: Boolean) {
+        isEditPasswordVisible = isPasswordVisible
     }
 
     fun destroy() {
