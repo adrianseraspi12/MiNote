@@ -119,8 +119,20 @@ class EditorNotePresenter : EditorNoteContract.Presenter {
     }
 
     private fun createNote(note: Notes) {
-        dataSourceImpl.saveNote(note)
-        mView.showToastMessage("Note created")
+        dataSourceImpl.saveNote(note, object: DataSource.ActionListener {
+
+            override fun onSuccess(itemId: String, createdDate: OffsetDateTime) {
+                this@EditorNotePresenter.itemId = itemId
+                this@EditorNotePresenter.createdDate = createdDate
+                mView.showToastMessage("Note created")
+            }
+
+            override fun onFailed() {
+                mView.showToastMessage("Save Failed")
+            }
+
+        })
+
     }
 
     private fun updateNote(note: Notes) {

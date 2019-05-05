@@ -21,8 +21,15 @@ class DataSourceImpl private constructor(
         appExecutor.diskIO.execute(runnable)
     }
 
-    override fun saveNote(note: Notes) {
-        val runnable = { notesDao.saveNote(note) }
+    override fun saveNote(note: Notes, actionListener: DataSource.ActionListener) {
+        val runnable = {
+            notesDao.saveNote(note)
+
+            appExecutor.mainThread.execute {
+                actionListener.onSuccess(note.id!!, note.createdDate!!)
+            }
+
+        }
         appExecutor.diskIO.execute(runnable)
     }
 

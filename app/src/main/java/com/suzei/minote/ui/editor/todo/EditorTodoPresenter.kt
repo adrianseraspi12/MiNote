@@ -82,8 +82,19 @@ class EditorTodoPresenter: EditorTodoContract.Presenter {
                     textColor,
                     noteColor)
 
-            repository.save(todo)
-            mView.showToastMessage("Todo Created")
+            repository.save(todo, object: Repository.ActionListener {
+
+                override fun onSuccess(itemId: String, createdDate: OffsetDateTime) {
+                    this@EditorTodoPresenter.itemId = itemId
+                    this@EditorTodoPresenter.createdDate = createdDate
+                    mView.showToastMessage("Todo Created")
+                }
+
+                override fun onFailed() {
+                    mView.showToastMessage("Save Failed")
+                }
+
+            })
         }
 
     }

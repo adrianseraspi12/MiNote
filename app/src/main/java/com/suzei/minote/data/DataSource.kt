@@ -1,7 +1,7 @@
 package com.suzei.minote.data
 
 import com.suzei.minote.data.entity.Notes
-import com.suzei.minote.data.entity.Todo
+import org.threeten.bp.OffsetDateTime
 
 interface DataSource {
 
@@ -21,15 +21,15 @@ interface DataSource {
 
     }
 
-    interface TodoListener {
+    interface ActionListener {
 
-        fun onDataAvailable(todo: Todo)
+        fun onSuccess(itemId: String, createdDate: OffsetDateTime)
 
-        fun onDataUnavailable()
+        fun onFailed()
 
     }
 
-    fun saveNote(note: Notes)
+    fun saveNote(note: Notes, actionListener: ActionListener)
 
     fun updateNote(note: Notes)
 

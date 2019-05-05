@@ -19,9 +19,16 @@ class TodoRepository private constructor(
 
     }
 
-    override fun save(data: Todo) {
+    override fun save(data: Todo, actionListener: Repository.ActionListener) {
         LogMe.info("TodoRepository =  Save")
-        val runnable = { todoDao.insertTodoWithTasks(data, todoItemDao) }
+        val runnable = {
+            todoDao.insertTodoWithTasks(data, todoItemDao)
+
+            appExecutor.mainThread.execute {
+                actionListener.onSuccess(data.id!!, data.createdDate!!)
+            }
+
+        }
         appExecutor.diskIO.execute(runnable)
     }
 
