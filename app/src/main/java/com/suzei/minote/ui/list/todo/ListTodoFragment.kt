@@ -1,6 +1,7 @@
 package com.suzei.minote.ui.list.todo
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -101,6 +102,7 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
         inner class ListViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
             fun bind(todo: Todo) {
+                itemView.item_notes_color.setBackgroundColor(Color.parseColor(todo.color))
                 itemView.item_notes_title.text = todo.title
                 itemView.setOnClickListener {
                     todo.id?.let {

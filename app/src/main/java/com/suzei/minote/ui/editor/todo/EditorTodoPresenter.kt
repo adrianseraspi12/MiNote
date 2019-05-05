@@ -1,10 +1,12 @@
 package com.suzei.minote.ui.editor.todo
 
 import android.content.SharedPreferences
+import android.graphics.Color
 import com.suzei.minote.data.entity.Todo
 import com.suzei.minote.data.entity.TodoItem
 import com.suzei.minote.data.repository.Repository
 import com.suzei.minote.data.repository.TodoRepository
+import com.suzei.minote.utils.ColorWheel
 import com.suzei.minote.utils.LogMe
 import org.threeten.bp.OffsetDateTime
 
@@ -54,8 +56,8 @@ class EditorTodoPresenter: EditorTodoContract.Presenter {
 
     }
 
-    override fun saveTodo(title: String, todoItems: List<TodoItem>) {
-        //  Add note color, text color
+    override fun saveTodo(title: String, todoItems: List<TodoItem>,
+                          noteColor: String, textColor: String) {
 
         if (itemId != null) {
             LogMe.info("Presenter = Updating")
@@ -64,8 +66,8 @@ class EditorTodoPresenter: EditorTodoContract.Presenter {
                     itemId!!,
                     title,
                     todoItems,
-                    "#FFF",
-                    "#000",
+                    textColor,
+                    noteColor,
                     createdDate!!)
 
             repository.update(todo)
@@ -77,8 +79,8 @@ class EditorTodoPresenter: EditorTodoContract.Presenter {
             val todo = Todo(
                     title,
                     todoItems,
-                    "#FFF",
-                    "#000")
+                    textColor,
+                    noteColor)
 
             repository.save(todo)
             mView.showToastMessage("Todo Created")
@@ -92,8 +94,34 @@ class EditorTodoPresenter: EditorTodoContract.Presenter {
         )
     }
 
-    override fun updateTask(position: Int, task: TodoItem) {
-        mView.showUpdatedTask(position, task)
+    override fun updateTask(position: Int, todoItem: TodoItem) {
+        mView.showUpdatedTask(position, todoItem)
+    }
+
+    override fun noteColorWheel(initialColor: Int) {
+        mView.showColorWheel(
+                "Choose note color",
+                initialColor,
+                object: ColorWheel {
+
+                    override fun onPositiveClick(color: Int) {
+                        mView.noteColor(color)
+                    }
+
+                })
+    }
+
+    override fun textColorWheel(initialColor: Int) {
+        mView.showColorWheel(
+                "Choose text color",
+                initialColor,
+                object: ColorWheel {
+
+                    override fun onPositiveClick(color: Int) {
+                        mView.textColor(color)
+                    }
+
+                })
     }
 
     private fun showTodo() {
@@ -114,6 +142,8 @@ class EditorTodoPresenter: EditorTodoContract.Presenter {
     private fun showNewTodo() {
         val noteColor = mPrefs.getString("default_note_color", "#ef5350")
         val textColor = mPrefs.getString("default_text_color", "#000000")
+        mView.noteColor(Color.parseColor(noteColor))
+        mView.textColor(Color.parseColor(textColor))
     }
 
 }

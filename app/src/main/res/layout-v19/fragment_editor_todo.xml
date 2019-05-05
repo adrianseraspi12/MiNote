@@ -5,6 +5,7 @@
     android:id="@+id/editor_todo_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="24dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.editor.todo.EditorTodoFragment">
 

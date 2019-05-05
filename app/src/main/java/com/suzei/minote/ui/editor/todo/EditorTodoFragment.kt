@@ -1,6 +1,8 @@
 package com.suzei.minote.ui.editor.todo
 
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,12 +11,16 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.flask.colorpicker.ColorPickerView
+import com.flask.colorpicker.builder.ColorPickerDialogBuilder
 import com.suzei.minote.R
 import com.suzei.minote.data.entity.Todo
 import com.suzei.minote.data.entity.TodoItem
-import com.suzei.minote.utils.LogMe
+import com.suzei.minote.utils.ColorWheel
+import com.suzei.minote.utils.dialogs.BottomSheetFragment
 import com.suzei.minote.utils.dialogs.InputDialog
 import com.suzei.minote.utils.dialogs.InputDialogListener
+import kotlinx.android.synthetic.main.fragment_editor.*
 import kotlinx.android.synthetic.main.fragment_editor_todo.*
 import kotlinx.android.synthetic.main.item_row_edit_todo.view.*
 
@@ -57,8 +63,11 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         editor_todo_add_item.setOnClickListener(this)
         editor_todo_save.setOnClickListener(this)
+        editor_todo_menu.setOnClickListener(this)
+        editor_todo_back_arrow.setOnClickListener(this)
 
         editor_todo_list.layoutManager = LinearLayoutManager(context)
         editor_todo_list.adapter = todoItemListAdapter
@@ -78,6 +87,8 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
         todoItemListAdapter.notifyDataSetChanged()
 
         editor_todo_title.setText(todo.title)
+        noteColor(Color.parseColor(todo.color))
+        textColor(Color.parseColor(todo.textColor))
     }
 
     override fun showAddTask(todoItem: TodoItem) {
@@ -98,37 +109,109 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
+    override fun showColorWheel(title: String, initialColor: Int, colorWheel: ColorWheel) {
+        ColorPickerDialogBuilder.with(context!!)
+                .setTitle(title)
+                .initialColor(initialColor)
+                .density(6)
+                .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
+                .setPositiveButton("Choose") {
+                    dialogInterface,
+                    i,
+                    integers ->
+                    colorWheel.onPositiveClick(i)
+                }
+                .setNegativeButton("Cancel") {
+                    dialog,
+                    which ->
+                    dialog.dismiss()
+                }
+                .build()
+                .show()
+    }
+
+    override fun noteColor(noteColor: Int) {
+        editor_todo_root.setBackgroundColor(noteColor)
+    }
+
+    override fun textColor(textColor: Int) {
+        editor_todo_title.setTextColor(textColor)
+        editor_todo_back_arrow.setColorFilter(textColor)
+        editor_todo_save.setColorFilter(textColor)
+        editor_todo_menu.setColorFilter(textColor)
+    }
+
     override fun onClick(v: View?) {
 
         when (v?.id) {
 
-            R.id.editor_todo_add_item -> {
-                inputDialog.title = "Add Task"
-                inputDialog.actionTitle = "Add"
-                inputDialog.removeOnAddClickListener()
-                inputDialog.setOnAddClickListener(object: InputDialogListener {
+            R.id.editor_todo_back_arrow -> activity!!.finish()
 
-                    override fun onAddClick(message: String?) {
+            R.id.editor_todo_menu -> showMenu()
 
-                        if (message!!.isNotEmpty()) {
-                            presenter.addTask(message)
-                        }
+            R.id.editor_todo_add_item -> addItem()
 
-                    }
+            R.id.editor_todo_save -> saveTodo()
 
-                })
-
-                showAddItemDialog()
-            }
-
-            R.id.editor_todo_save -> {
-                LogMe.info("Fragment =  Save")
-                val title = editor_todo_title.text.toString()
-                presenter.saveTodo(title, todoItemList)
-            }
 
         }
 
+    }
+
+    private fun saveTodo() {
+        val noteColor = (editor_todo_root.background as ColorDrawable).color
+        val hexNoteColor = String.format("#%06X", 0xFFFFFF and noteColor)
+
+        val textColor = editor_todo_title.currentTextColor
+        val hexTextColor = String.format("#%06X", 0xFFFFFF and textColor)
+
+        val title = editor_todo_title.text.toString()
+        presenter.saveTodo(title, todoItemList, hexNoteColor, hexTextColor)
+    }
+
+    private fun showMenu() {
+        val bottomSheetFragment = BottomSheetFragment()
+        bottomSheetFragment.retainInstance = true
+        bottomSheetFragment.setClickListener(object: BottomSheetFragment.ClickListener {
+
+            override fun onEditPasswordClick() {
+                Toast.makeText(context, "Edit Password", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onChangeNoteColorClick() {
+                val noteColor = (editor_todo_root.background as ColorDrawable).color
+                presenter.noteColorWheel(noteColor)
+                bottomSheetFragment.dismiss()
+            }
+
+            override fun onChangeTextColorClick() {
+                val textColor = editor_todo_title.currentTextColor
+                presenter.textColorWheel(textColor)
+                bottomSheetFragment.dismiss()
+            }
+
+        })
+
+        bottomSheetFragment.show(fragmentManager!!, bottomSheetFragment.tag)
+    }
+
+    private fun addItem() {
+        inputDialog.title = "Add Task"
+        inputDialog.actionTitle = "Add"
+        inputDialog.removeOnAddClickListener()
+        inputDialog.setOnAddClickListener(object: InputDialogListener {
+
+            override fun onAddClick(message: String?) {
+
+                if (message!!.isNotEmpty()) {
+                    presenter.addTask(message)
+                }
+
+            }
+
+        })
+
+        showAddItemDialog()
     }
 
     inner class TodoItemAdapter: RecyclerView.Adapter<TodoItemAdapter.TodoItemViewHolder>() {
