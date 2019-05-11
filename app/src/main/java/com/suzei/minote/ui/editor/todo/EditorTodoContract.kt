@@ -3,6 +3,7 @@ package com.suzei.minote.ui.editor.todo
 import com.suzei.minote.data.entity.Todo
 import com.suzei.minote.data.entity.TodoItem
 import com.suzei.minote.utils.ColorWheel
+import com.suzei.minote.utils.dialogs.InputDialogListener
 
 interface EditorTodoContract {
 
@@ -11,8 +12,6 @@ interface EditorTodoContract {
         fun setPresenter(presenter: Presenter)
 
         fun showTodoDetails(todo: Todo)
-
-        fun showAddItemDialog()
 
         fun showAddTask(todoItem: TodoItem)
 

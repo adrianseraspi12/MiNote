@@ -20,7 +20,6 @@ import com.suzei.minote.utils.ColorWheel
 import com.suzei.minote.utils.dialogs.BottomSheetFragment
 import com.suzei.minote.utils.dialogs.InputDialog
 import com.suzei.minote.utils.dialogs.InputDialogListener
-import kotlinx.android.synthetic.main.fragment_editor.*
 import kotlinx.android.synthetic.main.fragment_editor_todo.*
 import kotlinx.android.synthetic.main.item_row_edit_todo.view.*
 
@@ -45,8 +44,6 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
     private lateinit var todoItemList: MutableList<TodoItem>
 
     private lateinit var todoItemListAdapter: TodoItemAdapter
-
-    private val inputDialog = InputDialog.instance
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,7 +81,8 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
 
     override fun showTodoDetails(todo: Todo) {
         todoItemList = todo.todoItems?.toMutableList() ?: ArrayList()
-        todoItemListAdapter.notifyDataSetChanged()
+        todoItemListAdapter.changeTextColor(Color.parseColor(todo.textColor))
+//        todoItemListAdapter.notifyDataSetChanged()
 
         editor_todo_title.setText(todo.title)
         noteColor(Color.parseColor(todo.color))
@@ -99,10 +97,6 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
     override fun showUpdatedTask(position: Int, todoItem: TodoItem) {
         todoItemList[position] = todoItem
         todoItemListAdapter.notifyDataSetChanged()
-    }
-
-    override fun showAddItemDialog() {
-        inputDialog.show(fragmentManager!!, INPUT_DIALOG_TAG)
     }
 
     override fun showToastMessage(message: String) {
@@ -132,13 +126,16 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
 
     override fun noteColor(noteColor: Int) {
         editor_todo_root.setBackgroundColor(noteColor)
+        editor_todo_add_item.setTextColor(noteColor)
     }
 
     override fun textColor(textColor: Int) {
+        todoItemListAdapter.changeTextColor(textColor)
         editor_todo_title.setTextColor(textColor)
         editor_todo_back_arrow.setColorFilter(textColor)
         editor_todo_save.setColorFilter(textColor)
         editor_todo_menu.setColorFilter(textColor)
+        editor_todo_add_item.setBackgroundColor(textColor)
     }
 
     override fun onClick(v: View?) {
@@ -196,26 +193,35 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
         bottomSheetFragment.show(fragmentManager!!, bottomSheetFragment.tag)
     }
 
+    private fun showAddItemDialog(title: String,
+                                  actionTitle: String,
+                                  message: String,
+                                  listener: InputDialogListener) {
+        val inputDialog = InputDialog.instance(title, actionTitle, message)
+        inputDialog.setOnAddClickListener(listener)
+        inputDialog.show(fragmentManager!!, INPUT_DIALOG_TAG)
+    }
+
     private fun addItem() {
-        inputDialog.title = "Add Task"
-        inputDialog.actionTitle = "Add"
-        inputDialog.removeOnAddClickListener()
-        inputDialog.setOnAddClickListener(object: InputDialogListener {
+        showAddItemDialog("Add Task",
+                "Add",
+                "",
+                object: InputDialogListener {
 
-            override fun onAddClick(message: String?) {
+                    override fun onAddClick(message: String?) {
 
-                if (message!!.isNotEmpty()) {
-                    presenter.addTask(message)
-                }
+                        if (message!!.isNotEmpty()) {
+                            presenter.addTask(message)
+                        }
 
-            }
+                    }
 
-        })
-
-        showAddItemDialog()
+                })
     }
 
     inner class TodoItemAdapter: RecyclerView.Adapter<TodoItemAdapter.TodoItemViewHolder>() {
+
+        private var textColor: Int = 0
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoItemViewHolder {
             val view = layoutInflater.inflate(R.layout.item_row_edit_todo, parent, false)
@@ -228,37 +234,44 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
 
         override fun onBindViewHolder(holder: TodoItemViewHolder, position: Int) {
             val todoItem = todoItemList[position]
-            holder.bind(todoItem)
+            holder.bind(todoItem, textColor)
         }
 
+        fun changeTextColor(textColor: Int) {
+            this.textColor = textColor
+            notifyDataSetChanged()
+        }
 
         inner class TodoItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-            fun bind(todoItem: TodoItem) {
+            fun bind(todoItem: TodoItem, textColor: Int) {
                 val position = adapterPosition + 1
+
+                itemView.item_edit_todo_text.setTextColor(textColor)
+                itemView.item_edit_todo_number.setTextColor(textColor)
+                itemView.item_edit_todo_edit.setColorFilter(textColor)
 
                 itemView.item_edit_todo_text.text = todoItem.task
                 itemView.item_edit_todo_number.text = "$position.)"
 
                 itemView.item_edit_todo_edit.setOnClickListener {
-                    inputDialog.message = todoItem.task!!
-                    inputDialog.title = "Edit Task"
-                    inputDialog.actionTitle = "Edit"
-                    inputDialog.removeOnAddClickListener()
-                    inputDialog.setOnAddClickListener(object: InputDialogListener {
 
-                        override fun onAddClick(message: String?) {
+                    showAddItemDialog(
+                            "Edit Task",
+                            "Edit",
+                            todoItem.task!!,
+                            object: InputDialogListener {
 
-                            if (message!!.isNotEmpty()) {
-                                todoItem.task = message
-                                presenter.updateTask(adapterPosition, todoItem)
-                            }
+                                override fun onAddClick(message: String?) {
 
-                        }
+                                    if (message!!.isNotEmpty()) {
+                                        todoItem.task = message
+                                        presenter.updateTask(adapterPosition, todoItem)
+                                    }
 
-                    })
+                                }
 
-                    showAddItemDialog()
+                            })
                 }
 
             }

@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.suzei.minote.R
+import com.suzei.minote.utils.LogMe
 import kotlinx.android.synthetic.main.dialog_todo.*
 import java.lang.IllegalArgumentException
 
@@ -15,15 +16,23 @@ class InputDialog: DialogFragment(), View.OnClickListener {
 
     companion object {
 
-        val instance: InputDialog
-            get() = InputDialog()
+        fun instance(title: String,
+                     actionTitle: String,
+                     message: String): InputDialog {
+
+            val dialog = InputDialog()
+            dialog.setValues(title, actionTitle, message)
+
+            return dialog
+        }
 
     }
 
     var inputDialogListener: InputDialogListener? = null
-    var title = "Add Task"
-    var actionTitle = "Add"
-    var message = ""
+
+    private lateinit var message: String
+    private lateinit var actionTitle: String
+    private lateinit var title: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +69,12 @@ class InputDialog: DialogFragment(), View.OnClickListener {
             else -> throw IllegalArgumentException("Invalid Id = $id")
 
         }
+    }
+
+    protected fun setValues(title: String, actionTitle: String, message: String) {
+        this.title = title
+        this.actionTitle = actionTitle
+        this.message = message
     }
 
     fun setOnAddClickListener(inputDialogListener: InputDialogListener) {
