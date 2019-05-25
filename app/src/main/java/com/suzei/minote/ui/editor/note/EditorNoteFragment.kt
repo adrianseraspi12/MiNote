@@ -13,6 +13,7 @@ import com.flask.colorpicker.ColorPickerView
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
 import com.suzei.minote.R
 import com.suzei.minote.data.entity.Notes
+import com.suzei.minote.ext.moveFocus
 import com.suzei.minote.utils.ColorWheel
 import com.suzei.minote.utils.KeyboardUtils
 import com.suzei.minote.utils.Turing
@@ -61,14 +62,16 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         editor_back_arrow.setOnClickListener {
             activity!!.finish()
         }
 
-        editor_text_layout.setOnClickListener {
-            editor_text.requestFocus()
-            KeyboardUtils.showKeyboard(context!!, editor_text)
-        }
+//        editor_text_layout.setOnClickListener {
+//            editor_text.requestFocus()
+//            editor_text.moveFocus()
+//            KeyboardUtils.showKeyboard(context!!, editor_text)
+//        }
 
         editor_menu.setOnClickListener {
             val bottomSheetFragment = BottomSheetFragment()
@@ -142,6 +145,8 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
         editor_text.setText(note.message)
         noteColor(Color.parseColor(note.color))
         textColor(Color.parseColor(note.textColor))
+
+        editor_title.moveFocus()
     }
 
     override fun noteColor(noteColor: Int) {

@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.suzei.minote.R
+import com.suzei.minote.ext.moveFocus
 import com.suzei.minote.utils.LogMe
 import kotlinx.android.synthetic.main.dialog_todo.*
 import java.lang.IllegalArgumentException
@@ -51,6 +52,7 @@ class InputDialog: DialogFragment(), View.OnClickListener {
         dialog_todo_message.setText(message)
         dialog_todo_add.text = actionTitle
         dialog_todo_title.text = title
+        dialog_todo_message.moveFocus()
     }
 
     override fun onClick(v: View?) {
@@ -71,7 +73,7 @@ class InputDialog: DialogFragment(), View.OnClickListener {
         }
     }
 
-    protected fun setValues(title: String, actionTitle: String, message: String) {
+    private fun setValues(title: String, actionTitle: String, message: String) {
         this.title = title
         this.actionTitle = actionTitle
         this.message = message

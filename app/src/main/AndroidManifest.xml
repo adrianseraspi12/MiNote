@@ -16,7 +16,7 @@
 
         <activity android:name=".ui.editor.todo.EditorTodoActivity"
             android:theme="@style/EditorTheme"
-            android:windowSoftInputMode="stateVisible" />
+            android:windowSoftInputMode="stateAlwaysHidden" />
 
         <meta-data
             android:name="firebase_crashlytics_collection_enabled"
@@ -25,7 +25,7 @@
         <activity
             android:name=".ui.editor.note.EditorNoteActivity"
             android:theme="@style/EditorTheme"
-            android:windowSoftInputMode="stateVisible" />
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity android:name=".ui.list.ListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

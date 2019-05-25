@@ -17,6 +17,7 @@ import com.flask.colorpicker.builder.ColorPickerDialogBuilder
 import com.suzei.minote.R
 import com.suzei.minote.data.entity.Todo
 import com.suzei.minote.data.entity.TodoItem
+import com.suzei.minote.ext.moveFocus
 import com.suzei.minote.utils.ColorWheel
 import com.suzei.minote.utils.dialogs.BottomSheetFragment
 import com.suzei.minote.utils.dialogs.InputDialog
@@ -86,6 +87,8 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
         editor_todo_title.setText(todo.title)
         noteColor(Color.parseColor(todo.color))
         textColor(Color.parseColor(todo.textColor))
+
+        editor_todo_title.moveFocus()
     }
 
     override fun showAddTask(todoItem: TodoItem) {
