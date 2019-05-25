@@ -2,6 +2,7 @@ package com.suzei.minote.ui.editor.todo
 
 
 import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -25,7 +26,6 @@ import kotlinx.android.synthetic.main.item_row_edit_todo.view.*
 
 /**
  * A simple [Fragment] subclass.
- *
  */
 class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.View {
 
@@ -82,7 +82,6 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
     override fun showTodoDetails(todo: Todo) {
         todoItemList = todo.todoItems?.toMutableList() ?: ArrayList()
         todoItemListAdapter.changeTextColor(Color.parseColor(todo.textColor))
-//        todoItemListAdapter.notifyDataSetChanged()
 
         editor_todo_title.setText(todo.title)
         noteColor(Color.parseColor(todo.color))
@@ -247,12 +246,51 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
             fun bind(todoItem: TodoItem, textColor: Int) {
                 val position = adapterPosition + 1
 
-                itemView.item_edit_todo_text.setTextColor(textColor)
-                itemView.item_edit_todo_number.setTextColor(textColor)
-                itemView.item_edit_todo_edit.setColorFilter(textColor)
+                itemView.item_edit_todo_text.apply {
 
-                itemView.item_edit_todo_text.text = todoItem.task
-                itemView.item_edit_todo_number.text = "$position.)"
+                    if (todoItem.completed!!) {
+
+                        paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+
+                    }
+
+                    setTextColor(textColor)
+
+                }
+
+                itemView.item_edit_todo_text.setTextColor(textColor)
+                itemView.item_edit_todo_edit.setColorFilter(textColor)
+                itemView.item_edit_todo_remove.setColorFilter(textColor)
+
+                itemView.item_edit_todo_text.text = "$position.) " + todoItem.task
+
+                itemView.item_edit_todo_text.setOnClickListener {
+
+                    val todoItem = todoItemList[adapterPosition]
+
+                    if (!todoItem.completed!!) {
+
+                        it.item_edit_todo_text.paintFlags = it.item_edit_todo_text.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                        todoItemList[adapterPosition].completed = true
+
+                    }
+                    else {
+
+                        it.item_edit_todo_text.paintFlags = Paint.ANTI_ALIAS_FLAG
+                        todoItemList[adapterPosition].completed = false
+
+                    }
+
+                    notifyDataSetChanged()
+
+                }
+
+                itemView.item_edit_todo_remove.setOnClickListener {
+
+                    todoItemList.removeAt(adapterPosition)
+                    notifyDataSetChanged()
+
+                }
 
                 itemView.item_edit_todo_edit.setOnClickListener {
 
