@@ -20,7 +20,7 @@
             style="@style/ImageButton.Selectable"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginStart="@dimen/margin_small"
             android:contentDescription="@string/back"
             app:srcCompat="@drawable/back" />
         
@@ -45,7 +45,7 @@
             android:id="@+id/editor_save"
             style="@style/ImageButton.Selectable"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_small"
             android:layout_toStartOf="@id/editor_menu"
             android:contentDescription="@string/save"
             app:srcCompat="@drawable/save" />
@@ -55,7 +55,7 @@
             style="@style/ImageButton.Selectable"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_small"
             android:contentDescription="@string/menu"
             app:srcCompat="@drawable/menu" />
     
