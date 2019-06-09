@@ -16,7 +16,7 @@
 
         <activity android:name=".ui.editor.todo.EditorTodoActivity"
             android:theme="@style/EditorTheme"
-            android:windowSoftInputMode="stateAlwaysHidden" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
         <meta-data
             android:name="firebase_crashlytics_collection_enabled"

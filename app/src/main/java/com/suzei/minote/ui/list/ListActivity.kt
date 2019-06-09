@@ -35,7 +35,6 @@ class ListActivity : AppCompatActivity() {
 
         setSupportActionBar(list_toolbar)
 
-        LogMe.info("Instance = New Activity")
         fm = supportFragmentManager
 
         list_view_pager.adapter = ListTabPagerAdapter()

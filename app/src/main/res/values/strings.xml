@@ -37,5 +37,6 @@
     <string name="change_note_color">Change note color</string>
     <string name="change_text_color">Change text color</string>
     <string name="settings">Settings</string>
+    <string name="enter_task">Enter Task</string>
 
 </resources>

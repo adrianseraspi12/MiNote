@@ -62,7 +62,6 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        editor_todo_add_item.setOnClickListener(this)
         editor_todo_save.setOnClickListener(this)
         editor_todo_menu.setOnClickListener(this)
         editor_todo_back_arrow.setOnClickListener(this)
@@ -128,7 +127,6 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
 
     override fun noteColor(noteColor: Int) {
         editor_todo_root.setBackgroundColor(noteColor)
-        editor_todo_add_item.setTextColor(noteColor)
     }
 
     override fun textColor(textColor: Int) {
@@ -136,8 +134,9 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
         editor_todo_title.setTextColor(textColor)
         editor_todo_back_arrow.setColorFilter(textColor)
         editor_todo_save.setColorFilter(textColor)
+        editor_todo_add_task.setColorFilter(textColor)
+        editor_todo_task_input.setTextColor(textColor)
         editor_todo_menu.setColorFilter(textColor)
-        editor_todo_add_item.setBackgroundColor(textColor)
     }
 
     override fun onClick(v: View?) {
@@ -148,7 +147,7 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
 
             R.id.editor_todo_menu -> showMenu()
 
-            R.id.editor_todo_add_item -> addItem()
+            R.id.editor_todo_add_task -> addItem()
 
             R.id.editor_todo_save -> saveTodo()
 
@@ -205,20 +204,11 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
     }
 
     private fun addItem() {
-        showAddItemDialog("Add Task",
-                "Add",
-                "",
-                object: InputDialogListener {
+        val task = editor_todo_task_input.text.toString()
 
-                    override fun onAddClick(message: String?) {
-
-                        if (message!!.isNotEmpty()) {
-                            presenter.addTask(message)
-                        }
-
-                    }
-
-                })
+        if (task.isNotEmpty()) {
+            presenter.addTask(task)
+        }
     }
 
     inner class TodoItemAdapter: RecyclerView.Adapter<TodoItemAdapter.TodoItemViewHolder>() {
