@@ -19,6 +19,7 @@ import com.suzei.minote.data.entity.Todo
 import com.suzei.minote.data.entity.TodoItem
 import com.suzei.minote.ext.moveFocus
 import com.suzei.minote.utils.ColorWheel
+import com.suzei.minote.utils.LogMe
 import com.suzei.minote.utils.dialogs.BottomSheetFragment
 import com.suzei.minote.utils.dialogs.InputDialog
 import com.suzei.minote.utils.dialogs.InputDialogListener
@@ -65,6 +66,7 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
         editor_todo_save.setOnClickListener(this)
         editor_todo_menu.setOnClickListener(this)
         editor_todo_back_arrow.setOnClickListener(this)
+        editor_todo_add_task.setOnClickListener(this)
 
         editor_todo_list.layoutManager = LinearLayoutManager(context)
         editor_todo_list.adapter = todoItemListAdapter
@@ -151,7 +153,6 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
 
             R.id.editor_todo_save -> saveTodo()
 
-
         }
 
     }
@@ -205,6 +206,8 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
 
     private fun addItem() {
         val task = editor_todo_task_input.text.toString()
+
+        LogMe.info("Task = $task")
 
         if (task.isNotEmpty()) {
             presenter.addTask(task)
