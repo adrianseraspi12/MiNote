@@ -3,8 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.suzei.minote">
 
-    <!--TODO: Increment Version-->
-
     <application
         android:allowBackup="true"
         android:extractNativeLibs="false"
@@ -24,12 +22,6 @@
             android:theme="@style/EditorTheme"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
-
-
-        <!--TODO REMOVED THIS || change app id, ad id -->
-        <meta-data
-            android:name="firebase_crashlytics_collection_enabled"
-            android:value="false" />
 
         <activity
             android:name=".ui.editor.note.EditorNoteActivity"
