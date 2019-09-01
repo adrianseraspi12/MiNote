@@ -64,6 +64,7 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
     }
 
     override fun showListOfNotes(listOfTodo: MutableList<Todo>) {
+        list_empty_placeholder.visibility = View.GONE
         this.listOfTodo = listOfTodo
         adapter.notifyDataSetChanged()
     }
@@ -117,6 +118,7 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
                     listOfTodo.remove(tempTodo!!)
                     adapter.notifyItemRemoved(tempPosition)
 
+                    presenter.checkSizeOfList(listOfTodo.size)
                     showSnackbar()
                 }
             }

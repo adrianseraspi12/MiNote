@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.flask.colorpicker.ColorPickerView
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
 import com.suzei.minote.R
 import com.suzei.minote.data.entity.Todo
 import com.suzei.minote.data.entity.TodoItem
@@ -70,11 +72,30 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
 
         editor_todo_list.layoutManager = LinearLayoutManager(context)
         editor_todo_list.adapter = todoItemListAdapter
+
+        adView.adListener = adListener
+
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
     }
 
     override fun onStart() {
         super.onStart()
         presenter.start()
+    }
+
+    private val adListener = object: AdListener() {
+
+        override fun onAdLoaded() {
+            super.onAdLoaded()
+            adView.visibility = View.VISIBLE
+        }
+
+        override fun onAdFailedToLoad(p0: Int) {
+            super.onAdFailedToLoad(p0)
+            adView.visibility = View.GONE
+        }
+
     }
 
     override fun setPresenter(presenter: EditorTodoContract.Presenter) {

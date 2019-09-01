@@ -32,6 +32,12 @@ class ListTodoPresenter(
         repository.delete(data)
     }
 
+    override fun checkSizeOfList(size: Int) {
+        if (size == 0) {
+            mView.showListUnavailable()
+        }
+    }
+
     override fun showEditor(itemId: String) {
         mView.redirectToEditorActivity(itemId)
     }

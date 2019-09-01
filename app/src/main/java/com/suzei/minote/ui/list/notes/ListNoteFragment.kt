@@ -16,6 +16,7 @@ import com.suzei.minote.R
 import com.suzei.minote.data.entity.Notes
 import com.suzei.minote.ui.editor.note.EditorNoteActivity
 import com.suzei.minote.ui.list.ListContract
+import com.suzei.minote.utils.LogMe
 import com.suzei.minote.utils.Turing
 import com.suzei.minote.utils.dialogs.PasswordDialog
 import kotlinx.android.synthetic.main.fragment_list.*
@@ -78,6 +79,7 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
     }
 
     override fun insertNoteToList(note: Notes, position: Int) {
+        list_empty_placeholder.visibility = View.GONE
         listOfNotes.add(position, note)
         listAdapter.notifyItemInserted(position)
     }
@@ -122,6 +124,7 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
                     listOfNotes.remove(tempNote!!)
                     listAdapter.notifyItemRemoved(tempPosition)
 
+                    presenter.checkSizeOfList(listOfNotes.size)
                     showSnackbar()
 
                 }
@@ -177,8 +180,9 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
                                 super.onDismissed(transientBottomBar, event)
                                 when (event) {
 
-                                    BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_CONSECUTIVE ->
+                                    BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_CONSECUTIVE -> {
                                         presenter.delete(consecutiveNote!!)
+                                    }
 
                                     BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_TIMEOUT -> {
                                         presenter.delete(tempNote!!)

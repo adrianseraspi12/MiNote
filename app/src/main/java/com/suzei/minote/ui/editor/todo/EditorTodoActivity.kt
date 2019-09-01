@@ -1,10 +1,14 @@
 package com.suzei.minote.ui.editor.todo
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
 import com.suzei.minote.Injection
 import com.suzei.minote.R
+import kotlinx.android.synthetic.main.activity_editor_todo.*
 
 class EditorTodoActivity : AppCompatActivity() {
 
@@ -46,5 +50,7 @@ class EditorTodoActivity : AppCompatActivity() {
             }
 
         }
+
     }
+
 }

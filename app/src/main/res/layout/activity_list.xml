@@ -31,11 +31,22 @@
             app:tabBackground="?android:selectableItemBackground"
             app:tabIndicatorColor="@color/white"
             app:tabMode="fixed"
+            app:tabRippleColor="@color/colorPrimaryDark"
             app:tabSelectedTextColor="@color/white"
-            app:tabTextColor="@android:color/darker_gray"
-            app:tabRippleColor="@color/colorPrimaryDark" />
+            app:tabTextColor="@android:color/darker_gray" />
 
-    </com.google.android.material.appbar.AppBarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
+
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        ads:adSize="SMART_BANNER"
+        ads:adUnitId="ca-app-pub-3940256099942544/6300978111"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/list_app_bar" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/list_view_pager"
@@ -44,7 +55,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/list_app_bar" />
+        app:layout_constraintTop_toBottomOf="@+id/adView" />
 
     <uk.co.markormesher.android_fab.FloatingActionButton
         android:id="@+id/list_fab"

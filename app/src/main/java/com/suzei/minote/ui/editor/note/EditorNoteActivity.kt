@@ -1,10 +1,14 @@
 package com.suzei.minote.ui.editor.note
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
 import com.suzei.minote.Injection
 import com.suzei.minote.R
+import kotlinx.android.synthetic.main.activity_editor.*
 
 class EditorNoteActivity : AppCompatActivity() {
 
@@ -44,6 +48,24 @@ class EditorNoteActivity : AppCompatActivity() {
                         editorFragment)
             }
 
+        }
+
+        adView.adListener = adListener
+
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
+    }
+
+    private val adListener = object: AdListener() {
+
+        override fun onAdLoaded() {
+            super.onAdLoaded()
+            adView.visibility = View.VISIBLE
+        }
+
+        override fun onAdFailedToLoad(p0: Int) {
+            super.onAdFailedToLoad(p0)
+            adView.visibility = View.GONE
         }
 
     }

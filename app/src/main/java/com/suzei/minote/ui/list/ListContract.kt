@@ -23,6 +23,8 @@ interface ListContract {
 
         fun delete(data: T)
 
+        fun checkSizeOfList(size: Int)
+
         fun showEditor(itemId: String)
 
     }

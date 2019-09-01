@@ -5,11 +5,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.preference.PreferenceManager
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
 import com.suzei.minote.Injection
 import com.suzei.minote.R
 import com.suzei.minote.ui.editor.note.EditorNoteActivity
@@ -41,6 +44,10 @@ class ListActivity : AppCompatActivity() {
         list_tab_layout.setupWithViewPager(list_view_pager)
 
         list_fab.speedDialMenuAdapter = speedDialAdapter
+        adView.adListener = adListener
+
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -59,6 +66,20 @@ class ListActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    private val adListener = object: AdListener() {
+
+        override fun onAdLoaded() {
+            super.onAdLoaded()
+            adView.visibility = View.VISIBLE
+        }
+
+        override fun onAdFailedToLoad(p0: Int) {
+            super.onAdFailedToLoad(p0)
+            adView.visibility = View.GONE
+        }
+
+    }
+
     private val speedDialAdapter = object: SpeedDialMenuAdapter() {
 
         override fun getCount(): Int {
@@ -68,8 +89,8 @@ class ListActivity : AppCompatActivity() {
         override fun getMenuItem(context: Context, position: Int): SpeedDialMenuItem =
                 when(position) {
 
-                    0 -> SpeedDialMenuItem(context, R.drawable.lock_close, "Create Note")
-                    1 -> SpeedDialMenuItem(context, R.drawable.settings, "Create Todo")
+                    0 -> SpeedDialMenuItem(context, R.drawable.note, "Create Note")
+                    1 -> SpeedDialMenuItem(context, R.drawable.todo, "Create Todo")
 
                     else -> throw IllegalArgumentException("Invalid position = $position")
                 }
