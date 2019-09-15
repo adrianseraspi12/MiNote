@@ -5,11 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.suzei.minote.R
 import com.suzei.minote.ext.moveFocus
-import com.suzei.minote.utils.LogMe
 import kotlinx.android.synthetic.main.dialog_todo.*
 import java.lang.IllegalArgumentException
 

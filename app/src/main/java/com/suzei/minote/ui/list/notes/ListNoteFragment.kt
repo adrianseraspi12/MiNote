@@ -79,6 +79,7 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
         list_empty_placeholder.visibility = View.GONE
         this.listOfNotes = listOfNotes
         listAdapter.notifyDataSetChanged()
+        list_notes.smoothScrollToPosition(0)
     }
 
     override fun showListUnavailable() {

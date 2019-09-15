@@ -1,6 +1,5 @@
 package com.suzei.minote.ui.list
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -23,11 +22,11 @@ import com.suzei.minote.ui.list.todo.ListTodoFragment
 import com.suzei.minote.ui.list.todo.ListTodoPresenter
 import com.suzei.minote.ui.settings.SettingsActivity
 import com.suzei.minote.utils.LogMe
+import com.suzei.minote.utils.dialogs.SelectNoteDialog
+import com.suzei.minote.utils.dialogs.SelectNoteDialogListener
 import kotlinx.android.synthetic.main.activity_list.*
-import uk.co.markormesher.android_fab.SpeedDialMenuAdapter
-import uk.co.markormesher.android_fab.SpeedDialMenuItem
 
-class ListActivity : AppCompatActivity() {
+class ListActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var fm: FragmentManager
 
@@ -46,11 +45,40 @@ class ListActivity : AppCompatActivity() {
         list_view_pager.adapter = ListTabPagerAdapter()
         list_tab_layout.setupWithViewPager(list_view_pager)
 
-        list_fab.speedDialMenuAdapter = speedDialAdapter
+        list_fab.setOnClickListener(this)
         adView.adListener = adListener
 
         val adRequest = AdRequest.Builder().build()
         adView.loadAd(adRequest)
+    }
+
+    override fun onClick(v: View?) {
+        if (v?.id == R.id.list_fab) {
+            val dialog = SelectNoteDialog()
+            dialog.setOnCreateClickListener(object : SelectNoteDialogListener {
+
+                override fun onCreateClick(type: Int) {
+
+                    when(type) {
+
+                        SelectNoteDialog.NOTE_PAD ->
+                            startActivity(Intent(
+                                this@ListActivity,
+                                EditorNoteActivity::class.java))
+
+                        SelectNoteDialog.TODO_LIST ->
+                            startActivity(Intent(
+                                this@ListActivity,
+                                EditorTodoActivity::class.java))
+
+                    }
+
+                }
+
+            })
+
+            dialog.show(fm, null)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -84,45 +112,6 @@ class ListActivity : AppCompatActivity() {
         override fun onAdFailedToLoad(p0: Int) {
             super.onAdFailedToLoad(p0)
             adView.visibility = View.GONE
-        }
-
-    }
-
-    private val speedDialAdapter = object: SpeedDialMenuAdapter() {
-
-        override fun getCount(): Int {
-            return 2
-        }
-
-        override fun getMenuItem(context: Context, position: Int): SpeedDialMenuItem =
-                when(position) {
-
-                    0 -> SpeedDialMenuItem(context, R.drawable.note, "Create Note")
-                    1 -> SpeedDialMenuItem(context, R.drawable.todo, "Create Todo")
-
-                    else -> throw IllegalArgumentException("Invalid position = $position")
-                }
-
-        override fun onMenuItemClick(position: Int): Boolean {
-            return when(position) {
-
-                0 -> {
-                    startActivity(Intent(
-                            this@ListActivity,
-                            EditorNoteActivity::class.java))
-                    true
-                }
-
-                1 -> {
-                    startActivity(Intent(
-                            this@ListActivity,
-                            EditorTodoActivity::class.java))
-                    true
-                }
-
-
-                else -> throw IllegalArgumentException("Invalid position = $position")
-            }
         }
 
     }

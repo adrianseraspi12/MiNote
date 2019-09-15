@@ -39,5 +39,9 @@
     <string name="settings">Settings</string>
     <string name="enter_task">Enter Task</string>
     <string name="listContentDescription">empty list</string>
+    <string name="create_note">Create Note</string>
+    <string name="note_pad">Note Pad</string>
+    <string name="todo_list">Todo List</string>
+    <string name="create">CREATE</string>
 
 </resources>
