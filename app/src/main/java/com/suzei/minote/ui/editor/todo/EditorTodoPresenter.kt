@@ -100,9 +100,11 @@ class EditorTodoPresenter: EditorTodoContract.Presenter {
     }
 
     override fun addTask(task: String) {
-        mView.showAddTask(
-                TodoItem(task, false)
-        )
+        if (task.isNotEmpty()) {
+            mView.showAddTask(
+                    TodoItem(task, false)
+            )
+        }
     }
 
     override fun updateTask(position: Int, todoItem: TodoItem) {

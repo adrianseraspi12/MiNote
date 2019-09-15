@@ -27,6 +27,7 @@ import com.suzei.minote.utils.dialogs.InputDialog
 import com.suzei.minote.utils.dialogs.InputDialogListener
 import kotlinx.android.synthetic.main.fragment_editor_todo.*
 import kotlinx.android.synthetic.main.item_row_edit_todo.view.*
+import kotlinx.android.synthetic.main.item_row_notes_default.view.*
 
 /**
  * A simple [Fragment] subclass.
@@ -53,7 +54,53 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
         super.onCreate(savedInstanceState)
         retainInstance = true
         todoItemList = ArrayList()
-        todoItemListAdapter = TodoItemAdapter()
+        todoItemListAdapter = TodoItemAdapter(object : TodoAdapterClickListener {
+
+            override fun onEditClick(position: Int) {
+                val todoItem = todoItemList[position]
+
+                showAddItemDialog(
+                        "Edit Task",
+                        "Edit",
+                        todoItem.task!!,
+                        object: InputDialogListener {
+
+                            override fun onAddClick(message: String?) {
+
+                                val itemPosition = todoItemList.indexOf(todoItem)
+
+                                if (message!!.isNotEmpty()) {
+                                    todoItem.task = message
+                                    presenter.updateTask(itemPosition, todoItem)
+                                }
+
+                            }
+
+                        })
+            }
+
+            override fun onDeleteClick(position: Int) {
+                todoItemList.removeAt(position)
+                todoItemListAdapter.notifyDataSetChanged()
+                editor_todo_list.smoothScrollToPosition(position)
+            }
+
+            override fun onItemClick(position: Int) {
+                val todoItem = todoItemList[position]
+
+                if (todoItem.completed!!) {
+                    todoItem.completed = false
+                }
+                else {
+                    todoItem.completed = true
+                }
+
+                todoItemList[position] = todoItem
+                todoItemListAdapter.notifyDataSetChanged()
+                editor_todo_list.smoothScrollToPosition(position)
+            }
+
+        })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -72,30 +119,11 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
 
         editor_todo_list.layoutManager = LinearLayoutManager(context)
         editor_todo_list.adapter = todoItemListAdapter
-
-        adView.adListener = adListener
-
-        val adRequest = AdRequest.Builder().build()
-        adView.loadAd(adRequest)
     }
 
     override fun onStart() {
         super.onStart()
         presenter.start()
-    }
-
-    private val adListener = object: AdListener() {
-
-        override fun onAdLoaded() {
-            super.onAdLoaded()
-            adView.visibility = View.VISIBLE
-        }
-
-        override fun onAdFailedToLoad(p0: Int) {
-            super.onAdFailedToLoad(p0)
-            adView.visibility = View.GONE
-        }
-
     }
 
     override fun setPresenter(presenter: EditorTodoContract.Presenter) {
@@ -115,12 +143,12 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
 
     override fun showAddTask(todoItem: TodoItem) {
         todoItemList.add(todoItem)
-        todoItemListAdapter.notifyDataSetChanged()
+        todoItemListAdapter.updateAdapter()
     }
 
     override fun showUpdatedTask(position: Int, todoItem: TodoItem) {
         todoItemList[position] = todoItem
-        todoItemListAdapter.notifyDataSetChanged()
+        todoItemListAdapter.updateAdapter()
     }
 
     override fun showToastMessage(message: String) {
@@ -227,21 +255,17 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
 
     private fun addItem() {
         val task = editor_todo_task_input.text.toString()
-
-        LogMe.info("Task = $task")
-
-        if (task.isNotEmpty()) {
-            presenter.addTask(task)
-        }
+        presenter.addTask(task)
     }
 
-    inner class TodoItemAdapter: RecyclerView.Adapter<TodoItemAdapter.TodoItemViewHolder>() {
+    inner class TodoItemAdapter(var listener: TodoAdapterClickListener):
+            RecyclerView.Adapter<TodoItemAdapter.TodoItemViewHolder>() {
 
         private var textColor: Int = 0
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoItemViewHolder {
             val view = layoutInflater.inflate(R.layout.item_row_edit_todo, parent, false)
-            return TodoItemViewHolder(view)
+            return TodoItemViewHolder(view, listener)
         }
 
         override fun getItemCount(): Int {
@@ -253,82 +277,62 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
             holder.bind(todoItem, textColor)
         }
 
-        fun changeTextColor(textColor: Int) {
-            this.textColor = textColor
-            notifyDataSetChanged()
+        fun updateAdapter() {
+            val adapterPosition = todoItemList.size - 1
+            if (adapterPosition >= 0) {
+                todoItemListAdapter.notifyDataSetChanged()
+                editor_todo_list.smoothScrollToPosition(adapterPosition)
+            }
         }
 
-        inner class TodoItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        fun changeTextColor(textColor: Int) {
+            this.textColor = textColor
+            todoItemListAdapter.updateAdapter()
+        }
+
+        inner class TodoItemViewHolder(itemView: View,
+                                       private var todoListener: TodoAdapterClickListener) :
+                RecyclerView.ViewHolder(itemView), View.OnClickListener {
+
+            init {
+                itemView.item_edit_todo_remove.setOnClickListener(this)
+                itemView.item_edit_todo_edit.setOnClickListener(this)
+                itemView.item_edit_todo_text.setOnClickListener(this)
+            }
+
+            override fun onClick(v: View?) {
+
+                when (v?.id) {
+                    itemView.item_edit_todo_remove.id ->
+                        todoListener.onDeleteClick(adapterPosition)
+
+                    itemView.item_edit_todo_edit.id ->
+                        todoListener.onEditClick(adapterPosition)
+
+                    itemView.item_edit_todo_text.id -> {
+                        todoListener.onItemClick(adapterPosition)
+                    }
+                }
+            }
 
             fun bind(todoItem: TodoItem, textColor: Int) {
                 val position = adapterPosition + 1
 
-                itemView.item_edit_todo_text.apply {
-
-                    if (todoItem.completed!!) {
-
-                        paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-
-                    }
-
-                    setTextColor(textColor)
-
+                if (todoItem.completed!!) {
+                    itemView.item_edit_todo_text.paintFlags = itemView.item_edit_todo_text.paintFlags or
+                            Paint.STRIKE_THRU_TEXT_FLAG
                 }
+                else {
+                    itemView.item_edit_todo_text.paintFlags = Paint.ANTI_ALIAS_FLAG
+                }
+
+                itemView.item_edit_todo_text.setTextColor(textColor)
 
                 itemView.item_edit_todo_text.setTextColor(textColor)
                 itemView.item_edit_todo_edit.setColorFilter(textColor)
                 itemView.item_edit_todo_remove.setColorFilter(textColor)
 
                 itemView.item_edit_todo_text.text = "$position.) " + todoItem.task
-
-                itemView.item_edit_todo_text.setOnClickListener {
-
-                    val todoItem = todoItemList[adapterPosition]
-
-                    if (!todoItem.completed!!) {
-
-                        it.item_edit_todo_text.paintFlags = it.item_edit_todo_text.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                        todoItemList[adapterPosition].completed = true
-
-                    }
-                    else {
-
-                        it.item_edit_todo_text.paintFlags = Paint.ANTI_ALIAS_FLAG
-                        todoItemList[adapterPosition].completed = false
-
-                    }
-
-                    notifyDataSetChanged()
-
-                }
-
-                itemView.item_edit_todo_remove.setOnClickListener {
-
-                    todoItemList.removeAt(adapterPosition)
-                    notifyDataSetChanged()
-
-                }
-
-                itemView.item_edit_todo_edit.setOnClickListener {
-
-                    showAddItemDialog(
-                            "Edit Task",
-                            "Edit",
-                            todoItem.task!!,
-                            object: InputDialogListener {
-
-                                override fun onAddClick(message: String?) {
-
-                                    if (message!!.isNotEmpty()) {
-                                        todoItem.task = message
-                                        presenter.updateTask(adapterPosition, todoItem)
-                                    }
-
-                                }
-
-                            })
-                }
-
             }
 
         }

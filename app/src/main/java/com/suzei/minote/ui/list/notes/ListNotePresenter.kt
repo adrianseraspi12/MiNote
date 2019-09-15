@@ -12,6 +12,7 @@ class ListNotePresenter internal constructor(
         ListContract.Presenter<Notes> {
 
     init {
+        LogMe.info("LOG ListNotePresenter = initialized")
         mView.setPresenter(this)
     }
 
