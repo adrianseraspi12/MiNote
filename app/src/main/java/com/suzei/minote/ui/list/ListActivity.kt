@@ -34,6 +34,9 @@ class ListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list)
+
+        LogMe.info("LOG ListActivity = onCreate()")
+
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
 
         setSupportActionBar(list_toolbar)
@@ -64,6 +67,11 @@ class ListActivity : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onDestroy() {
+        LogMe.info("LOG ListActivity = onDestroy()")
+        super.onDestroy()
     }
 
     private val adListener = object: AdListener() {
@@ -125,6 +133,8 @@ class ListActivity : AppCompatActivity() {
             when (position) {
 
                 0 -> {
+                    LogMe.info("LOG ListTabPagerAdapter = set listNoteFragment")
+
                     val listNoteFragment = ListNoteFragment.newInstance()
 
                     ListNotePresenter(
@@ -135,6 +145,8 @@ class ListActivity : AppCompatActivity() {
                 }
 
                 1 -> {
+                    LogMe.info("LOG ListTabPagerAdapter = set listTodoFragment")
+
                     val listTodoFragment = ListTodoFragment.newInstance()
 
                     ListTodoPresenter(

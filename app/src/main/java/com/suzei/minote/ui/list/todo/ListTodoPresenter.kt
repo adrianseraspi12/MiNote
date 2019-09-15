@@ -4,6 +4,7 @@ import com.suzei.minote.data.entity.Todo
 import com.suzei.minote.data.repository.Repository
 import com.suzei.minote.data.repository.TodoRepository
 import com.suzei.minote.ui.list.ListContract
+import com.suzei.minote.utils.LogMe
 
 class ListTodoPresenter(
         private val repository: TodoRepository,
@@ -11,6 +12,8 @@ class ListTodoPresenter(
         ListContract.Presenter<Todo> {
 
     init {
+        LogMe.info("LOG ListTodoPresenter = initialized")
+
         mView.setPresenter(this)
     }
 
