@@ -1,6 +1,8 @@
 package com.suzei.minote.data
 
+import android.content.ContentValues
 import android.content.Context
+import android.database.sqlite.SQLiteException
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -14,6 +16,7 @@ import com.suzei.minote.data.dao.TodoItemDao
 import com.suzei.minote.data.entity.Notes
 import com.suzei.minote.data.entity.Todo
 import com.suzei.minote.data.entity.TodoItem
+import com.suzei.minote.utils.LogMe
 
 //  If the database updated, Increment version by 1
 @Database(entities = [Notes::class, Todo::class, TodoItem::class], version = 6)
@@ -36,7 +39,7 @@ abstract class NotesDatabase : RoomDatabase() {
                         context.applicationContext,
                         NotesDatabase::class.java,
                         DATABASE_NAME)
-                        .addMigrations(MIGRATION_2_3, MIGRATION_4_5)
+                        .addMigrations(MIGRATION_2_3, MIGRATION_4_5, MIGRATION_3_6)
                         .build()
             }
         }
@@ -55,6 +58,56 @@ abstract class NotesDatabase : RoomDatabase() {
                 // Since we didn't alter the table, there's nothing else to do here.
             }
 
+        }
+
+        private val MIGRATION_3_6: Migration = object: Migration(3, 6) {
+
+            override fun migrate(database: SupportSQLiteDatabase) {
+                try {
+                    val c = database.query("SELECT * FROM notes")
+                    c.use {
+
+                        if (c.moveToFirst()) {
+
+                            val cv = ContentValues()
+                            cv.put("_id", c.getInt(c.getColumnIndex("_id")))
+                            cv.put("password", c.getString(c.getColumnIndex("password")))
+                            cv.put("title", c.getString(c.getColumnIndex("title")))
+                            cv.put("message", c.getString(c.getColumnIndex("message")))
+                            cv.put("color", c.getString(c.getColumnIndex("color")))
+                            cv.put("text_color", c.getString(c.getColumnIndex("text_color")))
+
+                            database.execSQL("DROP TABLE IF EXISTS `notes`")
+                            createNotesTable(database)
+                            database.insert("notes", 0, cv)
+
+                        }
+                        else {
+
+                            database.execSQL("DROP TABLE IF EXISTS `customer`")
+                            createNotesTable(database)
+
+                        }
+
+                    }
+
+                }
+                catch (e: Exception) {
+                    LogMe.info("[DATABASE ROOM EXCEPTION] ${e.message}")
+                }
+            }
+
+        }
+
+        fun createNotesTable(database: SupportSQLiteDatabase){
+            database.execSQL("""CREATE TABLE IF NOT EXISTS `notes` (
+                            `_id` TEXT NOT NULL PRIMARY KEY,
+                            `created_date` TEXT,
+                            `text_color` TEXT,
+                            `color` TEXT,
+                            `message` TEXT,
+                            `title` TEXT,
+                            `password` TEXT)""".trimIndent())
         }
 
     }
