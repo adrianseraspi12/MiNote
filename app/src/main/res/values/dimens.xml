@@ -15,4 +15,19 @@
 
     <dimen name="bottom_sheet_height">56dp</dimen>
     
+    <dimen name="headerSize">40sp</dimen>
+    <dimen name="listTitleSize">18sp</dimen>
+    <dimen name="listContentSize">14sp</dimen>
+    <dimen name="listSubtitleSize">12sp</dimen>
+    <dimen name="placeholderTitleSize">30sp</dimen>
+    <dimen name="placeholderSubtitleSize">18sp</dimen>
+    <dimen name="bottomSheetTitleSectionSize">14sp</dimen>
+    <dimen name="passcodeTitleSize">20sp</dimen>
+    <dimen name="passcodeButtonSize">40sp</dimen>
+
+    <dimen name="listNoteContainerHeight">135dp</dimen>
+    <dimen name="listTodoContainerHeight">100dp</dimen>
+
+    <dimen name="navigationBarHeight">72dp</dimen>
+
 </resources>
