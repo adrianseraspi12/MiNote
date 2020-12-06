@@ -1,17 +1,13 @@
 package com.suzei.minote.ui.list
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
 import androidx.preference.PreferenceManager
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdRequest
 import com.suzei.minote.Injection
 import com.suzei.minote.R
 import com.suzei.minote.ui.editor.note.EditorNoteActivity
@@ -20,15 +16,17 @@ import com.suzei.minote.ui.list.notes.ListNoteFragment
 import com.suzei.minote.ui.list.notes.ListNotePresenter
 import com.suzei.minote.ui.list.todo.ListTodoFragment
 import com.suzei.minote.ui.list.todo.ListTodoPresenter
-import com.suzei.minote.ui.settings.SettingsActivity
 import com.suzei.minote.utils.LogMe
 import com.suzei.minote.utils.dialogs.SelectNoteDialog
 import com.suzei.minote.utils.dialogs.SelectNoteDialogListener
 import kotlinx.android.synthetic.main.activity_list.*
+import kotlinx.android.synthetic.main.custom_bottom_navigation.*
 
-class ListActivity : AppCompatActivity(), View.OnClickListener {
+class ListActivity : AppCompatActivity() {
 
     private lateinit var fm: FragmentManager
+    private val listNoteFragment = ListNoteFragment.newInstance()
+    private val listTodoFragment = ListTodoFragment.newInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,39 +35,57 @@ class ListActivity : AppCompatActivity(), View.OnClickListener {
         LogMe.info("LOG ListActivity = onCreate()")
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
-
-        setSupportActionBar(list_toolbar)
-
         fm = supportFragmentManager
-
-        list_view_pager.adapter = ListTabPagerAdapter()
-        list_tab_layout.setupWithViewPager(list_view_pager)
-
-        list_fab.setOnClickListener(this)
-        adView.adListener = adListener
-
-        val adRequest = AdRequest.Builder().build()
-        adView.loadAd(adRequest)
+        setupCustomBottomNavigation()
+        setupFabClick()
     }
 
-    override fun onClick(v: View?) {
-        if (v?.id == R.id.list_fab) {
+    private fun setupCustomBottomNavigation() {
+        val selectedColor = ResourcesCompat.getColor(resources, R.color.secondaryColor, null)
+        val unselectedColor = ResourcesCompat.getColor(resources, R.color.unselectedColor, null)
+
+        btn_nav_notes.iconTint = ColorStateList.valueOf(selectedColor)
+        btn_nav_todo.iconTint = ColorStateList.valueOf(unselectedColor)
+        showFragment(listNoteFragment)
+
+        ListNotePresenter(
+                Injection.provideDataSourceImpl(applicationContext),
+                listNoteFragment)
+        ListTodoPresenter(
+                Injection.provideTodoRepository(applicationContext),
+                listTodoFragment)
+
+        btn_nav_notes.setOnClickListener {
+            btn_nav_notes.iconTint = ColorStateList.valueOf(selectedColor)
+            btn_nav_todo.iconTint = ColorStateList.valueOf(unselectedColor)
+            showFragment(listNoteFragment)
+        }
+
+        btn_nav_todo.setOnClickListener {
+            btn_nav_notes.iconTint = ColorStateList.valueOf(unselectedColor)
+            btn_nav_todo.iconTint = ColorStateList.valueOf(selectedColor)
+            showFragment(listTodoFragment)
+        }
+    }
+
+    private fun setupFabClick() {
+        list_fab.setOnClickListener {
             val dialog = SelectNoteDialog()
             dialog.setOnCreateClickListener(object : SelectNoteDialogListener {
 
                 override fun onCreateClick(type: Int) {
 
-                    when(type) {
+                    when (type) {
 
                         SelectNoteDialog.NOTE_PAD ->
                             startActivity(Intent(
-                                this@ListActivity,
-                                EditorNoteActivity::class.java))
+                                    this@ListActivity,
+                                    EditorNoteActivity::class.java))
 
                         SelectNoteDialog.TODO_LIST ->
                             startActivity(Intent(
-                                this@ListActivity,
-                                EditorTodoActivity::class.java))
+                                    this@ListActivity,
+                                    EditorTodoActivity::class.java))
 
                     }
 
@@ -81,91 +97,7 @@ class ListActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.activity_list_menu, menu)
-        return true
+    private fun showFragment(fragment: Fragment) {
+        fm.beginTransaction().replace(list_container.id, fragment).commit()
     }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        if (item.itemId == R.id.menu_settings) {
-            startActivity(Intent(
-                    this@ListActivity,
-                    SettingsActivity::class.java))
-        }
-
-        return super.onOptionsItemSelected(item)
-    }
-
-    override fun onDestroy() {
-        LogMe.info("LOG ListActivity = onDestroy()")
-        super.onDestroy()
-    }
-
-    private val adListener = object: AdListener() {
-
-        override fun onAdLoaded() {
-            super.onAdLoaded()
-            adView.visibility = View.VISIBLE
-        }
-
-        override fun onAdFailedToLoad(p0: Int) {
-            super.onAdFailedToLoad(p0)
-            adView.visibility = View.GONE
-        }
-
-    }
-
-    inner class ListTabPagerAdapter: FragmentPagerAdapter(supportFragmentManager) {
-
-        override fun getItem(position: Int): Fragment {
-            when (position) {
-
-                0 -> {
-                    LogMe.info("LOG ListTabPagerAdapter = set listNoteFragment")
-
-                    val listNoteFragment = ListNoteFragment.newInstance()
-
-                    ListNotePresenter(
-                            Injection.provideDataSourceImpl(applicationContext),
-                            listNoteFragment)
-
-                    return listNoteFragment
-                }
-
-                1 -> {
-                    LogMe.info("LOG ListTabPagerAdapter = set listTodoFragment")
-
-                    val listTodoFragment = ListTodoFragment.newInstance()
-
-                    ListTodoPresenter(
-                            Injection.provideTodoRepository(applicationContext),
-                            listTodoFragment)
-
-                    return listTodoFragment
-                }
-
-            }
-
-            throw IllegalArgumentException("Invalid Position $position")
-        }
-
-        override fun getPageTitle(position: Int): CharSequence? {
-            when (position) {
-
-                0 -> return "Notes"
-
-                1 -> return "Todo"
-
-            }
-
-            return super.getPageTitle(position)
-        }
-
-        override fun getCount(): Int {
-            return 2
-        }
-
-    }
-
 }
