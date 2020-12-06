@@ -27,6 +27,7 @@
     <color name="backgroundColor">#292929</color>
     <color name="primaryColor">#454545</color>
     <color name="secondaryColor">#FAB73B</color>
+    <color name="unselectedColor">#80FAB73B</color>
     <color name="textColor">#FFFFFF</color>
     <color name="redColor">#FD6464</color>
 

@@ -43,5 +43,7 @@
     <string name="note_pad">Note Pad</string>
     <string name="todo_list">Todo List</string>
     <string name="create">CREATE</string>
+    <string name="todo">ToDo</string>
+    <string name="notes">Notes</string>
 
 </resources>

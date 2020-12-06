@@ -14,6 +14,11 @@
     <dimen name="icon_size">24dp</dimen>
 
     <dimen name="bottom_sheet_height">56dp</dimen>
+
+    <dimen name="constraint_layout_match_parent">0dp</dimen>
+
+    <dimen name="nav_fab_elevation">12dp</dimen>
+    <dimen name="nav_fab_bottom_margin">28dp</dimen>
     
     <dimen name="headerSize">40sp</dimen>
     <dimen name="listTitleSize">18sp</dimen>

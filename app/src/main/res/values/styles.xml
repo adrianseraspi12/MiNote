@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorSecondary</item>
+        <item name="backgroundColor">@color/backgroundColor</item>
     </style>
 
     <style name="SettingsTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
