@@ -3,7 +3,8 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
-
+apply plugin: 'com.google.gms.google-services'
+apply from: 'dependency.gradle'
 
 android {
     compileSdkVersion 30
@@ -45,48 +46,3 @@ android {
     }
     sourceSets { main { java.srcDirs = ['src/main/java', 'src/prod/java'] } }
 }
-
-dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.2.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.0-alpha1'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.preference:preference:1.0.0'
-
-    //  Unit test Junit/Mockito
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-all:2.0.2-beta'
-
-    //  Instrumentation Test Espresso
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    androidTestImplementation "androidx.test.espresso:espresso-contrib:3.3.0"
-    androidTestImplementation "androidx.test.espresso:espresso-intents:3.3.0"
-    androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:3.3.0"
-    implementation "androidx.test.espresso:espresso-idling-resource:3.3.0"
-
-    //  Room
-    implementation "androidx.room:room-runtime:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
-
-    //  Firebase
-    implementation 'com.google.firebase:firebase-core:18.0.0'
-    implementation 'com.google.firebase:firebase-crashlytics:17.3.0'
-
-    //  ColorPicker
-    implementation 'com.github.QuadFlask:colorpicker:0.0.13'
-
-    //  Encrypt/Decrypt String
-    implementation 'com.github.simbiose:Encryption:2.0.1'
-
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
-    //  Timezone
-    implementation 'com.jakewharton.threetenabp:threetenabp:1.2.0'
-
-    //  Google Ads
-    implementation 'com.google.android.gms:play-services-ads:18.1.1'
-}
-
-apply plugin: 'com.google.gms.google-services'

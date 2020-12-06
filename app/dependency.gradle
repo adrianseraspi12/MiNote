@@ -1,0 +1,73 @@
+
+//  App Compat
+def app_compat_version = "1.2.0"
+
+//  Material Design
+def material_version = "1.2.1"
+def constraint_layout_version = "2.0.4"
+
+//  Legacy Support
+def legacy_support_version = "1.0.0"
+
+//  Unit test
+def junit_version = "4.12"
+def mockito_version = "2.0.2-beta"
+
+//  Room
+def room_version = "2.2.5"
+
+//  Instrumentation Test
+def android_junit_version = "1.1.2"
+def espresso_version = "3.3.0"
+
+//  Firebase
+def firebase_core_version = "18.0.0"
+def firebase_crashlytics_version = "17.3.0"
+
+//  ColorPicker
+def color_picker_version = "0.0.15"
+
+//  ThreeTen ABP
+def three_ten_abp_version = "1.2.0"
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "androidx.appcompat:appcompat:$app_compat_version"
+    implementation "com.google.android.material:material:$material_version"
+    implementation "androidx.constraintlayout:constraintlayout:$constraint_layout_version"
+    implementation "androidx.legacy:legacy-support-v4:$legacy_support_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.preference:preference:1.0.0'
+
+    //  Unit test Junit/Mockito
+    testImplementation "junit:junit:$junit_version"
+    testImplementation "org.mockito:mockito-all:$mockito_version"
+
+    //  Instrumentation Test Espresso
+    androidTestImplementation "androidx.test.ext:junit:$android_junit_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso_version"
+    androidTestImplementation "androidx.test.espresso:espresso-intents:$espresso_version"
+    androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:$espresso_version"
+    implementation "androidx.test.espresso:espresso-idling-resource:$espresso_version"
+
+    //  Room
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+
+    //  Firebase
+    implementation "com.google.firebase:firebase-core:$firebase_core_version"
+    implementation "com.google.firebase:firebase-crashlytics:$firebase_crashlytics_version"
+
+    //  ColorPicker
+    implementation "com.github.QuadFlask:colorpicker:$color_picker_version"
+
+    //  Encrypt/Decrypt String
+    implementation 'com.github.simbiose:Encryption:2.0.1'
+
+    //  Timezone
+    implementation "com.jakewharton.threetenabp:threetenabp:$three_ten_abp_version"
+
+    //  Google Ads
+    implementation 'com.google.android.gms:play-services-ads:18.1.1'
+}
