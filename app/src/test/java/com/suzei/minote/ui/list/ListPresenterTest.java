@@ -3,6 +3,7 @@ package com.suzei.minote.ui.list;
 import com.suzei.minote.data.DataSource;
 import com.suzei.minote.data.DataSourceImpl;
 import com.suzei.minote.data.entity.Notes;
+import com.suzei.minote.ui.list.notes.ListNotePresenter;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +29,7 @@ public class ListPresenterTest {
 
     private static List<Notes> sListOfNotes;
 
-    private ListPresenter listPresenter;
+    private ListNotePresenter listPresenter;
 
     @Mock
     private DataSourceImpl dataSourceImpl;
@@ -42,7 +43,7 @@ public class ListPresenterTest {
     @Before
     public void setUpListPresenter() {
         MockitoAnnotations.initMocks(this);
-        listPresenter = new ListPresenter(dataSourceImpl, mView);
+        listPresenter = new ListNotePresenter(dataSourceImpl, mView);
         sListOfNotes = new ArrayList<>();
 
         sListOfNotes.add(new Notes(
@@ -87,7 +88,7 @@ public class ListPresenterTest {
 
     @Test
     public void showNoteEditor() {
-        listPresenter.showNoteEditor(note.getId());
+        listPresenter.showEditor(note.getId());
         verify(mView).redirectToEditorActivity(note.getId());
     }
 }

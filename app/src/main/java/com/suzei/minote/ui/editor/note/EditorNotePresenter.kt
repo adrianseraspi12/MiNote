@@ -1,4 +1,4 @@
-package com.suzei.minote.ui.editor
+package com.suzei.minote.ui.editor.note
 
 import android.content.SharedPreferences
 import android.graphics.Color
@@ -8,18 +8,21 @@ import com.suzei.minote.data.DataSourceImpl
 import com.suzei.minote.data.entity.Notes
 import com.suzei.minote.utils.ColorWheel
 import com.suzei.minote.utils.LogMe
+import org.threeten.bp.OffsetDateTime
 
-class EditorPresenter : EditorContract.Presenter {
+class EditorNotePresenter : EditorNoteContract.Presenter {
 
     private var dataSourceImpl: DataSource
 
-    private var mView: EditorContract.View
+    private var mView: EditorNoteContract.View
 
     private lateinit var prefs: SharedPreferences
 
-    private var itemId: Int = -1
+    private var itemId: String? = null
 
-    internal constructor(itemId: Int, dataSourceImpl: DataSourceImpl, mView: EditorContract.View) {
+    private lateinit var createdDate: OffsetDateTime
+
+    internal constructor(itemId: String, dataSourceImpl: DataSourceImpl, mView: EditorNoteContract.View) {
         this.dataSourceImpl = dataSourceImpl
         this.mView = mView
         this.itemId = itemId
@@ -29,7 +32,7 @@ class EditorPresenter : EditorContract.Presenter {
 
     internal constructor(prefs: SharedPreferences,
                          dataSourceImpl: DataSourceImpl,
-                         mView: EditorContract.View) {
+                         mView: EditorNoteContract.View) {
         this.dataSourceImpl = dataSourceImpl
         this.mView = mView
         this.prefs = prefs
@@ -38,7 +41,7 @@ class EditorPresenter : EditorContract.Presenter {
     }
 
     override fun start() {
-        if (itemId != -1) {
+        if (itemId != null) {
             showNote()
         } else {
             showNewNote()
@@ -52,7 +55,19 @@ class EditorPresenter : EditorContract.Presenter {
                           password: String?) {
         LogMe.info("Item Id = $itemId")
 
-        if (itemId == -1) {
+        if (itemId != null) {
+            val note = Notes(
+                    itemId!!,
+                    title,
+                    password,
+                    message,
+                    textColor,
+                    noteColor,
+                    createdDate)
+
+            updateNote(note)
+        }
+        else {
             val note = Notes(
                     title,
                     password,
@@ -61,17 +76,6 @@ class EditorPresenter : EditorContract.Presenter {
                     noteColor)
 
             createNote(note)
-        }
-        else {
-            val note = Notes(
-                    itemId,
-                    title,
-                    password,
-                    message,
-                    textColor,
-                    noteColor)
-
-            updateNote(note)
         }
 
     }
@@ -115,8 +119,20 @@ class EditorPresenter : EditorContract.Presenter {
     }
 
     private fun createNote(note: Notes) {
-        dataSourceImpl.saveNote(note)
-        mView.showToastMessage("Note created")
+        dataSourceImpl.saveNote(note, object: DataSource.ActionListener {
+
+            override fun onSuccess(itemId: String, createdDate: OffsetDateTime) {
+                this@EditorNotePresenter.itemId = itemId
+                this@EditorNotePresenter.createdDate = createdDate
+                mView.showToastMessage("Note created")
+            }
+
+            override fun onFailed() {
+                mView.showToastMessage("Save Failed")
+            }
+
+        })
+
     }
 
     private fun updateNote(note: Notes) {
@@ -125,9 +141,14 @@ class EditorPresenter : EditorContract.Presenter {
     }
 
     private fun showNote() {
-        dataSourceImpl.getNote(itemId, object : DataSource.NoteListener {
+        dataSourceImpl.getNote(itemId!!, object : DataSource.NoteListener {
 
             override fun onDataAvailable(note: Notes) {
+
+                note.createdDate?.let {
+                    createdDate = it
+                }
+
                 mView.showNoteDetails(note)
             }
 

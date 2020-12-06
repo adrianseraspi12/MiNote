@@ -1,15 +1,18 @@
-package com.suzei.minote.ui.list
+package com.suzei.minote.ui.list.notes
 
 import com.suzei.minote.data.DataSource
 import com.suzei.minote.data.entity.Notes
+import com.suzei.minote.ui.list.ListContract
+import com.suzei.minote.utils.LogMe
 
-class ListPresenter internal constructor(
+class ListNotePresenter internal constructor(
         private val dataSourceImpl:
         DataSource,
-        private val mView: ListContract.View):
-        ListContract.Presenter {
+        private val mView: ListContract.View<Notes>):
+        ListContract.Presenter<Notes> {
 
     init {
+        LogMe.info("LOG ListNotePresenter = initialized")
         mView.setPresenter(this)
     }
 
@@ -17,12 +20,18 @@ class ListPresenter internal constructor(
         showListOfNotes()
     }
 
-    override fun deleteNote(note: Notes) {
+    override fun delete(note: Notes) {
         dataSourceImpl.deleteNote(note)
     }
 
-    override fun showNoteEditor(itemId: Int) {
+    override fun showEditor(itemId: String) {
         mView.redirectToEditorActivity(itemId)
+    }
+
+    override fun checkSizeOfList(size: Int) {
+        if (size == 0) {
+            mView.showListUnavailable()
+        }
     }
 
     private fun showListOfNotes() {

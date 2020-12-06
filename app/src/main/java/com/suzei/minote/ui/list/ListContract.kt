@@ -1,31 +1,31 @@
 package com.suzei.minote.ui.list
 
 
-import com.suzei.minote.data.entity.Notes
-
 interface ListContract {
 
-    interface View {
+    interface View<T> {
 
-        fun setPresenter(presenter: Presenter)
+        fun setPresenter(presenter: Presenter<T>)
 
-        fun showListOfNotes(listOfNotes: MutableList<Notes>)
+        fun showListOfNotes(listOfNotes: MutableList<T>)
 
         fun showListUnavailable()
 
-        fun insertNoteToList(note: Notes, position: Int)
+        fun insertNoteToList(data: T, position: Int)
 
-        fun redirectToEditorActivity(itemId: Int)
+        fun redirectToEditorActivity(itemId: String)
 
     }
 
-    interface Presenter {
+    interface Presenter<T> {
 
         fun start()
 
-        fun deleteNote(note: Notes)
+        fun delete(data: T)
 
-        fun showNoteEditor(itemId: Int)
+        fun checkSizeOfList(size: Int)
+
+        fun showEditor(itemId: String)
 
     }
 

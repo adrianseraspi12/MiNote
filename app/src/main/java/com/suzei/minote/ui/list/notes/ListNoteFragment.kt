@@ -1,4 +1,4 @@
-package com.suzei.minote.ui.list
+package com.suzei.minote.ui.list.notes
 
 import android.content.Intent
 import android.graphics.Color
@@ -14,16 +14,18 @@ import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.suzei.minote.R
 import com.suzei.minote.data.entity.Notes
-import com.suzei.minote.ui.editor.EditorActivity
+import com.suzei.minote.ui.editor.note.EditorNoteActivity
+import com.suzei.minote.ui.list.ListContract
+import com.suzei.minote.utils.LogMe
 import com.suzei.minote.utils.Turing
 import com.suzei.minote.utils.dialogs.PasswordDialog
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.item_row_notes_default.view.*
 import java.util.*
 
-class ListFragment : Fragment(), ListContract.View {
+class ListNoteFragment : Fragment(), ListContract.View<Notes> {
 
-    private lateinit var presenter: ListContract.Presenter
+    private lateinit var presenter: ListContract.Presenter<Notes>
 
     private lateinit var listOfNotes: MutableList<Notes>
 
@@ -35,14 +37,13 @@ class ListFragment : Fragment(), ListContract.View {
 
     companion object {
 
-        internal fun newInstance(): ListFragment {
-            return ListFragment()
+        internal fun newInstance(): ListNoteFragment {
+            return ListNoteFragment()
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        retainInstance = true
         listOfNotes = ArrayList()
         listAdapter = ListAdapter()
     }
@@ -56,19 +57,21 @@ class ListFragment : Fragment(), ListContract.View {
         super.onViewCreated(view, savedInstanceState)
         list_notes.layoutManager = LinearLayoutManager(context)
         list_notes.adapter = listAdapter
-
-        list_add_note.setOnClickListener {
-            startActivity(Intent(context,
-                    EditorActivity::class.java))
-        }
     }
 
     override fun onStart() {
         super.onStart()
+        LogMe.info("LOG ListNoteFragment = onStart()")
         presenter.start()
     }
 
-    override fun setPresenter(presenter: ListContract.Presenter) {
+    override fun onDestroyView() {
+        LogMe.info("LOG ListNoteFragment = onDestroyView()")
+        super.onDestroyView()
+    }
+
+    override fun setPresenter(presenter: ListContract.Presenter<Notes>) {
+        LogMe.info("LOG ListNoteFragment = setPresenter")
         this.presenter = presenter
     }
 
@@ -76,6 +79,7 @@ class ListFragment : Fragment(), ListContract.View {
         list_empty_placeholder.visibility = View.GONE
         this.listOfNotes = listOfNotes
         listAdapter.notifyDataSetChanged()
+        list_notes.smoothScrollToPosition(0)
     }
 
     override fun showListUnavailable() {
@@ -83,13 +87,14 @@ class ListFragment : Fragment(), ListContract.View {
     }
 
     override fun insertNoteToList(note: Notes, position: Int) {
+        list_empty_placeholder.visibility = View.GONE
         listOfNotes.add(position, note)
         listAdapter.notifyItemInserted(position)
     }
 
-    override fun redirectToEditorActivity(itemId: Int) {
-        val intent = Intent(context, EditorActivity::class.java)
-        intent.putExtra(EditorActivity.EXTRA_NOTE_ID, itemId)
+    override fun redirectToEditorActivity(itemId: String) {
+        val intent = Intent(context, EditorNoteActivity::class.java)
+        intent.putExtra(EditorNoteActivity.EXTRA_NOTE_ID, itemId)
         startActivity(intent)
     }
 
@@ -127,6 +132,7 @@ class ListFragment : Fragment(), ListContract.View {
                     listOfNotes.remove(tempNote!!)
                     listAdapter.notifyItemRemoved(tempPosition)
 
+                    presenter.checkSizeOfList(listOfNotes.size)
                     showSnackbar()
 
                 }
@@ -139,7 +145,7 @@ class ListFragment : Fragment(), ListContract.View {
                     itemView.item_notes_password.visibility = View.GONE
                     itemView.setOnClickListener {
                         note.id?.let {
-                            it1 -> presenter.showNoteEditor(it1)
+                            it1 -> presenter.showEditor(it1)
                         }
                     }
                 }
@@ -158,7 +164,7 @@ class ListFragment : Fragment(), ListContract.View {
                                     Toast.LENGTH_SHORT).show()
                         } else {
                             note.id?.let {
-                                presenter.showNoteEditor(it)
+                                presenter.showEditor(it)
                             }
                         }
                     }
@@ -182,10 +188,12 @@ class ListFragment : Fragment(), ListContract.View {
                                 super.onDismissed(transientBottomBar, event)
                                 when (event) {
 
-                                    BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_CONSECUTIVE -> presenter.deleteNote(consecutiveNote!!)
+                                    BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_CONSECUTIVE -> {
+                                        presenter.delete(consecutiveNote!!)
+                                    }
 
                                     BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_TIMEOUT -> {
-                                        presenter!!.deleteNote(tempNote!!)
+                                        presenter.delete(tempNote!!)
                                         consecutiveNote = null
                                         tempNote = null
                                         tempPosition = -1

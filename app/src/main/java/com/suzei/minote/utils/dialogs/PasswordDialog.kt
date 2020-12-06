@@ -19,8 +19,7 @@ open class PasswordDialog : DialogFragment(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        retainInstance = true
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.PasswordDialogStyle)
+        setStyle(STYLE_NORMAL, R.style.PasswordDialogStyle)
     }
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -68,8 +67,8 @@ open class PasswordDialog : DialogFragment(), View.OnClickListener {
     }
 
     override fun onDestroyView() {
-        if (dialog != null && retainInstance) {
-            dialog.setOnDismissListener(null)
+        if (dialog != null) {
+            dialog!!.setOnDismissListener(null)
         }
         super.onDestroyView()
     }

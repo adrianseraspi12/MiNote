@@ -10,7 +10,7 @@ interface NotesDao {
     fun findAllNotes(): List<Notes>
 
     @Query("SELECT * FROM NOTES WHERE _id=:itemId")
-    fun findNoteById(itemId: Int): Notes
+    fun findNoteById(itemId: String): Notes
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveNote(note: Notes)
