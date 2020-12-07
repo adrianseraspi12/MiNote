@@ -4,7 +4,7 @@
     android:id="@+id/list_bottom_navigation_view"
     android:layout_width="match_parent"
     android:layout_height="72dp"
-    android:background="@color/primaryColor"
+    android:background="@drawable/navigation_bar_background"
     android:weightSum="2"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
