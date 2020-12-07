@@ -53,6 +53,7 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
         super.onViewCreated(view, savedInstanceState)
         list_notes.layoutManager = LinearLayoutManager(context)
         list_notes.adapter = adapter
+        list_tv_title.setText(R.string.todo)
     }
 
     override fun onStart() {
@@ -82,6 +83,9 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
 
     override fun showListUnavailable() {
         list_empty_placeholder.visibility = View.VISIBLE
+        list_iv_empty.setImageResource(R.drawable.ic_empty_todo)
+        list_tv_empty_title.setText(R.string.no_todo_found_title)
+        list_tv_empty_subtitle.setText(R.string.no_todo_found_subtitle)
     }
 
     override fun insertNoteToList(data: Todo, position: Int) {
@@ -95,7 +99,7 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
         startActivity(intent)
     }
 
-    inner class ListAdapter: RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
+    inner class ListAdapter : RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
             val view = layoutInflater.inflate(R.layout.item_row_notes_default, parent, false)
@@ -111,7 +115,7 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
             holder.bind(todo)
         }
 
-        inner class ListViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+        inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
             fun bind(todo: Todo) {
                 itemView.item_notes_color.setBackgroundColor(Color.parseColor(todo.color))

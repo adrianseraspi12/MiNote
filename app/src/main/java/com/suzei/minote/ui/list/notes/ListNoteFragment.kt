@@ -57,6 +57,7 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
         super.onViewCreated(view, savedInstanceState)
         list_notes.layoutManager = LinearLayoutManager(context)
         list_notes.adapter = listAdapter
+        list_tv_title.setText(R.string.notes)
     }
 
     override fun onStart() {
@@ -84,6 +85,9 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
 
     override fun showListUnavailable() {
         list_empty_placeholder.visibility = View.VISIBLE
+        list_iv_empty.setImageResource(R.drawable.ic_empty_notes)
+        list_tv_empty_title.setText(R.string.no_notes_found_title)
+        list_tv_empty_subtitle.setText(R.string.no_notes_found_subtitle)
     }
 
     override fun insertNoteToList(note: Notes, position: Int) {
@@ -140,12 +144,11 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
                 if (note.password != null) {
                     itemView.item_notes_password.visibility = View.VISIBLE
                     itemView.setOnClickListener { showPasswordDialog(note) }
-                }
-                else {
+                } else {
                     itemView.item_notes_password.visibility = View.GONE
                     itemView.setOnClickListener {
-                        note.id?.let {
-                            it1 -> presenter.showEditor(it1)
+                        note.id?.let { it1 ->
+                            presenter.showEditor(it1)
                         }
                     }
                 }
@@ -155,7 +158,7 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
                 val decryptedPassword = note.password?.let { Turing.decrypt(it) }
                 val passwordDialog = PasswordDialog.instance
 
-                passwordDialog.setOnClosePasswordDialog(object: PasswordDialog.PasswordDialogListener {
+                passwordDialog.setOnClosePasswordDialog(object : PasswordDialog.PasswordDialogListener {
 
                     override fun onClose(password: String) {
                         if (decryptedPassword != password) {
