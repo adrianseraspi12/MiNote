@@ -16,28 +16,42 @@ import com.suzei.minote.ui.list.notes.ListNoteFragment
 import com.suzei.minote.ui.list.notes.ListNotePresenter
 import com.suzei.minote.ui.list.todo.ListTodoFragment
 import com.suzei.minote.ui.list.todo.ListTodoPresenter
-import com.suzei.minote.utils.LogMe
 import com.suzei.minote.utils.dialogs.SelectNoteDialog
-import com.suzei.minote.utils.dialogs.SelectNoteDialogListener
 import kotlinx.android.synthetic.main.activity_list.*
 import kotlinx.android.synthetic.main.custom_bottom_navigation.*
 
 class ListActivity : AppCompatActivity() {
 
     private lateinit var fm: FragmentManager
+    private lateinit var selectNoteDialog: SelectNoteDialog
     private val listNoteFragment = ListNoteFragment.newInstance()
     private val listTodoFragment = ListTodoFragment.newInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list)
-
-        LogMe.info("LOG ListActivity = onCreate()")
-
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
         fm = supportFragmentManager
+        setupSelectNoteDialog()
         setupCustomBottomNavigation()
         setupFabClick()
+    }
+
+    private fun setupSelectNoteDialog() {
+        selectNoteDialog = SelectNoteDialog.newInstance {
+            selectNoteDialog.dismiss()
+            when (it) {
+                SelectNoteDialog.NOTE_PAD ->
+                    this.startActivity(Intent(
+                            this@ListActivity,
+                            EditorNoteActivity::class.java))
+
+                SelectNoteDialog.TODO_LIST ->
+                    this.startActivity(Intent(
+                            this@ListActivity,
+                            EditorTodoActivity::class.java))
+            }
+        }
     }
 
     private fun setupCustomBottomNavigation() {
@@ -70,30 +84,9 @@ class ListActivity : AppCompatActivity() {
 
     private fun setupFabClick() {
         list_fab.setOnClickListener {
-            val dialog = SelectNoteDialog()
-            dialog.setOnCreateClickListener(object : SelectNoteDialogListener {
-
-                override fun onCreateClick(type: Int) {
-
-                    when (type) {
-
-                        SelectNoteDialog.NOTE_PAD ->
-                            startActivity(Intent(
-                                    this@ListActivity,
-                                    EditorNoteActivity::class.java))
-
-                        SelectNoteDialog.TODO_LIST ->
-                            startActivity(Intent(
-                                    this@ListActivity,
-                                    EditorTodoActivity::class.java))
-
-                    }
-
-                }
-
-            })
-
-            dialog.show(fm, null)
+            fm.let {
+                selectNoteDialog.show(it, SelectNoteDialog.TAG)
+            }
         }
     }
 

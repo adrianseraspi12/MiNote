@@ -29,6 +29,7 @@
     <dimen name="bottomSheetTitleSectionSize">14sp</dimen>
     <dimen name="passcodeTitleSize">20sp</dimen>
     <dimen name="passcodeButtonSize">40sp</dimen>
+    <dimen name="selectNoteSize">80dp</dimen>
 
     <dimen name="listNoteContainerHeight">135dp</dimen>
     <dimen name="listTodoContainerHeight">100dp</dimen>
