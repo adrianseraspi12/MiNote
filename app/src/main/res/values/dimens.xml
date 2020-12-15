@@ -2,6 +2,8 @@
     <dimen name="margin_very_small">4dp</dimen>
     <dimen name="margin_small">8dp</dimen>
     <dimen name="margin_medium">16dp</dimen>
+    <dimen name="margin_large">24dp</dimen>
+    <dimen name="margin_very_large">48dp</dimen>
 
     <dimen name="text_size_x_small">12sp</dimen>
     <dimen name="text_size_small">14sp</dimen>
@@ -19,7 +21,8 @@
 
     <dimen name="nav_fab_elevation">12dp</dimen>
     <dimen name="nav_fab_bottom_margin">28dp</dimen>
-    
+
+    <dimen name="dividerSize">1dp</dimen>
     <dimen name="headerSize">40sp</dimen>
     <dimen name="listTitleSize">18sp</dimen>
     <dimen name="listContentSize">14sp</dimen>
@@ -30,9 +33,13 @@
     <dimen name="passcodeTitleSize">20sp</dimen>
     <dimen name="passcodeButtonSize">40sp</dimen>
     <dimen name="selectNoteSize">80dp</dimen>
+    <dimen name="pickColorSize">40dp</dimen>
 
     <dimen name="listNoteContainerHeight">135dp</dimen>
     <dimen name="listTodoContainerHeight">100dp</dimen>
+    <dimen name="bottomsheet_corners">24dp</dimen>
+
+    <dimen name="colorListSpacing">16dp</dimen>
 
     <dimen name="navigationBarHeight">72dp</dimen>
 

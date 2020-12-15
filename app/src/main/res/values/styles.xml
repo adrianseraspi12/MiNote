@@ -32,12 +32,4 @@
         <item name="android:minWidth">280dp</item>
     </style>
     
-    <style name="BottomSheetDialogStyle" parent="Theme.Design.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/BottomSheetModalStyle</item>
-    </style>
-    
-    <style name="BottomSheetModalStyle" parent="Widget.Design.BottomSheet.Modal">
-        <item name="behavior_peekHeight">200dp</item>
-    </style>
-    
 </resources>

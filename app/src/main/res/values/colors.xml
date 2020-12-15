@@ -30,5 +30,6 @@
     <color name="unselectedColor">#80FAB73B</color>
     <color name="textColor">#FFFFFF</color>
     <color name="redColor">#FD6464</color>
+    <color name="dividerColor">#707070</color>
 
 </resources>

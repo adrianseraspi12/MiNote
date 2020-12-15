@@ -48,5 +48,8 @@
     <string name="create">CREATE</string>
     <string name="todo">ToDo</string>
     <string name="notes">Notes</string>
+    <string name="note_color">Note color</string>
+    <string name="text_color">Text color</string>
+    <string name="lock">Lock</string>
 
 </resources>
