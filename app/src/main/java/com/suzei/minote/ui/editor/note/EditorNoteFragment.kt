@@ -9,16 +9,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import com.flask.colorpicker.ColorPickerView
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.suzei.minote.R
 import com.suzei.minote.data.entity.Notes
 import com.suzei.minote.ext.moveFocus
 import com.suzei.minote.utils.ColorWheel
-import com.suzei.minote.utils.KeyboardUtils
 import com.suzei.minote.utils.Turing
-import com.suzei.minote.utils.dialogs.BottomSheetFragment
 import com.suzei.minote.utils.dialogs.PasswordDialog
+import com.suzei.minote.utils.recycler_view.adapters.ColorListAdapter
+import com.suzei.minote.utils.recycler_view.decorator.GridSpacingItemDecoration
+import kotlinx.android.synthetic.main.bottomsheet_edit_note.*
 import kotlinx.android.synthetic.main.fragment_editor.*
 
 class EditorNoteFragment : Fragment(), EditorNoteContract.View {
@@ -29,12 +32,13 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
     private var noteColor = -1
     private var textColor = -1
 
+    private lateinit var itemDecoration: GridSpacingItemDecoration
 
     companion object {
 
-        private val EXTRA_PASSWORD = "EXTRA_PASSWORD"
-        private val EXTRA_NOTE_COLOR = "EXTRA_NOTE_COLOR"
-        private val EXTRA_TEXT_COLOR = "EXTRA_TEXT_COLOR"
+        private const val EXTRA_PASSWORD = "EXTRA_PASSWORD"
+        private const val EXTRA_NOTE_COLOR = "EXTRA_NOTE_COLOR"
+        private const val EXTRA_TEXT_COLOR = "EXTRA_TEXT_COLOR"
 
         internal fun newInstance(): EditorNoteFragment {
             return EditorNoteFragment()
@@ -44,6 +48,11 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
+        itemDecoration = GridSpacingItemDecoration(
+                6,
+                resources.getDimensionPixelSize(R.dimen.colorListSpacing),
+                false
+        )
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -62,55 +71,25 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+//        Change Note Color
+//        val noteColor = (editor_root.background as ColorDrawable).color
+//        presenter.noteColorWheel(noteColor)
 
-        editor_back_arrow.setOnClickListener {
-            activity!!.finish()
-        }
+//        Change Text Color
+//        val textColor = editor_text.currentTextColor
+//        presenter.textColorWheel(textColor)
 
-//        editor_text_layout.setOnClickListener {
-//            editor_text.requestFocus()
-//            editor_text.moveFocus()
-//            KeyboardUtils.showKeyboard(context!!, editor_text)
-//        }
+        setupBottomSheet()
+        setupSaveOnClick()
+        setupBack()
+        setupLock()
+        setupNoteColorRecyclerView()
+        setupTextColorRecyclerView()
+    }
 
-        editor_menu.setOnClickListener {
-            val bottomSheetFragment = BottomSheetFragment()
-            bottomSheetFragment.retainInstance = true
-            bottomSheetFragment.setClickListener(object : BottomSheetFragment.ClickListener {
-
-                override fun onEditPasswordClick() {
-                    presenter.passwordDialog()
-                    bottomSheetFragment.dismiss()
-                }
-
-                override fun onChangeNoteColorClick() {
-                    val noteColor = (editor_root.background as ColorDrawable).color
-                    presenter.noteColorWheel(noteColor)
-                    bottomSheetFragment.dismiss()
-                }
-
-                override fun onChangeTextColorClick() {
-                    val textColor = editor_text.currentTextColor
-                    presenter.textColorWheel(textColor)
-                    bottomSheetFragment.dismiss()
-                }
-            })
-
-            bottomSheetFragment.show(fragmentManager!!, bottomSheetFragment.tag)
-        }
-
-        editor_save.setOnClickListener {
-            val noteColor = (editor_root.background as ColorDrawable).color
-            val hexNoteColor = String.format("#%06X", 0xFFFFFF and noteColor)
-
-            val textColor = editor_text.currentTextColor
-            val hexTextColor = String.format("#%06X", 0xFFFFFF and textColor)
-
-            val title = editor_title.text.toString()
-            val message = editor_text.text.toString()
-            val password = mPassword?.let { it1 -> Turing.encrypt(it1) }
-
-            presenter.saveNote(title, message, hexNoteColor, hexTextColor, password)
+    private fun setupLock() {
+        bottom_sheet_switch_lock.setOnCheckedChangeListener { _, isCheck ->
+            if (isCheck) presenter.passwordDialog()
         }
     }
 
@@ -157,8 +136,6 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
         editor_title.setTextColor(textColor)
         editor_text.setTextColor(textColor)
         editor_back_arrow.setColorFilter(textColor)
-        editor_save.setColorFilter(textColor)
-        editor_menu.setColorFilter(textColor)
     }
 
     override fun showToastMessage(message: String) {
@@ -171,15 +148,13 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
                 .initialColor(initialColor)
                 .density(6)
                 .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
-                .setPositiveButton("Choose") {
-                    dialogInterface,
-                    i,
-                    integers ->
+                .setPositiveButton("Choose") { dialogInterface,
+                                               i,
+                                               integers ->
                     colorWheel.onPositiveClick(i)
                 }
-                .setNegativeButton("Cancel") {
-                    dialog,
-                    which ->
+                .setNegativeButton("Cancel") { dialog,
+                                               which ->
                     dialog.dismiss()
                 }
                 .build()
@@ -188,7 +163,7 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
 
     override fun showPasswordDialog() {
         val passwordDialog = PasswordDialog.instance
-        passwordDialog.setOnClosePasswordDialog(object: PasswordDialog.PasswordDialogListener {
+        passwordDialog.setOnClosePasswordDialog(object : PasswordDialog.PasswordDialogListener {
 
             override fun onClose(password: String) {
                 mPassword = password
@@ -196,6 +171,74 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
 
         })
         passwordDialog.show(fragmentManager!!, "Password Dialog")
+    }
+
+    private fun setupBack() {
+        editor_back_arrow.setOnClickListener {
+            activity!!.finish()
+        }
+    }
+
+    private fun setupSaveOnClick() {
+        editor_btn_save.setOnClickListener {
+            val noteColor = (editor_root.background as ColorDrawable).color
+            val hexNoteColor = String.format("#%06X", 0xFFFFFF and noteColor)
+
+            val textColor = editor_text.currentTextColor
+            val hexTextColor = String.format("#%06X", 0xFFFFFF and textColor)
+
+            val title = editor_title.text.toString()
+            val message = editor_text.text.toString()
+            val password = mPassword?.let { it1 -> Turing.encrypt(it1) }
+
+            presenter.saveNote(title, message, hexNoteColor, hexTextColor, password)
+        }
+    }
+
+    private fun setupBottomSheet() {
+        //  Setup Bottomsheet Behavior
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomsheet_settings_container)
+        bottomsheet_settings_container.viewTreeObserver.addOnGlobalLayoutListener {
+            val hiddenView = bottomsheet_settings_container.getChildAt(2)
+            bottomSheetBehavior.peekHeight = hiddenView.top
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+    }
+
+    private fun setupNoteColorRecyclerView() {
+        val colors = listOf(
+                Color.parseColor("#FF6464"),
+                Color.parseColor("#FDEC61"),
+                Color.parseColor("#76A0FF"),
+                Color.parseColor("#96F07B"),
+                Color.parseColor("#FF8EEE"),
+                Color.parseColor("#000000")
+        )
+
+        val colorsAdapter = ColorListAdapter(colors)
+        bottomsheet_rv_note_color.apply {
+            adapter = colorsAdapter
+            layoutManager = GridLayoutManager(activity!!, 6)
+            addItemDecoration(itemDecoration)
+        }
+    }
+
+    private fun setupTextColorRecyclerView() {
+        val colors = listOf(
+                Color.parseColor("#000000"),
+                Color.parseColor("#FFFFFF"),
+                Color.parseColor("#FF6464"),
+                Color.parseColor("#FDEC61"),
+                Color.parseColor("#76A0FF"),
+                Color.parseColor("#FFFFFF"),
+        )
+
+        val colorsAdapter = ColorListAdapter(colors)
+        bottomsheet_rv_text_color.apply {
+            adapter = colorsAdapter
+            layoutManager = GridLayoutManager(activity!!, 6)
+            addItemDecoration(itemDecoration)
+        }
     }
 
 }

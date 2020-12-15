@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/editor_root"
     android:layout_width="match_parent"
@@ -27,40 +26,23 @@
             android:id="@+id/editor_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/editor_back_arrow"
-            android:layout_toStartOf="@id/editor_save"
-            android:background="@android:color/transparent"
-            android:hint="@string/title"
-            android:layout_marginStart="@dimen/margin_medium"
-            android:layout_marginEnd="@dimen/margin_medium"
-            android:inputType="text"
-            android:maxLines="1"
-            android:imeOptions="flagNoExtractUi"
-            android:layout_centerVertical="true"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingBottom="@dimen/margin_small"/>
-
-        <ImageButton
-            android:id="@+id/editor_save"
-            style="@style/ImageButton.Selectable"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/margin_small"
-            android:layout_toStartOf="@id/editor_menu"
-            android:contentDescription="@string/save"
-            app:srcCompat="@drawable/save" />
-
-        <ImageButton
-            android:id="@+id/editor_menu"
-            style="@style/ImageButton.Selectable"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/margin_small"
-            android:contentDescription="@string/menu"
-            app:srcCompat="@drawable/menu" />
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:layout_toEndOf="@id/editor_back_arrow"
+            android:background="@android:color/transparent"
+            android:hint="@string/title"
+            android:imeOptions="flagNoExtractUi"
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingTop="@dimen/margin_small"
+            android:paddingBottom="@dimen/margin_small" />
 
     </RelativeLayout>
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
@@ -69,18 +51,39 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editor_nav_layout">
 
-            <EditText
-                android:id="@+id/editor_text"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="top|start"
-                android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_medium"
-                android:background="@android:color/transparent"
-                android:hint="@string/write_something"
-                android:imeOptions="flagNoExtractUi"
-                android:inputType="textMultiLine" />
+        <EditText
+            android:id="@+id/editor_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_marginRight="@dimen/margin_medium"
+            android:background="@android:color/transparent"
+            android:gravity="top|start"
+            android:hint="@string/write_something"
+            android:imeOptions="flagNoExtractUi"
+            android:inputType="textMultiLine" />
 
     </androidx.core.widget.NestedScrollView>
-    
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/editor_btn_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:backgroundTint="@color/secondaryColor"
+            app:layout_anchor="@+id/bottomsheet_settings_container"
+            app:layout_anchorGravity="center_horizontal"
+            app:srcCompat="@drawable/ic_done" />
+
+        <include layout="@layout/bottomsheet_edit_note" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

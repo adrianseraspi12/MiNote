@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottomsheet_settings_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/top_rounded_bottomsheet"
+    app:behavior_hideable="false"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    tools:behavior_peekHeight="100dp">
+
+    <TextView
+        android:id="@+id/bottomsheet_note_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_large"
+        android:layout_marginTop="@dimen/margin_very_large"
+        android:text="@string/note_color"
+        android:textColor="@color/textColor"
+        android:textSize="@dimen/text_size_small"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/bottomsheet_rv_note_color"
+        android:layout_width="@dimen/constraint_layout_match_parent"
+        android:layout_height="@dimen/pickColorSize"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/bottomsheet_note_title"
+        app:layout_constraintTop_toBottomOf="@+id/bottomsheet_note_title" />
+
+    <View
+        android:id="@+id/bottomsheet_divider_top"
+        android:layout_width="@dimen/constraint_layout_match_parent"
+        android:layout_height="@dimen/dividerSize"
+        android:layout_marginTop="@dimen/margin_large"
+        android:background="@color/dividerColor"
+        app:layout_constraintEnd_toEndOf="@+id/bottomsheet_rv_note_color"
+        app:layout_constraintStart_toStartOf="@+id/bottomsheet_rv_note_color"
+        app:layout_constraintTop_toBottomOf="@+id/bottomsheet_rv_note_color" />
+
+    <TextView
+        android:id="@+id/bottomsheet_text_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_large"
+        android:text="@string/text_color"
+        android:textColor="@color/textColor"
+        android:textSize="@dimen/text_size_small"
+        app:layout_constraintStart_toStartOf="@+id/bottomsheet_divider_top"
+        app:layout_constraintTop_toBottomOf="@+id/bottomsheet_divider_top" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/bottomsheet_rv_text_color"
+        android:layout_width="@dimen/constraint_layout_match_parent"
+        android:layout_height="@dimen/pickColorSize"
+        android:layout_marginTop="@dimen/margin_medium"
+        app:layout_constraintEnd_toEndOf="@+id/bottomsheet_rv_note_color"
+        app:layout_constraintStart_toStartOf="@+id/bottomsheet_rv_note_color"
+        app:layout_constraintTop_toBottomOf="@+id/bottomsheet_text_title" />
+
+    <View
+        android:id="@+id/bottomsheet_divider_bottom"
+        android:layout_width="@dimen/constraint_layout_match_parent"
+        android:layout_height="@dimen/dividerSize"
+        android:layout_marginTop="@dimen/margin_large"
+        android:background="@color/dividerColor"
+        app:layout_constraintEnd_toEndOf="@+id/bottomsheet_divider_top"
+        app:layout_constraintStart_toStartOf="@+id/bottomsheet_divider_top"
+        app:layout_constraintTop_toBottomOf="@+id/bottomsheet_rv_text_color" />
+
+    <TextView
+        android:id="@+id/bottomsheet_lock_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_large"
+        android:text="@string/lock"
+        android:textColor="@color/textColor"
+        android:textSize="@dimen/text_size_small"
+        app:layout_constraintBottom_toBottomOf="@+id/bottom_sheet_switch_lock"
+        app:layout_constraintEnd_toStartOf="@+id/bottom_sheet_switch_lock"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/bottom_sheet_switch_lock" />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/bottom_sheet_switch_lock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_large"
+        android:layout_marginBottom="@dimen/margin_medium"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/bottomsheet_lock_title"
+        app:layout_constraintTop_toBottomOf="@+id/bottomsheet_divider_bottom"
+        app:thumbTint="@color/white"
+        app:trackTint="@color/track_tint_selector"
+        app:useMaterialThemeColors="false" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

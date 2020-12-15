@@ -15,11 +15,6 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
     private var listener: ClickListener? = null
     private var isEditPasswordVisible = true
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.BottomSheetDialogStyle)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.bottom_sheet_dialog, container, false)
     }
