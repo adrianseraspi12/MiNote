@@ -31,6 +31,8 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
     private var mPassword: String? = null
     private var noteColor = -1
     private var textColor = -1
+    private lateinit var noteColorsAdapter: ColorListAdapter
+    private lateinit var textColorsAdapter: ColorListAdapter
 
     private lateinit var itemDecoration: GridSpacingItemDecoration
 
@@ -53,6 +55,7 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
                 resources.getDimensionPixelSize(R.dimen.colorListSpacing),
                 false
         )
+        initAdapters()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -130,12 +133,14 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
 
     override fun noteColor(noteColor: Int) {
         editor_root.setBackgroundColor(noteColor)
+        noteColorsAdapter.setSelectedColor(noteColor)
     }
 
     override fun textColor(textColor: Int) {
         editor_title.setTextColor(textColor)
         editor_text.setTextColor(textColor)
         editor_back_arrow.setColorFilter(textColor)
+        textColorsAdapter.setSelectedColor(textColor)
     }
 
     override fun showToastMessage(message: String) {
@@ -173,6 +178,34 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
         passwordDialog.show(fragmentManager!!, "Password Dialog")
     }
 
+    private fun initAdapters() {
+        val noteColors = mutableListOf(
+                Pair(Color.parseColor("#FF6464"), true),
+                Pair(Color.parseColor("#FDEC61"), false),
+                Pair(Color.parseColor("#76A0FF"), false),
+                Pair(Color.parseColor("#96F07B"), false),
+                Pair(Color.parseColor("#FF8EEE"), false),
+                Pair(Color.parseColor("#000000"), false),
+        )
+        val textColors = mutableListOf(
+                Pair(Color.parseColor("#000000"), true),
+                Pair(Color.parseColor("#FFFFFF"), false),
+                Pair(Color.parseColor("#FF6464"), false),
+                Pair(Color.parseColor("#FDEC61"), false),
+                Pair(Color.parseColor("#76A0FF"), false),
+                Pair(Color.parseColor("#FFFFFF"), false),
+        )
+
+        noteColorsAdapter = ColorListAdapter(noteColors) {
+            editor_root.setBackgroundColor(it)
+        }
+        textColorsAdapter = ColorListAdapter(textColors) {
+            editor_title.setTextColor(it)
+            editor_text.setTextColor(it)
+            editor_back_arrow.setColorFilter(it)
+        }
+    }
+
     private fun setupBack() {
         editor_back_arrow.setOnClickListener {
             activity!!.finish()
@@ -206,36 +239,16 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
     }
 
     private fun setupNoteColorRecyclerView() {
-        val colors = listOf(
-                Color.parseColor("#FF6464"),
-                Color.parseColor("#FDEC61"),
-                Color.parseColor("#76A0FF"),
-                Color.parseColor("#96F07B"),
-                Color.parseColor("#FF8EEE"),
-                Color.parseColor("#000000")
-        )
-
-        val colorsAdapter = ColorListAdapter(colors)
         bottomsheet_rv_note_color.apply {
-            adapter = colorsAdapter
+            adapter = noteColorsAdapter
             layoutManager = GridLayoutManager(activity!!, 6)
             addItemDecoration(itemDecoration)
         }
     }
 
     private fun setupTextColorRecyclerView() {
-        val colors = listOf(
-                Color.parseColor("#000000"),
-                Color.parseColor("#FFFFFF"),
-                Color.parseColor("#FF6464"),
-                Color.parseColor("#FDEC61"),
-                Color.parseColor("#76A0FF"),
-                Color.parseColor("#FFFFFF"),
-        )
-
-        val colorsAdapter = ColorListAdapter(colors)
         bottomsheet_rv_text_color.apply {
-            adapter = colorsAdapter
+            adapter = textColorsAdapter
             layoutManager = GridLayoutManager(activity!!, 6)
             addItemDecoration(itemDecoration)
         }

@@ -66,8 +66,7 @@ class EditorNotePresenter : EditorNoteContract.Presenter {
                     createdDate)
 
             updateNote(note)
-        }
-        else {
+        } else {
             val note = Notes(
                     title,
                     password,
@@ -81,10 +80,8 @@ class EditorNotePresenter : EditorNoteContract.Presenter {
     }
 
     private fun showNewNote() {
-        val noteColor = prefs.getString("default_note_color", "#ef5350")
-        val textColor = prefs.getString("default_text_color", "#000000")
-        mView.noteColor(Color.parseColor(noteColor))
-        mView.textColor(Color.parseColor(textColor))
+        mView.noteColor(Color.parseColor("#FF6464"))
+        mView.textColor(Color.parseColor("#000000"))
     }
 
     override fun passwordDialog() {
@@ -95,7 +92,7 @@ class EditorNotePresenter : EditorNoteContract.Presenter {
         mView.showColorWheel(
                 "Choose note color",
                 initialColor,
-                object: ColorWheel {
+                object : ColorWheel {
 
                     override fun onPositiveClick(color: Int) {
                         mView.noteColor(color)
@@ -109,7 +106,7 @@ class EditorNotePresenter : EditorNoteContract.Presenter {
         mView.showColorWheel(
                 "Choose text color",
                 initialColor,
-                object: ColorWheel {
+                object : ColorWheel {
 
                     override fun onPositiveClick(color: Int) {
                         mView.textColor(color)
@@ -119,7 +116,7 @@ class EditorNotePresenter : EditorNoteContract.Presenter {
     }
 
     private fun createNote(note: Notes) {
-        dataSourceImpl.saveNote(note, object: DataSource.ActionListener {
+        dataSourceImpl.saveNote(note, object : DataSource.ActionListener {
 
             override fun onSuccess(itemId: String, createdDate: OffsetDateTime) {
                 this@EditorNotePresenter.itemId = itemId
