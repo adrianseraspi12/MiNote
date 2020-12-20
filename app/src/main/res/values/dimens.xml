@@ -37,7 +37,6 @@
 
     <dimen name="listNoteContainerHeight">135dp</dimen>
     <dimen name="listTodoContainerHeight">100dp</dimen>
-    <dimen name="bottomsheet_corners">24dp</dimen>
 
     <dimen name="colorListSpacing">16dp</dimen>
 

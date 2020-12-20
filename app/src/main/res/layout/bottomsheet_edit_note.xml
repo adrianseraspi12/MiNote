@@ -5,7 +5,7 @@
     android:id="@+id/bottomsheet_settings_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/top_rounded_bottomsheet"
+    android:background="@drawable/navigation_bar_background"
     app:behavior_hideable="false"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
     tools:behavior_peekHeight="100dp">
