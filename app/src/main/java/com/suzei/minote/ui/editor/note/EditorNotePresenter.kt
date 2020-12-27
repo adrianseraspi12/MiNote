@@ -43,8 +43,6 @@ class EditorNotePresenter : EditorNoteContract.Presenter {
     override fun start() {
         if (itemId != null) {
             showNote()
-        } else {
-            showNewNote()
         }
     }
 
@@ -79,11 +77,6 @@ class EditorNotePresenter : EditorNoteContract.Presenter {
 
     }
 
-    private fun showNewNote() {
-        mView.noteColor(Color.parseColor("#FF6464"))
-        mView.textColor(Color.parseColor("#000000"))
-    }
-
     override fun passwordDialog() {
         mView.showPasswordDialog()
     }
@@ -95,7 +88,7 @@ class EditorNotePresenter : EditorNoteContract.Presenter {
                 object : ColorWheel {
 
                     override fun onPositiveClick(color: Int) {
-                        mView.noteColor(color)
+                        mView.setNoteColor(color)
                     }
 
                 })
@@ -109,7 +102,7 @@ class EditorNotePresenter : EditorNoteContract.Presenter {
                 object : ColorWheel {
 
                     override fun onPositiveClick(color: Int) {
-                        mView.textColor(color)
+                        mView.setTextColor(color)
                     }
 
                 })

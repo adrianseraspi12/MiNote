@@ -11,9 +11,9 @@ interface EditorNoteContract {
 
         fun showNoteDetails(note: Notes)
 
-        fun noteColor(noteColor: Int)
+        fun setNoteColor(noteColor: Int)
 
-        fun textColor(textColor: Int)
+        fun setTextColor(textColor: Int)
 
         fun showToastMessage(message: String)
 

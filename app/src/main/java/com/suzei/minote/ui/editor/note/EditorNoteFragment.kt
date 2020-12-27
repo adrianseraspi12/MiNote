@@ -29,8 +29,8 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
     private lateinit var presenter: EditorNoteContract.Presenter
 
     private var mPassword: String? = null
-    private var noteColor = -1
-    private var textColor = -1
+    private var currentNoteColor = -1
+    private var currentTextColor = -1
     private lateinit var noteColorsAdapter: ColorListAdapter
     private lateinit var textColorsAdapter: ColorListAdapter
 
@@ -64,8 +64,8 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
         val view = inflater.inflate(R.layout.fragment_editor, container, false)
 
         if (savedInstanceState != null) {
-            noteColor = savedInstanceState.getInt(EXTRA_NOTE_COLOR, -1)
-            textColor = savedInstanceState.getInt(EXTRA_TEXT_COLOR, -1)
+            currentNoteColor = savedInstanceState.getInt(EXTRA_NOTE_COLOR, -1)
+            currentTextColor = savedInstanceState.getInt(EXTRA_TEXT_COLOR, -1)
             mPassword = savedInstanceState.getString(EXTRA_NOTE_COLOR, null)
         }
 
@@ -103,9 +103,9 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
 
     override fun onResume() {
         super.onResume()
-        if (noteColor != -1 || textColor != -1) {
-            noteColor(noteColor)
-            textColor(textColor)
+        if (currentNoteColor != -1 || currentTextColor != -1) {
+            setNoteColor(currentNoteColor)
+            setTextColor(currentTextColor)
         }
     }
 
@@ -125,18 +125,20 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
     override fun showNoteDetails(note: Notes) {
         editor_title.setText(note.title)
         editor_text.setText(note.message)
-        noteColor(Color.parseColor(note.color))
-        textColor(Color.parseColor(note.textColor))
+        setNoteColor(Color.parseColor(note.color))
+        setTextColor(Color.parseColor(note.textColor))
 
         editor_title.moveFocus()
     }
 
-    override fun noteColor(noteColor: Int) {
+    override fun setNoteColor(noteColor: Int) {
+        currentNoteColor = noteColor
         editor_root.setBackgroundColor(noteColor)
         noteColorsAdapter.setSelectedColor(noteColor)
     }
 
-    override fun textColor(textColor: Int) {
+    override fun setTextColor(textColor: Int) {
+        currentTextColor = textColor
         editor_title.setTextColor(textColor)
         editor_text.setTextColor(textColor)
         editor_back_arrow.setColorFilter(textColor)
@@ -185,7 +187,7 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
                 Pair(Color.parseColor("#76A0FF"), false),
                 Pair(Color.parseColor("#96F07B"), false),
                 Pair(Color.parseColor("#FF8EEE"), false),
-                Pair(Color.parseColor("#000000"), false),
+                Pair(Color.parseColor("#F5DEB3"), false),
         )
         val textColors = mutableListOf(
                 Pair(Color.parseColor("#000000"), true),
@@ -193,17 +195,47 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
                 Pair(Color.parseColor("#FF6464"), false),
                 Pair(Color.parseColor("#FDEC61"), false),
                 Pair(Color.parseColor("#76A0FF"), false),
-                Pair(Color.parseColor("#FFFFFF"), false),
+                Pair(Color.parseColor("#F5DEB3"), false),
         )
 
-        noteColorsAdapter = ColorListAdapter(noteColors) {
+        noteColorsAdapter = ColorListAdapter(noteColors, {
             editor_root.setBackgroundColor(it)
-        }
-        textColorsAdapter = ColorListAdapter(textColors) {
+        }, {
+            ColorPickerDialogBuilder.with(context)
+                    .setTitle("Choose note color")
+                    .initialColor(it)
+                    .density(6)
+                    .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
+                    .setPositiveButton("Choose") { _, i, _ ->
+                        setNoteColor(i)
+                        noteColorsAdapter.setSelectedColor(i)
+                    }
+                    .setNegativeButton("Cancel") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .build()
+                    .show()
+        })
+        textColorsAdapter = ColorListAdapter(textColors, {
             editor_title.setTextColor(it)
             editor_text.setTextColor(it)
             editor_back_arrow.setColorFilter(it)
-        }
+        }, {
+            ColorPickerDialogBuilder.with(context)
+                    .setTitle("Choose note color")
+                    .initialColor(it)
+                    .density(6)
+                    .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
+                    .setPositiveButton("Choose") { _, i, _ ->
+                        setTextColor(i)
+                        textColorsAdapter.setSelectedColor(i)
+                    }
+                    .setNegativeButton("Cancel") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .build()
+                    .show()
+        })
     }
 
     private fun setupBack() {
