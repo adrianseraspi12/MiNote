@@ -1,90 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/editor_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FF6464">
 
-    <RelativeLayout
-        android:id="@+id/editor_nav_layout"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/editor_app_bar"
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:elevation="0dp">
 
-        <ImageButton
-            android:id="@+id/editor_back_arrow"
-            style="@style/ImageButton.Selectable"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/margin_small"
-            android:contentDescription="@string/back"
-            app:srcCompat="@drawable/back" />
-
-        <EditText
-            android:id="@+id/editor_title"
-            android:layout_width="wrap_content"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/margin_medium"
-            android:layout_marginEnd="@dimen/margin_medium"
-            android:layout_toEndOf="@id/editor_back_arrow"
-            android:background="@android:color/transparent"
-            android:hint="@string/title"
-            android:imeOptions="flagNoExtractUi"
-            android:inputType="text"
-            android:maxLines="1"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingBottom="@dimen/margin_small" />
+            app:layout_scrollFlags="noScroll">
 
-    </RelativeLayout>
+            <ImageButton
+                android:id="@+id/editor_back_arrow"
+                style="@style/ImageButton.Selectable"
+                android:layout_marginStart="@dimen/margin_small"
+                android:contentDescription="@string/back"
+                app:srcCompat="@drawable/back" />
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScrollView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:fillViewport="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editor_nav_layout">
+        </com.google.android.material.appbar.MaterialToolbar>
 
-        <EditText
-            android:id="@+id/editor_text"
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <FrameLayout
+        android:id="@+id/editor_edittext_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/margin_medium"
-            android:layout_marginRight="@dimen/margin_medium"
-            android:background="@android:color/transparent"
-            android:gravity="top|start"
-            android:hint="@string/write_something"
-            android:imeOptions="flagNoExtractUi"
-            android:inputType="textMultiLine" />
+            android:fillViewport="true">
 
-    </androidx.core.widget.NestedScrollView>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+                <EditText
+                    android:id="@+id/editor_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_medium"
+                    android:layout_marginEnd="@dimen/margin_medium"
+                    android:background="@android:color/transparent"
+                    android:gravity="top|start"
+                    android:hint="@string/title"
+                    android:imeOptions="flagNoExtractUi"
+                    android:inputType="textMultiLine"
+                    android:textSize="32sp" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/editor_btn_save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:backgroundTint="@color/secondaryColor"
-            app:layout_anchor="@+id/bottomsheet_settings_container"
-            app:layout_anchorGravity="center_horizontal"
-            app:srcCompat="@drawable/ic_done" />
+                <EditText
+                    android:id="@+id/editor_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_medium"
+                    android:layout_marginRight="@dimen/margin_medium"
+                    android:background="@android:color/transparent"
+                    android:gravity="top|start"
+                    android:hint="@string/write_something"
+                    android:imeOptions="flagNoExtractUi"
+                    android:inputType="textMultiLine" />
 
-        <include layout="@layout/bottomsheet_edit_note" />
+            </LinearLayout>
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        </androidx.core.widget.NestedScrollView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+
+    <include layout="@layout/bottomsheet_edit_note" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/editor_btn_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:backgroundTint="@color/secondaryColor"
+        app:layout_anchor="@+id/bottomsheet_settings_container"
+        app:layout_anchorGravity="center_horizontal"
+        app:srcCompat="@drawable/ic_done" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
