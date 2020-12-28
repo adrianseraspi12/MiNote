@@ -4,10 +4,12 @@ package com.suzei.minote.ui.editor.note
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.flask.colorpicker.ColorPickerView
@@ -23,6 +25,7 @@ import com.suzei.minote.utils.recycler_view.adapters.ColorListAdapter
 import com.suzei.minote.utils.recycler_view.decorator.GridSpacingItemDecoration
 import kotlinx.android.synthetic.main.bottomsheet_edit_note.*
 import kotlinx.android.synthetic.main.fragment_editor.*
+
 
 class EditorNoteFragment : Fragment(), EditorNoteContract.View {
 
@@ -74,14 +77,6 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        Change Note Color
-//        val noteColor = (editor_root.background as ColorDrawable).color
-//        presenter.noteColorWheel(noteColor)
-
-//        Change Text Color
-//        val textColor = editor_text.currentTextColor
-//        presenter.textColorWheel(textColor)
-
         setupBottomSheet()
         setupSaveOnClick()
         setupBack()
@@ -265,9 +260,28 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomsheet_settings_container)
         bottomsheet_settings_container.viewTreeObserver.addOnGlobalLayoutListener {
             val hiddenView = bottomsheet_settings_container.getChildAt(2)
-            bottomSheetBehavior.peekHeight = hiddenView.top
+            val params = CoordinatorLayout.LayoutParams(
+                    CoordinatorLayout.LayoutParams.MATCH_PARENT,
+                    CoordinatorLayout.LayoutParams.MATCH_PARENT
+            )
+
+            val bottomsheetSize = hiddenView.top + convertToPixels(32)
+            params.setMargins(0, convertToPixels(56),
+                    0, bottomsheetSize)
+
+            editor_edittext_container.layoutParams = params
+
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            bottomSheetBehavior.setPeekHeight(hiddenView.top, true)
         }
+    }
+
+    private fun convertToPixels(dp: Int): Int {
+        return TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                dp.toFloat(),
+                resources.displayMetrics
+        ).toInt()
     }
 
     private fun setupNoteColorRecyclerView() {
