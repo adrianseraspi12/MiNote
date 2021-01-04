@@ -4,10 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.util.TypedValue
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
-import com.suzei.minote.utils.LogMe
-import kotlin.math.ceil
 
 class CircleView : MaterialCardView {
 
@@ -26,10 +23,10 @@ class CircleView : MaterialCardView {
 
         if (currentDp > 80) {
             val newPx = convertToPixels(80)
-            radius = (newPx/2).toFloat()
+            radius = (newPx / 2).toFloat()
             setMeasuredDimension(newPx, newPx)
         } else {
-            radius = (width/2).toFloat()
+            radius = (width / 2).toFloat()
             setMeasuredDimension(width, width)
         }
     }
