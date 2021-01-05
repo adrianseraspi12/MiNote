@@ -12,7 +12,7 @@
     </style>
 
     <style name="PasswordButtonsLayout">
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
         <item name="android:weightSum">4</item>
@@ -23,9 +23,7 @@
         <item name="android:layout_weight">1</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_size_large</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="cardBackgroundColor">@color/primaryColor</item>
     </style>
 
 </resources>
