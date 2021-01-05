@@ -156,7 +156,7 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
 
             private fun showPasswordDialog(note: Notes) {
                 val decryptedPassword = note.password?.let { Turing.decrypt(it) }
-                val passwordDialog = PasswordDialog.instance
+                val passwordDialog = PasswordDialog.instance()
 
                 passwordDialog.setOnClosePasswordDialog(object : PasswordDialog.PasswordDialogListener {
 
