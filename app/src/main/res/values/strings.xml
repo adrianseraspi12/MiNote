@@ -11,7 +11,6 @@
     <string name="add_password">Add password</string>
     <string name="save">Save</string>
     <string name="write_something">Write Something…</string>
-    <string name="wrong_password">Wrong Password</string>
     <string name="delete_note_message">Are you sure want to delete this note?</string>
     <string name="note_deleted">Note Deleted</string>
     <string name="cancel">Cancel</string>
@@ -51,5 +50,8 @@
     <string name="note_color">Note color</string>
     <string name="text_color">Text color</string>
     <string name="lock">Lock</string>
-
+    <string name="enter_passcode">Enter Passcode</string>
+    <string name="verify_passcode">Verify Passcode</string>
+    <string name="wrong_passcode">Wrong Passcode. Please try again.</string>
+    <string name="clear">Clear</string>
 </resources>
