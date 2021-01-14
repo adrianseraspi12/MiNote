@@ -1,66 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:card_view="http://schemas.android.com/tools"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_rootview"
     android:layout_width="match_parent"
-    android:layout_height="72dp"
-    android:layout_marginBottom="@dimen/margin_very_small"
-    android:layout_marginEnd="@dimen/margin_small"
-    android:layout_marginStart="@dimen/margin_small"
-    android:layout_marginTop="@dimen/margin_very_small"
-    android:background="@color/white"
-    android:foreground="?android:attr/selectableItemBackground"
-    card_view:cardCornerRadius="@dimen/card_corner_radius"
-    card_view:cardElevation="@dimen/card_elevation">
+    android:layout_height="135dp"
+    android:layout_marginStart="@dimen/margin_medium"
+    android:layout_marginTop="@dimen/margin_mid"
+    android:layout_marginEnd="@dimen/margin_medium"
+    android:layout_marginBottom="@dimen/margin_mid"
+    app:cardBackgroundColor="@color/primaryColor"
+    app:cardCornerRadius="@dimen/card_corner_radius"
+    app:cardElevation="@dimen/card_elevation">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <View
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/item_notes_color"
-            android:layout_width="16dp"
-            android:layout_height="match_parent"
-            tools:background="@color/colorPrimary" />
+            android:layout_width="8dp"
+            android:layout_height="0dp"
+            android:layout_marginVertical="16dp"
+            app:cardBackgroundColor="@color/backgroundColor"
+            app:cardCornerRadius="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_toEndOf="@id/item_notes_color"
-            android:padding="@dimen/margin_medium">
+        <TextView
+            android:id="@+id/item_notes_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/item_notes_color"
+            app:layout_constraintTop_toTopOf="@+id/item_notes_color"
+            tools:text="Bucket List 2020" />
 
-            <TextView
-                android:id="@+id/item_notes_title"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentStart="true"
-                android:layout_toStartOf="@id/item_notes_password"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:layout_marginEnd="@dimen/margin_medium"
-                android:textColor="@color/black" />
+        <TextView
+            android:id="@+id/item_notes_subtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/item_notes_title"
+            app:layout_constraintStart_toStartOf="@+id/item_notes_title"
+            app:layout_constraintTop_toBottomOf="@+id/item_notes_title"
+            tools:text="July 8, 2020" />
 
-            <ImageView
-                android:id="@+id/item_notes_password"
-                style="@style/ImageButton"
-                android:layout_toStartOf="@id/item_notes_delete"
-                android:contentDescription="@string/password"
-                android:layout_marginEnd="@dimen/margin_medium"
-                android:layout_centerVertical="true"
-                app:srcCompat="@drawable/lock_close" />
+        <TextView
+            android:id="@+id/item_notes_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/item_notes_color"
+            app:layout_constraintEnd_toEndOf="@+id/item_notes_title"
+            app:layout_constraintStart_toStartOf="@+id/item_notes_title"
+            app:layout_constraintTop_toBottomOf="@+id/item_notes_subtitle"
+            tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor asdasdincididunt uasdt labore etasda" />
 
-            <ImageButton
-                android:id="@+id/item_notes_delete"
-                style="@style/ImageButton.Selectable"
-                android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true"
-                android:contentDescription="@string/delete"
-                app:srcCompat="@drawable/delete" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </RelativeLayout>
-
-    </RelativeLayout>
-
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>
