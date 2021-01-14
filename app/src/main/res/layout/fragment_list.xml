@@ -20,6 +20,24 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/notes" />
 
+    <FrameLayout
+        android:id="@+id/list_delete_container"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:background="@color/redColor"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" >
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:srcCompat="@drawable/delete"
+            android:layout_gravity="center"/>
+
+    </FrameLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_notes"
         android:layout_width="0dp"
