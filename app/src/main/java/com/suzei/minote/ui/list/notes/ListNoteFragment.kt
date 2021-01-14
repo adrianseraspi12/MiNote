@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.BaseTransientBottomBar
@@ -15,12 +16,17 @@ import com.google.android.material.snackbar.Snackbar
 import com.suzei.minote.R
 import com.suzei.minote.data.entity.Notes
 import com.suzei.minote.ui.editor.note.EditorNoteActivity
+import com.suzei.minote.ui.list.ListActivity
 import com.suzei.minote.ui.list.ListContract
 import com.suzei.minote.utils.LogMe
 import com.suzei.minote.utils.Turing
 import com.suzei.minote.utils.dialogs.PasswordDialog
+import com.suzei.minote.utils.recycler_view.callback.ItemMoveTouchHelper
+import kotlinx.android.synthetic.main.activity_list.*
+import kotlinx.android.synthetic.main.custom_bottom_navigation.*
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.item_row_notes_default.view.*
+import org.threeten.bp.format.DateTimeFormatter
 import java.util.*
 
 class ListNoteFragment : Fragment(), ListContract.View<Notes> {
@@ -55,6 +61,40 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val itemMoveTouchHelper = ItemMoveTouchHelper()
+        itemMoveTouchHelper.callback = object : ItemMoveTouchHelper.MoveCallback {
+
+            override fun isInDeleteArea(view: View): Boolean {
+                val firstPosition = IntArray(2)
+                val secondPosition = IntArray(2)
+                list_delete_container.getLocationOnScreen(firstPosition)
+                view.getLocationOnScreen(secondPosition)
+                val l = firstPosition[1]
+                val r = view.measuredHeight + secondPosition[1]
+                return r > l
+            }
+
+            override fun removeItem(position: Int) {
+                listAdapter.removeItem(position)
+            }
+
+            override fun onClearView() {
+                val listActivity = activity as ListActivity
+                list_delete_container.visibility = View.GONE
+                listActivity.list_fab.visibility = View.VISIBLE
+                listActivity.list_bottom_navigation_view.visibility = View.VISIBLE
+            }
+
+            override fun onDrag() {
+                val listActivity = activity as ListActivity
+                list_delete_container.visibility = View.VISIBLE
+                listActivity.list_fab.visibility = View.GONE
+                listActivity.list_bottom_navigation_view.visibility = View.GONE
+            }
+
+        }
+        val itemTouchHelper = ItemTouchHelper(itemMoveTouchHelper)
+        itemTouchHelper.attachToRecyclerView(list_notes)
         list_notes.layoutManager = LinearLayoutManager(context)
         list_notes.adapter = listAdapter
         list_tv_title.setText(R.string.notes)
@@ -122,30 +162,26 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
             return listOfNotes.size
         }
 
+        fun removeItem(position: Int) {
+            listOfNotes.removeAt(position)
+            notifyItemRemoved(position)
+            notifyItemRangeChanged(position, listOfNotes.size)
+        }
+
         inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
             fun bindNote(note: Notes) {
-                itemView.item_notes_color.setBackgroundColor(Color.parseColor(note.color))
+                val datetimeFormatter = DateTimeFormatter.ofPattern("MMMM d, yyyy")
+
+                itemView.item_notes_color.setCardBackgroundColor(Color.parseColor(note.color))
                 itemView.item_notes_title.text = note.title
-
-                itemView.item_notes_delete.setOnClickListener {
-
-                    tempPosition = adapterPosition
-                    tempNote = listOfNotes[tempPosition]
-
-                    listOfNotes.remove(tempNote!!)
-                    listAdapter.notifyItemRemoved(tempPosition)
-
-                    presenter.checkSizeOfList(listOfNotes.size)
-                    showSnackbar()
-
-                }
+                itemView.item_notes_subtitle.text = note.createdDate?.format(datetimeFormatter)
 
                 if (note.password != null) {
-                    itemView.item_notes_password.visibility = View.VISIBLE
+                    itemView.item_notes_content.text = getString(R.string.locked)
                     itemView.setOnClickListener { showPasswordDialog(note) }
                 } else {
-                    itemView.item_notes_password.visibility = View.GONE
+                    itemView.item_notes_content.text = note.message
                     itemView.setOnClickListener {
                         note.id?.let { it1 ->
                             presenter.showEditor(it1)
