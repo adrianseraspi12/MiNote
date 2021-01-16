@@ -16,6 +16,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <include layout="@layout/toast_undo_delete"
+        android:visibility="gone"/>
+
     <include layout="@layout/custom_bottom_navigation" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
