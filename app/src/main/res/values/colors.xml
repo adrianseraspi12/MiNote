@@ -2,27 +2,11 @@
 <resources>
     <color name="colorPrimary">#0d46a0</color>
     <color name="colorPrimaryDark">#002071</color>
-    <color name="colorPrimaryLight">#5471d2</color>
-
-    <color name="colorPrimaryTest">#525471d2</color>
 
     <color name="colorSecondary">#ffd54f</color>
 
-    <color name="colorPrimaryRipple">#420d46a0</color>
-
-    <!-- color picker -->
-    <color name="colorRed">#ef5350</color>
-    <color name="colorBlue">#42a5f5</color>
-    <color name="colorGreen">#66bb6a</color>
-    <color name="colorOrange">#ffa726</color>
-    <color name="colorBlueGray">#78909c</color>
-
     <color name="white">#FFFFFF</color>
-    <color name="gray">#999999</color>
-    <color name="gray_light">#CCCCCC</color>
-    <color name="gray_very_light">#E0E0E0</color>
     <color name="black">#000000</color>
-    <color name="gray_deep">#666666</color>
 
     <color name="backgroundColor">#292929</color>
     <color name="primaryColor">#454545</color>

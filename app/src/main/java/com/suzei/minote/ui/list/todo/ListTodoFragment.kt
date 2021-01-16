@@ -126,16 +126,16 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
                     }
                 }
 
-                itemView.item_notes_delete.setOnClickListener {
-                    tempPosition = adapterPosition
-                    tempTodo = listOfTodo[tempPosition]
-
-                    listOfTodo.remove(tempTodo!!)
-                    adapter.notifyItemRemoved(tempPosition)
-
-                    presenter.checkSizeOfList(listOfTodo.size)
-                    showSnackbar()
-                }
+//                itemView.item_notes_delete.setOnClickListener {
+//                    tempPosition = adapterPosition
+//                    tempTodo = listOfTodo[tempPosition]
+//
+//                    listOfTodo.remove(tempTodo!!)
+//                    adapter.notifyItemRemoved(tempPosition)
+//
+//                    presenter.checkSizeOfList(listOfTodo.size)
+//                    showSnackbar()
+//                }
             }
 
             private fun showSnackbar() {
@@ -161,6 +161,9 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
                                         tempTodo = null
                                         tempPosition = -1
                                     }
+                                    BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_ACTION -> {}
+                                    BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_MANUAL -> {}
+                                    BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_SWIPE -> {}
                                 }
 
                             }

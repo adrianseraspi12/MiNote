@@ -28,13 +28,14 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" >
+        app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
             android:layout_width="48dp"
             android:layout_height="48dp"
-            app:srcCompat="@drawable/delete"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:contentDescription="@string/empty_notes"
+            app:srcCompat="@drawable/delete" />
 
     </FrameLayout>
 

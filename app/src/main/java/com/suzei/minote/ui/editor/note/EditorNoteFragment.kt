@@ -257,22 +257,23 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
 
     private fun setupBottomSheet() {
         //  Setup Bottomsheet Behavior
+        val hiddenView = bottomsheet_settings_container.getChildAt(2)
+        val params = CoordinatorLayout.LayoutParams(
+                CoordinatorLayout.LayoutParams.MATCH_PARENT,
+                CoordinatorLayout.LayoutParams.MATCH_PARENT
+        )
+
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomsheet_settings_container)
         bottomsheet_settings_container.viewTreeObserver.addOnGlobalLayoutListener {
-            val hiddenView = bottomsheet_settings_container.getChildAt(2)
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             bottomSheetBehavior.setPeekHeight(hiddenView.top, true)
 
-//            val params = CoordinatorLayout.LayoutParams(
-//                    CoordinatorLayout.LayoutParams.MATCH_PARENT,
-//                    CoordinatorLayout.LayoutParams.MATCH_PARENT
-//            )
-//
-//            val bottomsheetSize = hiddenView.top + convertToPixels(32)
-//            params.setMargins(0, convertToPixels(56),
-//                    0, bottomsheetSize)
-//
-//            editor_edittext_container.layoutParams = params
+            val bottomsheetSize = hiddenView.top + convertToPixels(32)
+            params.setMargins(0, convertToPixels(56),
+                    0, bottomsheetSize)
+
+            editor_edittext_container.layoutParams = params
+            editor_edittext_container.requestLayout()
         }
     }
 

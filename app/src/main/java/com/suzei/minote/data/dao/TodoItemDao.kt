@@ -3,7 +3,6 @@ package com.suzei.minote.data.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Update
 import com.suzei.minote.data.entity.TodoItem
 
 @Dao

@@ -23,6 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="44dp"
+        android:contentDescription="@string/add_note_button"
         app:backgroundTint="@color/secondaryColor"
         app:elevation="@dimen/nav_fab_elevation"
         app:layout_constraintBottom_toBottomOf="parent"

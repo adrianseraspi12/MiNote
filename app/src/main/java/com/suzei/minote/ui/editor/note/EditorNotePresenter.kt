@@ -1,8 +1,6 @@
 package com.suzei.minote.ui.editor.note
 
 import android.content.SharedPreferences
-import android.graphics.Color
-
 import com.suzei.minote.data.DataSource
 import com.suzei.minote.data.DataSourceImpl
 import com.suzei.minote.data.entity.Notes

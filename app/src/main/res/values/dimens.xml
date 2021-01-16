@@ -14,33 +14,19 @@
     <dimen name="card_corner_radius">12dp</dimen>
     <dimen name="card_elevation">2dp</dimen>
 
-    <dimen name="icon_size">24dp</dimen>
-
     <dimen name="bottom_sheet_height">56dp</dimen>
 
     <dimen name="constraint_layout_match_parent">0dp</dimen>
 
     <dimen name="nav_fab_elevation">12dp</dimen>
-    <dimen name="nav_fab_bottom_margin">28dp</dimen>
 
     <dimen name="dividerSize">1dp</dimen>
     <dimen name="headerSize">40sp</dimen>
-    <dimen name="listTitleSize">18sp</dimen>
-    <dimen name="listContentSize">14sp</dimen>
-    <dimen name="listSubtitleSize">12sp</dimen>
-    <dimen name="placeholderTitleSize">30sp</dimen>
     <dimen name="placeholderSubtitleSize">18sp</dimen>
-    <dimen name="bottomSheetTitleSectionSize">14sp</dimen>
-    <dimen name="passcodeTitleSize">20sp</dimen>
-    <dimen name="passcodeButtonSize">40sp</dimen>
+    <dimen name="placeholderTitleSize">30sp</dimen>
     <dimen name="selectNoteSize">80dp</dimen>
     <dimen name="pickColorSize">40dp</dimen>
 
-    <dimen name="listNoteContainerHeight">135dp</dimen>
-    <dimen name="listTodoContainerHeight">100dp</dimen>
-
     <dimen name="colorListSpacing">16dp</dimen>
-
-    <dimen name="navigationBarHeight">72dp</dimen>
 
 </resources>

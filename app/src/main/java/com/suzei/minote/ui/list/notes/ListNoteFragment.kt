@@ -237,6 +237,9 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
                                         tempNote = null
                                         tempPosition = -1
                                     }
+                                    BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_ACTION -> {}
+                                    BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_MANUAL -> {}
+                                    BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_SWIPE -> {}
                                 }
 
                             }
