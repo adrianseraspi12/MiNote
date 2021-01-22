@@ -139,24 +139,17 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
 
         override fun onNotePasswordClick(note: Notes) {
             val decryptedPassword = note.password?.let { Turing.decrypt(it) }
-            val passwordDialog = PasswordDialog.instance()
-
-            passwordDialog.setOnClosePasswordDialog(object : PasswordDialog.PasswordDialogListener {
-
-                override fun onClose(password: String) {
-                    if (decryptedPassword != password) {
-                        Toast.makeText(context,
-                                "Wrong Password, Please Try again",
-                                Toast.LENGTH_SHORT).show()
-                    } else {
-                        note.id?.let {
-                            presenter.showEditor(it)
-                        }
+            val passwordDialog = PasswordDialog.instance {
+                if (decryptedPassword != it) {
+                    Toast.makeText(context,
+                            "Wrong Password, Please Try again",
+                            Toast.LENGTH_SHORT).show()
+                } else {
+                    note.id?.let {
+                        presenter.showEditor(it)
                     }
                 }
-
-            })
-
+            }
             passwordDialog.show(fragmentManager!!, "PasswordDialog")
         }
 

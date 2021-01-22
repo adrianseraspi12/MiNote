@@ -16,18 +16,18 @@ import kotlinx.android.synthetic.main.fullscreen_dialog_password.*
 
 open class PasswordDialog : DialogFragment(), View.OnClickListener {
 
-    private var listener: PasswordDialogListener? = null
-
     private var currentPassword = ""
     private var verifyPassword = ""
     private var isVerifying = false
+    private var listener: ((String) -> Unit)? = null
 
     companion object {
 
-        fun instance(password: String = ""): PasswordDialog {
+        fun instance(password: String = "", listener: ((String) -> Unit)): PasswordDialog {
             val passwordDialog = PasswordDialog()
             passwordDialog.currentPassword = password
             passwordDialog.isVerifying = true
+            passwordDialog.listener = listener
             return passwordDialog
         }
 
@@ -72,7 +72,7 @@ open class PasswordDialog : DialogFragment(), View.OnClickListener {
         if (textCount == 3) {
             if (isVerifying) {
                 if (currentPassword == verifyPassword) {
-                    listener?.onClose(currentPassword)
+                    listener?.invoke(currentPassword)
                     dismiss()
                     return
                 }
@@ -89,10 +89,6 @@ open class PasswordDialog : DialogFragment(), View.OnClickListener {
                 resetCodeColor()
             }, 500)
         }
-    }
-
-    fun setOnClosePasswordDialog(listener: PasswordDialogListener) {
-        this.listener = listener
     }
 
     private fun setupNumberBtnClickListener() {
@@ -155,6 +151,7 @@ open class PasswordDialog : DialogFragment(), View.OnClickListener {
 
     override fun onDestroyView() {
         if (dialog != null) {
+            listener = null
             dialog!!.setOnDismissListener(null)
         }
         super.onDestroyView()

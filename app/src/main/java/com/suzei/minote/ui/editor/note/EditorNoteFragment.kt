@@ -164,14 +164,9 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
     }
 
     override fun showPasswordDialog() {
-        val passwordDialog = PasswordDialog.instance()
-        passwordDialog.setOnClosePasswordDialog(object : PasswordDialog.PasswordDialogListener {
-
-            override fun onClose(password: String) {
-                mPassword = password
-            }
-
-        })
+        val passwordDialog = PasswordDialog.instance {
+            mPassword = it
+        }
         passwordDialog.show(fragmentManager!!, "Password Dialog")
     }
 
