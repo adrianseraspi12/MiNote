@@ -16,6 +16,7 @@ class ListNoteAdapter(
         private var listAdapterCallback: ListAdapterCallback
 ) : RecyclerView.Adapter<ListNoteAdapter.ViewHolder>() {
 
+    var tempDeletedNote: Notes? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val context = parent.context
@@ -45,10 +46,23 @@ class ListNoteAdapter(
         notifyItemInserted(position)
     }
 
-    fun removeItem(position: Int) {
+    fun removeTempItem(position: Int) {
+        val note = listOfNotes[position]
+        tempDeletedNote = note
         listOfNotes.removeAt(position)
         notifyItemRemoved(position)
         notifyItemRangeChanged(position, listOfNotes.size)
+    }
+
+    fun retainDeletedItem(position: Int) {
+        listOfNotes.add(position, tempDeletedNote!!)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, listOfNotes.size)
+        tempDeletedNote = null
+    }
+
+    fun forceRemove() {
+        tempDeletedNote = null
     }
 
     inner class ViewHolder(val context: Context, itemView: View) : RecyclerView.ViewHolder(itemView) {
