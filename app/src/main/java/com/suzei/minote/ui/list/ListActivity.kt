@@ -43,7 +43,8 @@ class ListActivity : AppCompatActivity() {
         setupFabClick()
     }
 
-    fun showToastUndo(message: String, onUndoClick: (() -> Unit)) {
+    fun showToastUndo(message: String, callback: ToastCallback) {
+        if (toast_undo_delete_root.visibility == View.VISIBLE) callback.onToastDismiss()
         toast_undo_delete_root.alpha = 0f
         toast_undo_delete_root.visibility = View.VISIBLE
         toast_undo_delete_root
@@ -52,20 +53,27 @@ class ListActivity : AppCompatActivity() {
                 .duration = 300
         toast_undo_delete_tv_title.text = message
         toast_delete_btn_undo.setOnClickListener {
-            onUndoClick.invoke()
+            callback.onUndoClick()
+            toast_undo_delete_root.visibility = View.GONE
+            toast_undo_delete_root.alpha = 0f
+            toast_undo_delete_root.animate().setListener(null)
         }
+
         Handler(Looper.getMainLooper()).postDelayed({
-            toast_undo_delete_root
-                    .animate()
-                    .alpha(0f)
-                    .setDuration(300)
-                    .setListener(object : AnimatorListenerAdapter() {
-                        override fun onAnimationEnd(animation: Animator?) {
-                            super.onAnimationEnd(animation)
-                            toast_undo_delete_root.visibility = View.GONE
-                            toast_undo_delete_root.animate().setListener(null)
-                        }
-                    })
+            if (toast_undo_delete_root.visibility == View.VISIBLE) {
+                toast_undo_delete_root
+                        .animate()
+                        .alpha(0f)
+                        .setDuration(300)
+                        .setListener(object : AnimatorListenerAdapter() {
+                            override fun onAnimationEnd(animation: Animator?) {
+                                super.onAnimationEnd(animation)
+                                toast_undo_delete_root.visibility = View.GONE
+                                toast_undo_delete_root.animate().setListener(null)
+                                callback.onToastDismiss()
+                            }
+                        })
+            }
         }, 4000)
     }
 

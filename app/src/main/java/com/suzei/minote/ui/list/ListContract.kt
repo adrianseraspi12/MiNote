@@ -30,3 +30,10 @@ interface ListContract {
     }
 
 }
+
+interface ToastCallback {
+
+    fun onUndoClick()
+    fun onToastDismiss()
+
+}
