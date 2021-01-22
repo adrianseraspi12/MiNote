@@ -4,7 +4,6 @@ package com.suzei.minote.ui.editor.note
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +16,7 @@ import com.flask.colorpicker.builder.ColorPickerDialogBuilder
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.suzei.minote.R
 import com.suzei.minote.data.entity.Notes
+import com.suzei.minote.ext.convertToPx
 import com.suzei.minote.ext.moveFocus
 import com.suzei.minote.utils.ColorWheel
 import com.suzei.minote.utils.Turing
@@ -263,21 +263,13 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             bottomSheetBehavior.setPeekHeight(hiddenView.top, true)
 
-            val bottomsheetSize = hiddenView.top + convertToPixels(32)
-            params.setMargins(0, convertToPixels(56),
+            val bottomsheetSize = hiddenView.top + 32.convertToPx(resources)
+            params.setMargins(0, 56.convertToPx(resources),
                     0, bottomsheetSize)
 
             editor_edittext_container.layoutParams = params
             editor_edittext_container.requestLayout()
         }
-    }
-
-    private fun convertToPixels(dp: Int): Int {
-        return TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                dp.toFloat(),
-                resources.displayMetrics
-        ).toInt()
     }
 
     private fun setupNoteColorRecyclerView() {
