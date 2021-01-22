@@ -14,6 +14,7 @@ import com.suzei.minote.data.entity.Notes
 import com.suzei.minote.ui.editor.note.EditorNoteActivity
 import com.suzei.minote.ui.list.ListActivity
 import com.suzei.minote.ui.list.ListContract
+import com.suzei.minote.ui.list.ToastCallback
 import com.suzei.minote.utils.LogMe
 import com.suzei.minote.utils.Turing
 import com.suzei.minote.utils.dialogs.PasswordDialog
@@ -26,6 +27,7 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
 
     private lateinit var presenter: ListContract.Presenter<Notes>
     private lateinit var listAdapter: ListNoteAdapter
+    private lateinit var listActivity: ListActivity
 
     companion object {
 
@@ -36,6 +38,7 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        listActivity = activity as ListActivity
         listAdapter = ListNoteAdapter(ArrayList(), listAdapterCallback)
     }
 
@@ -110,7 +113,10 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
         }
 
         override fun removeItem(position: Int) {
-            listAdapter.removeItem(position)
+            listAdapter.removeTempItem(position)
+            listActivity.showToastUndo(
+                    getString(R.string.note_deleted),
+                    toastCallback(position))
         }
 
         override fun onClearView() {
@@ -156,6 +162,19 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
 
         override fun onNoteClick(itemId: String) {
             presenter.showEditor(itemId)
+        }
+
+    }
+
+    private fun toastCallback(position: Int) = object : ToastCallback {
+
+        override fun onUndoClick() {
+            listAdapter.retainDeletedItem(position)
+        }
+
+        override fun onToastDismiss() {
+            presenter.delete(listAdapter.tempDeletedNote!!)
+            listAdapter.forceRemove()
         }
 
     }
