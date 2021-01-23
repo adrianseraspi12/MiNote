@@ -1,12 +1,12 @@
 package com.suzei.minote.ext
 
 import android.content.res.Resources
-import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import com.flask.colorpicker.ColorPickerView
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
+import kotlin.math.roundToInt
 
 fun EditText.moveFocus() {
     val pos = text.length
@@ -22,8 +22,7 @@ fun Int.convertToPx(resources: Resources): Int {
 }
 
 fun Int.convertToDp(resources: Resources): Int {
-    val scale = resources.displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT
-    return this / scale
+    return (this / resources.displayMetrics.density).roundToInt()
 }
 
 fun Fragment.showColorWheel(title: String,

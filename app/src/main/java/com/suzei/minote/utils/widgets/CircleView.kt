@@ -17,17 +17,16 @@ class CircleView : MaterialCardView {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
-        val width = measuredWidth
-
-        val currentDp = width.convertToDp(resources)
+        val height = measuredHeight
+        val currentDp = height.convertToDp(resources)
 
         if (currentDp > 80) {
             val newPx = 80.convertToPx(resources)
             radius = (newPx / 2).toFloat()
             setMeasuredDimension(newPx, newPx)
         } else {
-            radius = (width / 2).toFloat()
-            setMeasuredDimension(width, width)
+            radius = (height / 2).toFloat()
+            setMeasuredDimension(height, height)
         }
     }
 }
