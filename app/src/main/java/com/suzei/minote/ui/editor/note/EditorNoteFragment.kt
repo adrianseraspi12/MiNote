@@ -26,7 +26,6 @@ import com.suzei.minote.utils.recycler_view.decorator.GridSpacingItemDecoration
 import kotlinx.android.synthetic.main.bottomsheet_edit_note.*
 import kotlinx.android.synthetic.main.fragment_editor.*
 
-
 class EditorNoteFragment : Fragment(), EditorNoteContract.View {
 
     private lateinit var presenter: EditorNoteContract.Presenter
@@ -36,7 +35,6 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
     private var currentTextColor = -1
     private lateinit var noteColorsAdapter: ColorListAdapter
     private lateinit var textColorsAdapter: ColorListAdapter
-
     private lateinit var itemDecoration: GridSpacingItemDecoration
 
     companion object {
@@ -170,6 +168,79 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
         passwordDialog.show(fragmentManager!!, "Password Dialog")
     }
 
+    private fun setupBack() {
+        editor_back_arrow.setOnClickListener {
+            activity!!.finish()
+        }
+    }
+
+    private fun setupNoteColorRecyclerView() {
+        bottomsheet_rv_note_color.apply {
+            adapter = noteColorsAdapter
+            layoutManager = GridLayoutManager(activity!!, 6)
+            addItemDecoration(itemDecoration)
+        }
+    }
+
+    private fun setupTextColorRecyclerView() {
+        bottomsheet_rv_text_color.apply {
+            adapter = textColorsAdapter
+            layoutManager = GridLayoutManager(activity!!, 6)
+            addItemDecoration(itemDecoration)
+        }
+    }
+
+    private fun setupSaveOnClick() {
+        editor_btn_save.setOnClickListener {
+            val noteColor = (editor_root.background as ColorDrawable).color
+            val hexNoteColor = String.format("#%06X", 0xFFFFFF and noteColor)
+
+            val textColor = editor_text.currentTextColor
+            val hexTextColor = String.format("#%06X", 0xFFFFFF and textColor)
+
+            val title = editor_title.text.toString()
+            val message = editor_text.text.toString()
+            val password = mPassword?.let { it1 -> Turing.encrypt(it1) }
+
+            presenter.saveNote(title, message, hexNoteColor, hexTextColor, password)
+        }
+    }
+
+    private fun setupBottomSheet() {
+        //  Setup Bottomsheet Behavior
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomsheet_settings_container)
+        val hiddenView = bottomsheet_settings_container.getChildAt(2)
+
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_SETTLING) {
+                    //  Set Editor (EditText) a margin to avoid
+                    //  bottomsheet overlaps the editor
+                    val params = CoordinatorLayout.LayoutParams(
+                            CoordinatorLayout.LayoutParams.MATCH_PARENT,
+                            CoordinatorLayout.LayoutParams.MATCH_PARENT
+                    )
+                    val bottomsheetSize = hiddenView.top + 32.convertToPx(resources)
+                    params.setMargins(0, 56.convertToPx(resources),
+                            0, bottomsheetSize)
+
+                    editor_edittext_container.layoutParams = params
+                    editor_edittext_container.requestLayout()
+                    bottomSheetBehavior.removeBottomSheetCallback(this)
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+
+        })
+
+        bottomsheet_settings_container.viewTreeObserver.addOnGlobalLayoutListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            bottomSheetBehavior.setPeekHeight(hiddenView.top, true)
+        }
+    }
+
     private fun initAdapters() {
         val noteColors = mutableListOf(
                 Pair(Color.parseColor("#FF6464"), true),
@@ -212,7 +283,7 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
             editor_back_arrow.setColorFilter(it)
         }, {
             ColorPickerDialogBuilder.with(context)
-                    .setTitle("Choose note color")
+                    .setTitle("Choose text color")
                     .initialColor(it)
                     .density(6)
                     .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
@@ -227,65 +298,4 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
                     .show()
         })
     }
-
-    private fun setupBack() {
-        editor_back_arrow.setOnClickListener {
-            activity!!.finish()
-        }
-    }
-
-    private fun setupSaveOnClick() {
-        editor_btn_save.setOnClickListener {
-            val noteColor = (editor_root.background as ColorDrawable).color
-            val hexNoteColor = String.format("#%06X", 0xFFFFFF and noteColor)
-
-            val textColor = editor_text.currentTextColor
-            val hexTextColor = String.format("#%06X", 0xFFFFFF and textColor)
-
-            val title = editor_title.text.toString()
-            val message = editor_text.text.toString()
-            val password = mPassword?.let { it1 -> Turing.encrypt(it1) }
-
-            presenter.saveNote(title, message, hexNoteColor, hexTextColor, password)
-        }
-    }
-
-    private fun setupBottomSheet() {
-        //  Setup Bottomsheet Behavior
-        val hiddenView = bottomsheet_settings_container.getChildAt(2)
-        val params = CoordinatorLayout.LayoutParams(
-                CoordinatorLayout.LayoutParams.MATCH_PARENT,
-                CoordinatorLayout.LayoutParams.MATCH_PARENT
-        )
-
-        val bottomSheetBehavior = BottomSheetBehavior.from(bottomsheet_settings_container)
-        bottomsheet_settings_container.viewTreeObserver.addOnGlobalLayoutListener {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            bottomSheetBehavior.setPeekHeight(hiddenView.top, true)
-
-            val bottomsheetSize = hiddenView.top + 32.convertToPx(resources)
-            params.setMargins(0, 56.convertToPx(resources),
-                    0, bottomsheetSize)
-
-            editor_edittext_container.layoutParams = params
-            editor_edittext_container.requestLayout()
-        }
-    }
-
-    private fun setupNoteColorRecyclerView() {
-        bottomsheet_rv_note_color.apply {
-            adapter = noteColorsAdapter
-            layoutManager = GridLayoutManager(activity!!, 6)
-            addItemDecoration(itemDecoration)
-        }
-    }
-
-    private fun setupTextColorRecyclerView() {
-        bottomsheet_rv_text_color.apply {
-            adapter = textColorsAdapter
-            layoutManager = GridLayoutManager(activity!!, 6)
-            addItemDecoration(itemDecoration)
-        }
-    }
-
 }
