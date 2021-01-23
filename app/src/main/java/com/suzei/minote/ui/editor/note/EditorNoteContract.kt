@@ -17,8 +17,6 @@ interface EditorNoteContract {
 
         fun showToastMessage(message: String)
 
-        fun showColorWheel(title: String, initialColor: Int, colorWheel: ColorWheel)
-
         fun showPasswordDialog()
     }
 
@@ -33,10 +31,6 @@ interface EditorNoteContract {
                      password: String?)
 
         fun passwordDialog()
-
-        fun noteColorWheel(initialColor: Int)
-
-        fun textColorWheel(initialColor: Int)
 
     }
 

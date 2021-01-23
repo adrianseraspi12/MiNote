@@ -11,8 +11,7 @@ import kotlinx.android.synthetic.main.item_row_pick_color.view.*
 
 class ColorListAdapter(
         private val data: MutableList<Pair<Int, Boolean>>,
-        private val onChangeColorListener: ((Int) -> Unit),
-        private val onShowColorWheel: ((Int) -> Unit)
+        private val callback: ColorListAdapterCallback
 ) : RecyclerView.Adapter<ColorListAdapter.ViewHolder>() {
 
     private var currentSelectedColorPos = 0
@@ -33,11 +32,11 @@ class ColorListAdapter(
 
             if (position == data.lastIndex) {
                 //  Show Color Picker Dialog
-                onShowColorWheel.invoke(oldData.first)
+                callback.onShowColorWheel(oldData.first)
                 return@setOnClickListener
             }
             setSelectedColor(colorData.first)
-            onChangeColorListener.invoke(colorData.first)
+            callback.onChangedColor(colorData.first)
         }
     }
 
@@ -92,5 +91,12 @@ class ColorListAdapter(
         }
 
     }
+
+}
+
+interface ColorListAdapterCallback {
+
+    fun onChangedColor(color: Int)
+    fun onShowColorWheel(color: Int)
 
 }

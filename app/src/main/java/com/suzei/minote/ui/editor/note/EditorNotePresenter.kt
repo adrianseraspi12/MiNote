@@ -79,33 +79,6 @@ class EditorNotePresenter : EditorNoteContract.Presenter {
         mView.showPasswordDialog()
     }
 
-    override fun noteColorWheel(initialColor: Int) {
-        mView.showColorWheel(
-                "Choose note color",
-                initialColor,
-                object : ColorWheel {
-
-                    override fun onPositiveClick(color: Int) {
-                        mView.setNoteColor(color)
-                    }
-
-                })
-
-    }
-
-    override fun textColorWheel(initialColor: Int) {
-        mView.showColorWheel(
-                "Choose text color",
-                initialColor,
-                object : ColorWheel {
-
-                    override fun onPositiveClick(color: Int) {
-                        mView.setTextColor(color)
-                    }
-
-                })
-    }
-
     private fun createNote(note: Notes) {
         dataSourceImpl.saveNote(note, object : DataSource.ActionListener {
 

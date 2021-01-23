@@ -11,17 +11,16 @@ import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import com.flask.colorpicker.ColorPickerView
-import com.flask.colorpicker.builder.ColorPickerDialogBuilder
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.suzei.minote.R
 import com.suzei.minote.data.entity.Notes
 import com.suzei.minote.ext.convertToPx
 import com.suzei.minote.ext.moveFocus
-import com.suzei.minote.utils.ColorWheel
+import com.suzei.minote.ext.showColorWheel
 import com.suzei.minote.utils.Turing
 import com.suzei.minote.utils.dialogs.PasswordDialog
 import com.suzei.minote.utils.recycler_view.adapters.ColorListAdapter
+import com.suzei.minote.utils.recycler_view.adapters.ColorListAdapterCallback
 import com.suzei.minote.utils.recycler_view.decorator.GridSpacingItemDecoration
 import kotlinx.android.synthetic.main.bottomsheet_edit_note.*
 import kotlinx.android.synthetic.main.fragment_editor.*
@@ -142,25 +141,6 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun showColorWheel(title: String, initialColor: Int, colorWheel: ColorWheel) {
-        ColorPickerDialogBuilder.with(context!!)
-                .setTitle(title)
-                .initialColor(initialColor)
-                .density(6)
-                .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
-                .setPositiveButton("Choose") { dialogInterface,
-                                               i,
-                                               integers ->
-                    colorWheel.onPositiveClick(i)
-                }
-                .setNegativeButton("Cancel") { dialog,
-                                               which ->
-                    dialog.dismiss()
-                }
-                .build()
-                .show()
-    }
-
     override fun showPasswordDialog() {
         val passwordDialog = PasswordDialog.instance {
             mPassword = it
@@ -259,43 +239,37 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
                 Pair(Color.parseColor("#F5DEB3"), false),
         )
 
-        noteColorsAdapter = ColorListAdapter(noteColors, {
-            editor_root.setBackgroundColor(it)
-        }, {
-            ColorPickerDialogBuilder.with(context)
-                    .setTitle("Choose note color")
-                    .initialColor(it)
-                    .density(6)
-                    .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
-                    .setPositiveButton("Choose") { _, i, _ ->
-                        setNoteColor(i)
-                        noteColorsAdapter.setSelectedColor(i)
+        noteColorsAdapter = ColorListAdapter(noteColors,
+                object : ColorListAdapterCallback {
+
+                    override fun onChangedColor(color: Int) {
+                        editor_root.setBackgroundColor(color)
                     }
-                    .setNegativeButton("Cancel") { dialog, _ ->
-                        dialog.dismiss()
+
+                    override fun onShowColorWheel(color: Int) {
+                        showColorWheel("Choose note color", color) {
+                            setNoteColor(it)
+                            noteColorsAdapter.setSelectedColor(it)
+                        }
                     }
-                    .build()
-                    .show()
-        })
-        textColorsAdapter = ColorListAdapter(textColors, {
-            editor_title.setTextColor(it)
-            editor_text.setTextColor(it)
-            editor_back_arrow.setColorFilter(it)
-        }, {
-            ColorPickerDialogBuilder.with(context)
-                    .setTitle("Choose text color")
-                    .initialColor(it)
-                    .density(6)
-                    .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
-                    .setPositiveButton("Choose") { _, i, _ ->
-                        setTextColor(i)
-                        textColorsAdapter.setSelectedColor(i)
+
+                })
+
+        textColorsAdapter = ColorListAdapter(textColors,
+                object : ColorListAdapterCallback {
+                    override fun onChangedColor(color: Int) {
+                        editor_title.setTextColor(color)
+                        editor_text.setTextColor(color)
+                        editor_back_arrow.setColorFilter(color)
                     }
-                    .setNegativeButton("Cancel") { dialog, _ ->
-                        dialog.dismiss()
+
+                    override fun onShowColorWheel(color: Int) {
+                        showColorWheel("Choose text color", color) {
+                            setTextColor(it)
+                            textColorsAdapter.setSelectedColor(it)
+                        }
                     }
-                    .build()
-                    .show()
-        })
+
+                })
     }
 }
