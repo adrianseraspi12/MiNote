@@ -51,4 +51,5 @@
     <string name="_0">0</string>
     <string name="note_deleted">Note Deleted</string>
     <string name="undo">UNDO</string>
+    <string name="delete_note">Delete Note</string>
 </resources>

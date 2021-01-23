@@ -31,11 +31,11 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_gravity="center"
-            android:contentDescription="@string/empty_notes"
-            app:srcCompat="@drawable/delete" />
+            android:contentDescription="@string/delete_note"
+            app:srcCompat="@drawable/ic_delete" />
 
     </FrameLayout>
 
