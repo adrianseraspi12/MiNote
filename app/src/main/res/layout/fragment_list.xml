@@ -12,8 +12,8 @@
         android:id="@+id/list_tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="@dimen/margin_large"
+        android:layout_marginTop="@dimen/margin_large"
         android:textColor="@color/textColor"
         android:textSize="@dimen/headerSize"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,7 +22,7 @@
 
     <FrameLayout
         android:id="@+id/list_delete_container"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/constraint_layout_match_parent"
         android:layout_height="60dp"
         android:background="@color/redColor"
         android:visibility="gone"
@@ -41,9 +41,9 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_notes"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="24dp"
+        android:layout_width="@dimen/constraint_layout_match_parent"
+        android:layout_height="@dimen/constraint_layout_match_parent"
+        android:layout_marginTop="@dimen/margin_large"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -51,9 +51,9 @@
 
     <LinearLayout
         android:id="@+id/list_empty_placeholder"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginHorizontal="24dp"
+        android:layout_width="@dimen/constraint_layout_match_parent"
+        android:layout_height="@dimen/constraint_layout_match_parent"
+        android:layout_marginHorizontal="@dimen/margin_large"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone"
@@ -81,7 +81,7 @@
             android:id="@+id/list_tv_empty_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="@dimen/margin_very_small"
             android:textAlignment="center"
             android:textColor="@color/textColor"
             android:textSize="@dimen/placeholderSubtitleSize"

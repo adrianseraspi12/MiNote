@@ -9,7 +9,8 @@
     <dimen name="text_size_x_small">12sp</dimen>
     <dimen name="text_size_small">14sp</dimen>
     <dimen name="text_size_medium">16sp</dimen>
-    <dimen name="text_size_large">20sp</dimen>
+    <dimen name="text_size_large">18sp</dimen>
+    <dimen name="text_size_extra_large">20sp</dimen>
 
     <dimen name="card_corner_radius">12dp</dimen>
     <dimen name="card_elevation">2dp</dimen>
@@ -28,5 +29,8 @@
     <dimen name="pickColorSize">40dp</dimen>
 
     <dimen name="colorListSpacing">16dp</dimen>
+
+    <dimen name="passcodeIconSize">16dp</dimen>
+    <dimen name="passcodeButtonTextSize">40sp</dimen>
 
 </resources>

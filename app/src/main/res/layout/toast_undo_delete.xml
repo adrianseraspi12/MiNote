@@ -4,7 +4,7 @@
     android:id="@+id/toast_undo_delete_root"
     android:layout_width="wrap_content"
     android:layout_height="40dp"
-    android:layout_marginBottom="24dp"
+    android:layout_marginBottom="@dimen/margin_large"
     android:gravity="center_horizontal"
     android:orientation="horizontal"
     app:cardBackgroundColor="#8B8B8B"
@@ -29,8 +29,8 @@
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:layout_marginHorizontal="8dp"
-            android:layout_marginVertical="8dp"
+            android:layout_marginHorizontal="@dimen/margin_small"
+            android:layout_marginVertical="@dimen/margin_small"
             android:background="@color/white" />
 
         <com.google.android.material.button.MaterialButton

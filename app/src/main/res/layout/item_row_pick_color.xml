@@ -8,8 +8,8 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/item_row_cv_pick_color"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="@dimen/constraint_layout_match_parent"
+        android:layout_height="@dimen/constraint_layout_match_parent"
         app:cardCornerRadius="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="H,1:1"
