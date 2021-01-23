@@ -20,6 +20,7 @@ import com.suzei.minote.ext.showColorWheel
 import com.suzei.minote.utils.Turing
 import com.suzei.minote.utils.dialogs.PasswordDialog
 import com.suzei.minote.utils.recycler_view.adapters.ColorListAdapter
+import com.suzei.minote.utils.recycler_view.adapters.ColorListAdapterBuilder
 import com.suzei.minote.utils.recycler_view.adapters.ColorListAdapterCallback
 import com.suzei.minote.utils.recycler_view.decorator.GridSpacingItemDecoration
 import kotlinx.android.synthetic.main.bottomsheet_edit_note.*
@@ -222,54 +223,35 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
     }
 
     private fun initAdapters() {
-        val noteColors = mutableListOf(
-                Pair(Color.parseColor("#FF6464"), true),
-                Pair(Color.parseColor("#FDEC61"), false),
-                Pair(Color.parseColor("#76A0FF"), false),
-                Pair(Color.parseColor("#96F07B"), false),
-                Pair(Color.parseColor("#FF8EEE"), false),
-                Pair(Color.parseColor("#F5DEB3"), false),
-        )
-        val textColors = mutableListOf(
-                Pair(Color.parseColor("#000000"), true),
-                Pair(Color.parseColor("#FFFFFF"), false),
-                Pair(Color.parseColor("#FF6464"), false),
-                Pair(Color.parseColor("#FDEC61"), false),
-                Pair(Color.parseColor("#76A0FF"), false),
-                Pair(Color.parseColor("#F5DEB3"), false),
-        )
+        noteColorsAdapter = ColorListAdapterBuilder.noteList(object : ColorListAdapterCallback {
 
-        noteColorsAdapter = ColorListAdapter(noteColors,
-                object : ColorListAdapterCallback {
+            override fun onChangedColor(color: Int) {
+                editor_root.setBackgroundColor(color)
+            }
 
-                    override fun onChangedColor(color: Int) {
-                        editor_root.setBackgroundColor(color)
-                    }
+            override fun onShowColorWheel(color: Int) {
+                showColorWheel("Choose note color", color) {
+                    setNoteColor(it)
+                    noteColorsAdapter.setSelectedColor(it)
+                }
+            }
 
-                    override fun onShowColorWheel(color: Int) {
-                        showColorWheel("Choose note color", color) {
-                            setNoteColor(it)
-                            noteColorsAdapter.setSelectedColor(it)
-                        }
-                    }
+        })
 
-                })
+        textColorsAdapter = ColorListAdapterBuilder.textList(object : ColorListAdapterCallback {
+            override fun onChangedColor(color: Int) {
+                editor_title.setTextColor(color)
+                editor_text.setTextColor(color)
+                editor_back_arrow.setColorFilter(color)
+            }
 
-        textColorsAdapter = ColorListAdapter(textColors,
-                object : ColorListAdapterCallback {
-                    override fun onChangedColor(color: Int) {
-                        editor_title.setTextColor(color)
-                        editor_text.setTextColor(color)
-                        editor_back_arrow.setColorFilter(color)
-                    }
+            override fun onShowColorWheel(color: Int) {
+                showColorWheel("Choose text color", color) {
+                    setTextColor(it)
+                    textColorsAdapter.setSelectedColor(it)
+                }
+            }
 
-                    override fun onShowColorWheel(color: Int) {
-                        showColorWheel("Choose text color", color) {
-                            setTextColor(it)
-                            textColorsAdapter.setSelectedColor(it)
-                        }
-                    }
-
-                })
+        })
     }
 }
