@@ -26,8 +26,10 @@ open class PasswordDialog : DialogFragment(), View.OnClickListener {
         fun instance(password: String = "", listener: ((String) -> Unit)): PasswordDialog {
             val passwordDialog = PasswordDialog()
             passwordDialog.currentPassword = password
-            passwordDialog.isVerifying = true
             passwordDialog.listener = listener
+            if (password.isNotEmpty()) {
+                passwordDialog.isVerifying = true
+            }
             return passwordDialog
         }
 
@@ -48,7 +50,10 @@ open class PasswordDialog : DialogFragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
         setupNumberBtnClickListener()
         setupClearBtnClickListener()
-        dialog_password_btn_cancel.setOnClickListener { dismiss() }
+        dialog_password_btn_cancel.setOnClickListener {
+            listener?.invoke("")
+            dismiss()
+        }
     }
 
     override fun onClick(v: View?) {
@@ -109,14 +114,18 @@ open class PasswordDialog : DialogFragment(), View.OnClickListener {
             val currentPasswordCount: Int
 
             if (isVerifying) {
+                if (verifyPassword.isEmpty()) return@setOnClickListener
+
                 currentPasswordCount = verifyPassword.length
                 verifyPassword = verifyPassword.substring(0, verifyPassword.length - 1)
             } else {
+                if (currentPassword.isEmpty()) return@setOnClickListener
+
                 currentPasswordCount = currentPassword.length
                 currentPassword = currentPassword.substring(0, currentPassword.length - 1)
             }
 
-            setCodeColor(currentPasswordCount, Color.TRANSPARENT)
+            setCodeColor(currentPasswordCount - 1, Color.TRANSPARENT)
         }
     }
 
@@ -155,11 +164,5 @@ open class PasswordDialog : DialogFragment(), View.OnClickListener {
             dialog!!.setOnDismissListener(null)
         }
         super.onDestroyView()
-    }
-
-    interface PasswordDialogListener {
-
-        fun onClose(password: String)
-
     }
 }
