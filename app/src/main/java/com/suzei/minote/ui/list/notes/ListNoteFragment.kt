@@ -139,9 +139,10 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
 
         override fun onNotePasswordClick(note: Notes) {
             val decryptedPassword = note.password?.let { Turing.decrypt(it) } ?: ""
-            val passwordDialog = PasswordDialog.instance(decryptedPassword) {
-                note.id?.let {
-                    presenter.showEditor(it)
+            val passwordDialog = PasswordDialog.instance(decryptedPassword) { password ->
+                if (password.isEmpty()) return@instance
+                note.id?.let { noteId ->
+                    presenter.showEditor(noteId)
                 }
             }
             passwordDialog.show(fragmentManager!!, "PasswordDialog")
