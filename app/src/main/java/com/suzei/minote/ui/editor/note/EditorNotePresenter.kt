@@ -75,10 +75,6 @@ class EditorNotePresenter : EditorNoteContract.Presenter {
 
     }
 
-    override fun passwordDialog() {
-        mView.showPasswordDialog()
-    }
-
     private fun createNote(note: Notes) {
         dataSourceImpl.saveNote(note, object : DataSource.ActionListener {
 

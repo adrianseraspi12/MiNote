@@ -16,8 +16,6 @@ interface EditorNoteContract {
         fun setTextColor(textColor: Int)
 
         fun showToastMessage(message: String)
-
-        fun showPasswordDialog()
     }
 
     interface Presenter {
@@ -29,8 +27,6 @@ interface EditorNoteContract {
                      noteColor: String,
                      textColor: String,
                      password: String?)
-
-        fun passwordDialog()
 
     }
 

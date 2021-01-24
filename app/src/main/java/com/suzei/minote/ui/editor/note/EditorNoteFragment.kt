@@ -75,23 +75,13 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        presenter.start()
         setupBottomSheet()
         setupSaveOnClick()
         setupBack()
         setupLock()
         setupNoteColorRecyclerView()
         setupTextColorRecyclerView()
-    }
-
-    private fun setupLock() {
-        bottom_sheet_switch_lock.setOnCheckedChangeListener { _, isCheck ->
-            if (isCheck) presenter.passwordDialog()
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        presenter.start()
     }
 
     override fun onResume() {
@@ -116,6 +106,7 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
     }
 
     override fun showNoteDetails(note: Notes) {
+        mPassword = note.password?.let { Turing.decrypt(it) }
         editor_title.setText(note.title)
         editor_text.setText(note.message)
         setNoteColor(Color.parseColor(note.color))
@@ -142,13 +133,6 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun showPasswordDialog() {
-        val passwordDialog = PasswordDialog.instance {
-            mPassword = it
-        }
-        passwordDialog.show(fragmentManager!!, "Password Dialog")
-    }
-
     private fun setupBack() {
         editor_back_arrow.setOnClickListener {
             activity!!.finish()
@@ -168,6 +152,23 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
             adapter = textColorsAdapter
             layoutManager = GridLayoutManager(activity!!, 6)
             addItemDecoration(itemDecoration)
+        }
+    }
+
+    private fun setupLock() {
+        bottom_sheet_switch_lock.setOnCheckedChangeListener { _, isCheck ->
+            if (isCheck) {
+                val passwordDialog = PasswordDialog.instance(mPassword ?: "") {
+                    if (it.isEmpty()) {
+                        bottom_sheet_switch_lock.isChecked = false
+                    } else{
+                        mPassword = it
+                    }
+                }
+                passwordDialog.show(fragmentManager!!, "Password Dialog")
+            } else {
+                mPassword = null
+            }
         }
     }
 
