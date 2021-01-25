@@ -1,15 +1,13 @@
 package com.suzei.minote
 
-import android.app.Application
-import com.google.android.gms.ads.MobileAds
+import androidx.multidex.MultiDexApplication
 import com.jakewharton.threetenabp.AndroidThreeTen
 
-class MiNoteApp: Application() {
+class MiNoteApp : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
         AndroidThreeTen.init(this)
-        MobileAds.initialize(this)
     }
 
 }
