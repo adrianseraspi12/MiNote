@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_large"
         android:layout_marginTop="@dimen/margin_large"
+        android:fontFamily="@font/proxima_nova_bold"
         android:textColor="@color/textColor"
         android:textSize="@dimen/headerSize"
         app:layout_constraintStart_toStartOf="parent"

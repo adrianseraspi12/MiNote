@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/toast_undo_delete_root"
     android:layout_width="wrap_content"
     android:layout_height="40dp"
@@ -23,8 +24,10 @@
             android:id="@+id/toast_undo_delete_tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/proxima_nova_regular"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_x_small" />
+            android:textSize="@dimen/text_size_x_small"
+            tools:text="Note Deleted" />
 
         <View
             android:layout_width="1dp"
@@ -38,6 +41,7 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/proxima_nova_bold"
             android:minWidth="0dp"
             android:text="@string/undo"
             android:textColor="@color/white"
