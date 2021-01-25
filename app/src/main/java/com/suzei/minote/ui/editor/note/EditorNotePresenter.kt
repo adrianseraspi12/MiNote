@@ -1,10 +1,8 @@
 package com.suzei.minote.ui.editor.note
 
-import android.content.SharedPreferences
 import com.suzei.minote.data.DataSource
 import com.suzei.minote.data.DataSourceImpl
 import com.suzei.minote.data.entity.Notes
-import com.suzei.minote.utils.ColorWheel
 import com.suzei.minote.utils.LogMe
 import org.threeten.bp.OffsetDateTime
 
@@ -13,8 +11,6 @@ class EditorNotePresenter : EditorNoteContract.Presenter {
     private var dataSourceImpl: DataSource
 
     private var mView: EditorNoteContract.View
-
-    private lateinit var prefs: SharedPreferences
 
     private var itemId: String? = null
 
@@ -28,12 +24,10 @@ class EditorNotePresenter : EditorNoteContract.Presenter {
         mView.setPresenter(this)
     }
 
-    internal constructor(prefs: SharedPreferences,
-                         dataSourceImpl: DataSourceImpl,
+    internal constructor(dataSourceImpl: DataSourceImpl,
                          mView: EditorNoteContract.View) {
         this.dataSourceImpl = dataSourceImpl
         this.mView = mView
-        this.prefs = prefs
 
         mView.setPresenter(this)
     }

@@ -2,7 +2,6 @@ package com.suzei.minote.ui.editor.note
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.preference.PreferenceManager
 import com.suzei.minote.Injection
 import com.suzei.minote.R
 
@@ -38,10 +37,8 @@ class EditorNoteActivity : AppCompatActivity() {
                         Injection.provideDataSourceImpl(applicationContext),
                         editorFragment)
             } else {
-                val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-                EditorNotePresenter(prefs,
-                        Injection.provideDataSourceImpl(applicationContext),
-                        editorFragment)
+                EditorNotePresenter(Injection.provideDataSourceImpl(applicationContext),
+                                    editorFragment)
             }
 
         }

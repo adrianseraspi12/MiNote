@@ -37,7 +37,6 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:$constraint_layout_version"
     implementation "androidx.legacy:legacy-support-v4:$legacy_support_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.preference:preference:1.0.0'
 
     //  Unit test Junit/Mockito
     testImplementation "junit:junit:$junit_version"
@@ -67,7 +66,4 @@ dependencies {
 
     //  Timezone
     implementation "com.jakewharton.threetenabp:threetenabp:$three_ten_abp_version"
-
-    //  Google Ads
-    implementation 'com.google.android.gms:play-services-ads:18.1.1'
 }
