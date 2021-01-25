@@ -16,8 +16,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <include layout="@layout/toast_undo_delete"
-        android:visibility="gone"/>
+    <include
+        layout="@layout/toast_undo_delete"
+        android:visibility="gone" />
 
     <include layout="@layout/custom_bottom_navigation" />
 
@@ -25,13 +26,20 @@
         android:id="@+id/list_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="44dp"
         android:contentDescription="@string/add_note_button"
         app:backgroundTint="@color/secondaryColor"
         app:elevation="@dimen/nav_fab_elevation"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/list_bottom_navigation_view"
-        app:layout_constraintStart_toStartOf="@+id/list_bottom_navigation_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/list_guideline"
         app:srcCompat="@drawable/add" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/list_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="140dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
