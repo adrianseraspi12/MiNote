@@ -4,15 +4,9 @@
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/backgroundColor</item>
         <item name="colorAccent">@color/colorSecondary</item>
         <item name="backgroundColor">@color/backgroundColor</item>
-    </style>
-
-    <style name="SettingsTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorSecondary</item>
     </style>
 
     <style name="EditorTheme" parent="AppTheme">
@@ -20,7 +14,7 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
-    
+
     <style name="PasswordDialogStyle" parent="Theme.MaterialComponents.DialogWhenLarge">
         <item name="windowNoTitle">true</item>
         <item name="android:windowAnimationStyle">@style/Animation.AppCompat.Dialog</item>
@@ -31,5 +25,5 @@
         <item name="android:windowAnimationStyle">@style/Animation.AppCompat.Dialog</item>
         <item name="android:minWidth">280dp</item>
     </style>
-    
+
 </resources>

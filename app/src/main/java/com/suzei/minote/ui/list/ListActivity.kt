@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.preference.PreferenceManager
 import com.suzei.minote.Injection
 import com.suzei.minote.R
 import com.suzei.minote.ui.editor.note.EditorNoteActivity
@@ -36,7 +35,6 @@ class ListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list)
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
         fm = supportFragmentManager
         setupSelectNoteDialog()
         setupCustomBottomNavigation()
