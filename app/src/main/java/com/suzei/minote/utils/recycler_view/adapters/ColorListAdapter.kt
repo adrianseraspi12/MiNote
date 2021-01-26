@@ -1,6 +1,7 @@
 package com.suzei.minote.utils.recycler_view.adapters
 
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -79,14 +80,26 @@ class ColorListAdapter(
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(color: Int, isSelected: Boolean) {
-            itemView.item_row_cv_pick_color.setCardBackgroundColor(color)
+            if (adapterPosition == 5) {
+                //  Set a gradient custom color
+                val arr = intArrayOf(
+                        Color.parseColor("#FF6464"),
+                        Color.parseColor("#FFA500"),
+                        Color.parseColor("#FDEC61"),
+                        Color.parseColor("#96F07B"),
+                        Color.parseColor("#76A0FF"))
 
-            LogMe.info("COLOR = $color ||| isSelected = $isSelected ||| Position = $adapterPosition")
+                val gradientDrawable = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, arr)
+                gradientDrawable.cornerRadius = itemView.item_row_cv_pick_color.radius
+                itemView.item_row_cv_pick_color.background = gradientDrawable
+            } else {
+                itemView.item_row_cv_pick_color.setCardBackgroundColor(color)
+            }
 
             if (isSelected) {
                 itemView.item_row_cv_pick_color.strokeColor = Color.parseColor("#FAB73B")
             } else {
-                itemView.item_row_cv_pick_color.strokeColor = color
+                itemView.item_row_cv_pick_color.strokeColor = Color.TRANSPARENT
             }
         }
 
