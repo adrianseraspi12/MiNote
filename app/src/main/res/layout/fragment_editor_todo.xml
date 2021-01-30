@@ -1,112 +1,176 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/editor_todo_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.editor.todo.EditorTodoFragment">
+    android:background="#FF6464"
+    android:fitsSystemWindows="true">
 
-    <RelativeLayout
-        android:id="@+id/editor_todo_nav_layout"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/editor_todo_app_bar"
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:elevation="0dp">
 
-        <ImageButton
-            android:id="@+id/editor_todo_back_arrow"
-            style="@style/ImageButton.Selectable"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/margin_small"
-            android:contentDescription="@string/back"
-            app:srcCompat="@drawable/back" />
-
-        <EditText
-            android:id="@+id/editor_todo_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/margin_medium"
-            android:layout_marginEnd="@dimen/margin_medium"
-            android:layout_toStartOf="@id/editor_todo_save"
-            android:layout_toEndOf="@id/editor_todo_back_arrow"
-            android:autoLink=""
-            android:autofillHints=""
-            android:background="@android:color/transparent"
-            android:hint="@string/title"
-            android:imeOptions="flagNoExtractUi"
-            android:inputType="text"
-            android:maxLines="1"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingBottom="@dimen/margin_small" />
-
-        <ImageButton
-            android:id="@+id/editor_todo_save"
-            style="@style/ImageButton.Selectable"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/margin_small"
-            android:layout_toStartOf="@id/editor_todo_menu"
-            android:contentDescription="@string/save"
-            app:srcCompat="@drawable/save" />
-
-        <ImageButton
-            android:id="@+id/editor_todo_menu"
-            style="@style/ImageButton.Selectable"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/margin_small"
-            android:contentDescription="@string/menu"
-            app:srcCompat="@drawable/menu" />
-
-    </RelativeLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/editor_todo_list"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editor_todo_nav_layout" />
-
-    <RelativeLayout
-        android:id="@+id/relativeLayout"
-        android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <EditText
-            android:id="@+id/editor_todo_task_input"
+        <com.google.android.material.appbar.MaterialToolbar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_toStartOf="@id/editor_todo_add_task"
-            android:autofillHints=""
-            android:hint="@string/enter_task"
-            android:inputType="text|textMultiLine"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_scrollFlags="noScroll">
 
-        <ImageButton
-            android:id="@+id/editor_todo_add_task"
-            style="@style/ImageButton.Selectable"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:contentDescription="@string/add_sub_todo_button"
-            app:srcCompat="@drawable/add" />
+            <ImageButton
+                android:id="@+id/editor_todo_back_arrow"
+                style="@style/ImageButton.Selectable"
+                android:layout_marginStart="@dimen/margin_small"
+                android:contentDescription="@string/back"
+                app:srcCompat="@drawable/back" />
 
-    </RelativeLayout>
+        </com.google.android.material.appbar.MaterialToolbar>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <FrameLayout
+        android:id="@+id/editor_todo_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editor_todo_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_medium"
+                    android:background="@android:color/transparent"
+                    android:fontFamily="@font/proxima_nova_bold"
+                    android:hint="@string/enter_title"
+                    android:inputType="textMultiLine"
+                    android:paddingVertical="@dimen/padding_small"
+                    android:textSize="32sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/editor_todo_tv_subtask_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:fontFamily="@font/proxima_nova_regular"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/editor_todo_title" />
+
+                <TextView
+                    android:id="@+id/editor_todo_tv_subtask_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_medium"
+                    android:layout_marginTop="@dimen/margin_large"
+                    android:fontFamily="@font/proxima_nova_bold"
+                    android:text="@string/sub_tasks"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/editor_todo_tv_subtask_count" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/editor_todo_list"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/editor_todo_tv_subtask_title" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/editor_todo_cv_done"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="@dimen/margin_medium"
+                    android:visibility="invisible"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardCornerRadius="12dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/editor_todo_tv_text"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/editor_todo_tv_text"
+                    app:strokeColor="@color/black"
+                    app:strokeWidth="1dp" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/editor_todo_iv_addsubtask"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="@dimen/margin_medium"
+                    app:layout_constraintBottom_toBottomOf="@+id/editor_todo_tv_text"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/editor_todo_tv_text"
+                    app:srcCompat="@drawable/add" />
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editor_todo_tv_text"
+                    android:layout_width="@dimen/constraint_layout_match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_small"
+                    android:layout_marginVertical="@dimen/margin_medium"
+                    android:background="@android:color/transparent"
+                    android:fontFamily="@font/proxima_nova_regular"
+                    android:hint="@string/add_subtask"
+                    android:inputType="textMultiLine"
+                    android:padding="@dimen/padding_very_small"
+                    android:textColor="@color/black"
+                    app:layout_constraintBottom_toTopOf="@+id/editor_todo_divider"
+                    app:layout_constraintEnd_toStartOf="@+id/item_editor_todo_add"
+                    app:layout_constraintStart_toEndOf="@+id/editor_todo_iv_addsubtask"
+                    app:layout_constraintTop_toBottomOf="@+id/editor_todo_list" />
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/item_editor_todo_add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/margin_medium"
+                    android:layout_marginEnd="@dimen/margin_medium"
+                    android:background="@android:color/transparent"
+                    android:padding="@dimen/padding_very_small"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/editor_todo_tv_text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/editor_todo_tv_text"
+                    app:srcCompat="@drawable/add" />
+
+                <View
+                    android:id="@+id/editor_todo_divider"
+                    android:layout_width="@dimen/constraint_layout_match_parent"
+                    android:layout_height="@dimen/dividerSize"
+                    android:layout_marginEnd="@dimen/margin_medium"
+                    android:background="@color/black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/editor_todo_iv_addsubtask" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </FrameLayout>
+
+    <include layout="@layout/bottomsheet_edit_note" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/editor_todo_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/save_note_button"
+        app:backgroundTint="@color/secondaryColor"
+        app:layout_anchor="@+id/bottomsheet_settings_container"
+        app:layout_anchorGravity="center_horizontal"
+        app:srcCompat="@drawable/ic_done" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
