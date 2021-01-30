@@ -53,4 +53,6 @@
     <string name="undo">UNDO</string>
     <string name="delete_note">Delete Note</string>
     <string name="add_subtask">Add subtask</string>
+    <string name="enter_title">Enter Title</string>
+    <string name="sub_tasks">Sub Tasks</string>
 </resources>
