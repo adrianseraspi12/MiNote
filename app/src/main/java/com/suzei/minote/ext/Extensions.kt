@@ -1,6 +1,7 @@
 package com.suzei.minote.ext
 
 import android.content.res.Resources
+import android.graphics.Color
 import android.util.TypedValue
 import android.widget.EditText
 import androidx.fragment.app.Fragment
@@ -41,4 +42,12 @@ fun Fragment.showColorWheel(title: String,
             }
             .build()
             .show()
+}
+
+fun Int.setAlpha(alpha: Float): Int {
+    val alpha = (Color.alpha(this) * alpha).roundToInt()
+    val red = Color.red(this)
+    val green = Color.green(this)
+    val blue = Color.blue(this)
+    return Color.argb(alpha, red, green, blue)
 }
