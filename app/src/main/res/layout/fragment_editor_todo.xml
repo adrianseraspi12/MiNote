@@ -87,6 +87,7 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintHeight_default="wrap"
                     app:layout_constraintTop_toBottomOf="@+id/editor_todo_tv_subtask_title" />
 
                 <com.google.android.material.card.MaterialCardView
