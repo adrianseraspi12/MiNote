@@ -20,10 +20,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.suzei.minote.R
 import com.suzei.minote.data.entity.Todo
 import com.suzei.minote.data.entity.TodoItem
-import com.suzei.minote.ext.convertToPx
-import com.suzei.minote.ext.moveFocus
-import com.suzei.minote.ext.setAlpha
-import com.suzei.minote.ext.showColorWheel
+import com.suzei.minote.ext.*
 import com.suzei.minote.utils.dialogs.PasswordDialog
 import com.suzei.minote.utils.recycler_view.adapters.ColorListAdapter
 import com.suzei.minote.utils.recycler_view.adapters.ColorListAdapterBuilder
@@ -178,12 +175,19 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
     private var onAddNewSubTaskClickListener = View.OnClickListener {
         val text = editor_todo_tv_text.text.toString()
         val todoItem = TodoItem(text, isNewSubtaskDone)
+        val transparent = ContextCompat.getColor(context!!, android.R.color.transparent)
+
         todoSubtaskAdapter.add(todoItem)
         taskCount++
+
         setTaskCount()
+
         editor_todo_tv_text.text = null
         isNewSubtaskDone = false
+        editor_todo_cv_done.setCardBackgroundColor(transparent)
         editor_todo_tv_text.clearFocus()
+        hideKeyboard()
+        editor_todo_scroll_view.scrollToBottom()
     }
 
     private fun setupSubTaskRecyclerView() {
