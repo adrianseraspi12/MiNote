@@ -20,6 +20,7 @@ import com.suzei.minote.ui.list.notes.ListNoteFragment
 import com.suzei.minote.ui.list.notes.ListNotePresenter
 import com.suzei.minote.ui.list.todo.ListTodoFragment
 import com.suzei.minote.ui.list.todo.ListTodoPresenter
+import com.suzei.minote.utils.OnOneOffClickListener
 import com.suzei.minote.utils.dialogs.SelectNoteDialog
 import kotlinx.android.synthetic.main.activity_list.*
 import kotlinx.android.synthetic.main.custom_bottom_navigation.*
@@ -121,11 +122,13 @@ class ListActivity : AppCompatActivity() {
     }
 
     private fun setupFabClick() {
-        list_fab.setOnClickListener {
-            fm.let {
-                selectNoteDialog.show(it, SelectNoteDialog.TAG)
+        list_fab.setOnClickListener(object : OnOneOffClickListener() {
+            override fun onSingleClick(view: View?) {
+                fm.let {
+                    selectNoteDialog.show(it, SelectNoteDialog.TAG)
+                }
             }
-        }
+        })
     }
 
     private fun showFragment(fragment: Fragment) {
