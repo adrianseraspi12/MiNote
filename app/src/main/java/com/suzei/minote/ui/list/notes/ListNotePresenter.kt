@@ -8,7 +8,7 @@ import com.suzei.minote.utils.LogMe
 class ListNotePresenter internal constructor(
         private val dataSourceImpl:
         DataSource,
-        private val mView: ListContract.View<Notes>):
+        private val mView: ListContract.View<Notes>) :
         ListContract.Presenter<Notes> {
 
     init {
@@ -20,12 +20,8 @@ class ListNotePresenter internal constructor(
         showListOfNotes()
     }
 
-    override fun delete(note: Notes) {
-        dataSourceImpl.deleteNote(note)
-    }
-
-    override fun showEditor(itemId: String) {
-        mView.redirectToEditorActivity(itemId)
+    override fun delete(data: Notes) {
+        dataSourceImpl.deleteNote(data)
     }
 
     override fun checkSizeOfList(size: Int) {

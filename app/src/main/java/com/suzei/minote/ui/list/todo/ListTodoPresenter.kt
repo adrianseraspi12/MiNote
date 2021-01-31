@@ -8,17 +8,16 @@ import com.suzei.minote.utils.LogMe
 
 class ListTodoPresenter(
         private val repository: TodoRepository,
-        private val mView: ListContract.View<Todo>):
+        private val mView: ListContract.View<Todo>) :
         ListContract.Presenter<Todo> {
 
     init {
         LogMe.info("LOG ListTodoPresenter = initialized")
-
         mView.setPresenter(this)
     }
 
     override fun start() {
-        repository.getListOfData(object: Repository.ListListener<Todo> {
+        repository.getListOfData(object : Repository.ListListener<Todo> {
 
             override fun onDataAvailable(listOfData: MutableList<Todo>) {
                 mView.showListOfNotes(listOfData)
@@ -40,9 +39,4 @@ class ListTodoPresenter(
             mView.showListUnavailable()
         }
     }
-
-    override fun showEditor(itemId: String) {
-        mView.redirectToEditorActivity(itemId)
-    }
-
 }

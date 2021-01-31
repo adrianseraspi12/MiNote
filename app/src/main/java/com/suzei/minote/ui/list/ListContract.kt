@@ -11,10 +11,6 @@ interface ListContract {
 
         fun showListUnavailable()
 
-        fun insertNoteToList(data: T, position: Int)
-
-        fun redirectToEditorActivity(itemId: String)
-
     }
 
     interface Presenter<T> {
@@ -24,8 +20,6 @@ interface ListContract {
         fun delete(data: T)
 
         fun checkSizeOfList(size: Int)
-
-        fun showEditor(itemId: String)
 
     }
 
