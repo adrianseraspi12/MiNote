@@ -271,6 +271,10 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
     }
 
     private fun setupBottomSheet() {
+        bottom_sheet_switch_lock.visibility = View.GONE
+        bottomsheet_lock_title.visibility = View.GONE
+        bottomsheet_divider_bottom.visibility = View.GONE
+
         //  Setup Bottomsheet Behavior
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomsheet_settings_container)
         val hiddenView = bottomsheet_settings_container.getChildAt(2)
