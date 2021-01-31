@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.suzei.minote.R
 import com.suzei.minote.data.entity.Notes
-import kotlinx.android.synthetic.main.item_row_notes_default.view.*
+import kotlinx.android.synthetic.main.item_row_notes.view.*
 import org.threeten.bp.format.DateTimeFormatter
 
 class ListNoteAdapter(
@@ -21,7 +21,7 @@ class ListNoteAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val context = parent.context
         val view = LayoutInflater.from(context).inflate(
-                R.layout.item_row_notes_default,
+                R.layout.item_row_notes,
                 parent,
                 false)
         return ViewHolder(context, view)
