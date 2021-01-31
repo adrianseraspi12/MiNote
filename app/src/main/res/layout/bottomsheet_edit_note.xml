@@ -18,6 +18,7 @@
         android:text="@string/note_color"
         android:textColor="@color/textColor"
         android:textSize="@dimen/text_size_small"
+        app:layout_constraintBottom_toTopOf="@+id/bottomsheet_rv_note_color"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -27,7 +28,9 @@
         android:layout_height="@dimen/pickColorSize"
         android:layout_marginTop="@dimen/margin_small"
         android:layout_marginEnd="@dimen/margin_large"
+        app:layout_constraintBottom_toTopOf="@+id/bottomsheet_divider_top"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/bottomsheet_note_title"
         app:layout_constraintTop_toBottomOf="@+id/bottomsheet_note_title" />
 
@@ -37,7 +40,9 @@
         android:layout_height="@dimen/dividerSize"
         android:layout_marginTop="@dimen/margin_large"
         android:background="@color/dividerColor"
+        app:layout_constraintBottom_toTopOf="@+id/bottomsheet_text_title"
         app:layout_constraintEnd_toEndOf="@+id/bottomsheet_rv_note_color"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/bottomsheet_rv_note_color"
         app:layout_constraintTop_toBottomOf="@+id/bottomsheet_rv_note_color" />
 
@@ -50,6 +55,7 @@
         android:text="@string/text_color"
         android:textColor="@color/textColor"
         android:textSize="@dimen/text_size_small"
+        app:layout_constraintBottom_toTopOf="@+id/bottomsheet_rv_text_color"
         app:layout_constraintStart_toStartOf="@+id/bottomsheet_divider_top"
         app:layout_constraintTop_toBottomOf="@+id/bottomsheet_divider_top" />
 
@@ -58,7 +64,10 @@
         android:layout_width="@dimen/constraint_layout_match_parent"
         android:layout_height="@dimen/pickColorSize"
         android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomsheet_divider_bottom"
         app:layout_constraintEnd_toEndOf="@+id/bottomsheet_rv_note_color"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/bottomsheet_rv_note_color"
         app:layout_constraintTop_toBottomOf="@+id/bottomsheet_text_title" />
 
@@ -66,9 +75,10 @@
         android:id="@+id/bottomsheet_divider_bottom"
         android:layout_width="@dimen/constraint_layout_match_parent"
         android:layout_height="@dimen/dividerSize"
-        android:layout_marginTop="@dimen/margin_large"
         android:background="@color/dividerColor"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_sheet_switch_lock"
         app:layout_constraintEnd_toEndOf="@+id/bottomsheet_divider_top"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/bottomsheet_divider_top"
         app:layout_constraintTop_toBottomOf="@+id/bottomsheet_rv_text_color" />
 
