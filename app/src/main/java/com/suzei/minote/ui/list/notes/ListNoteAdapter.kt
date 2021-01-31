@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.suzei.minote.R
 import com.suzei.minote.data.entity.Notes
+import com.suzei.minote.ui.list.ListAdapterCallback
 import kotlinx.android.synthetic.main.item_row_notes.view.*
 import org.threeten.bp.format.DateTimeFormatter
 
@@ -90,13 +91,5 @@ class ListNoteAdapter(
         }
 
     }
-
-}
-
-interface ListAdapterCallback {
-
-    fun onNotePasswordClick(note: Notes)
-
-    fun onNoteClick(itemId: String)
 
 }

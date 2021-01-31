@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,6 +12,7 @@ import com.suzei.minote.R
 import com.suzei.minote.data.entity.Notes
 import com.suzei.minote.ui.editor.note.EditorNoteActivity
 import com.suzei.minote.ui.list.ListActivity
+import com.suzei.minote.ui.list.ListAdapterCallback
 import com.suzei.minote.ui.list.ListContract
 import com.suzei.minote.ui.list.ToastCallback
 import com.suzei.minote.utils.LogMe
