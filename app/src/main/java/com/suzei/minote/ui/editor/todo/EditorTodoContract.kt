@@ -2,7 +2,6 @@ package com.suzei.minote.ui.editor.todo
 
 import com.suzei.minote.data.entity.Todo
 import com.suzei.minote.data.entity.TodoItem
-import com.suzei.minote.utils.ColorWheel
 
 interface EditorTodoContract {
 
