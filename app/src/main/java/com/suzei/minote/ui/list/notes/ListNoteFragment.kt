@@ -89,17 +89,6 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
         list_tv_empty_subtitle.setText(R.string.no_notes_found_subtitle)
     }
 
-    override fun insertNoteToList(data: Notes, position: Int) {
-        list_empty_placeholder.visibility = View.GONE
-        listAdapter.add(data, position)
-    }
-
-    override fun redirectToEditorActivity(itemId: String) {
-        val intent = Intent(context, EditorNoteActivity::class.java)
-        intent.putExtra(EditorNoteActivity.EXTRA_NOTE_ID, itemId)
-        startActivity(intent)
-    }
-
     private var itemTouchCallback = object : ItemMoveTouchHelper.MoveCallback {
 
         override fun isInDeleteArea(view: View): Boolean {
@@ -142,16 +131,22 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
             val passwordDialog = PasswordDialog.instance(decryptedPassword) { password ->
                 if (password.isEmpty()) return@instance
                 note.id?.let { noteId ->
-                    presenter.showEditor(noteId)
+                    showEditor(noteId)
                 }
             }
             passwordDialog.show(fragmentManager!!, "PasswordDialog")
         }
 
         override fun onNoteClick(itemId: String) {
-            presenter.showEditor(itemId)
+            showEditor(itemId)
         }
 
+    }
+
+    private fun showEditor(itemId: String) {
+        val intent = Intent(context, EditorNoteActivity::class.java)
+        intent.putExtra(EditorNoteActivity.EXTRA_NOTE_ID, itemId)
+        startActivity(intent)
     }
 
     private fun toastCallback(position: Int) = object : ToastCallback {
