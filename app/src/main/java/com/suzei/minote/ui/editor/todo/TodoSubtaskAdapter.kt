@@ -19,12 +19,13 @@ class TodoSubtaskAdapter(var data: MutableList<TodoItem>, var onDeleteCallback: 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_row_edit_todo, parent, false)
-        return ViewHolder(view)
+        return ViewHolder(view, SubTaskTextChangedListener())
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = data[position]
         holder.bind(item)
+        holder.subTaskTextChangedListener.updatePosition(position)
         holder.itemView.item_edit_todo_remove.setOnClickListener {
             onDeleteCallback.invoke()
             delete(position)
@@ -34,30 +35,20 @@ class TodoSubtaskAdapter(var data: MutableList<TodoItem>, var onDeleteCallback: 
             val isDone = item.completed ?: false
             isTaskCompleted(position, !isDone)
         }
-
-        holder.itemView
-                .item_edit_todo_text
-                .addTextChangedListener(textChangedListener(position, item))
     }
 
     override fun getItemCount(): Int {
         return data.size
     }
 
-    private fun textChangedListener(position: Int, todoItem: TodoItem) = object : TextWatcher {
+    override fun onViewAttachedToWindow(holder: ViewHolder) {
+        super.onViewAttachedToWindow(holder)
+        holder.enableTextWatcher()
+    }
 
-        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-        override fun afterTextChanged(p0: Editable?) {}
-
-        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            val charSequence = p0 ?: ""
-            if (charSequence.isNotEmpty()) {
-                todoItem.task = charSequence.toString()
-                data[position] = todoItem
-            }
-        }
-
+    override fun onViewDetachedFromWindow(holder: ViewHolder) {
+        super.onViewDetachedFromWindow(holder)
+        holder.disableTextWatcher()
     }
 
     fun add(todoItem: TodoItem) {
@@ -86,7 +77,9 @@ class TodoSubtaskAdapter(var data: MutableList<TodoItem>, var onDeleteCallback: 
         notifyItemRangeChanged(position, data.size)
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(
+            itemView: View,
+            var subTaskTextChangedListener: SubTaskTextChangedListener) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(todoItem: TodoItem) {
             val transparent = ContextCompat.getColor(itemView.context!!,
@@ -104,6 +97,35 @@ class TodoSubtaskAdapter(var data: MutableList<TodoItem>, var onDeleteCallback: 
             }
         }
 
+        fun enableTextWatcher() {
+            itemView.item_edit_todo_text.addTextChangedListener(subTaskTextChangedListener)
+        }
+
+        fun disableTextWatcher() {
+            itemView.item_edit_todo_text.removeTextChangedListener(subTaskTextChangedListener)
+        }
+
     }
 
+    inner class SubTaskTextChangedListener : TextWatcher {
+
+        private var position = -1
+
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+        override fun afterTextChanged(p0: Editable?) {}
+
+        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            val charSequence = p0 ?: ""
+            if (charSequence.isNotEmpty() && position != -1) {
+                val todoItem = data[position]
+                todoItem.task = charSequence.toString()
+                data[position] = todoItem
+            }
+        }
+
+        fun updatePosition(position: Int) {
+            this.position = position
+        }
+    }
 }
