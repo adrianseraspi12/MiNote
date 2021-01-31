@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_rootview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/margin_medium"
+    android:layout_marginTop="@dimen/margin_mid"
+    android:layout_marginEnd="@dimen/margin_medium"
+    android:layout_marginBottom="@dimen/margin_mid"
+    android:maxHeight="135dp"
+    android:minHeight="50dp"
+    app:cardBackgroundColor="@color/primaryColor"
+    app:cardCornerRadius="@dimen/card_corner_radius"
+    app:cardElevation="@dimen/card_elevation">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/item_todo_color"
+            android:layout_width="8dp"
+            android:layout_height="@dimen/constraint_layout_match_parent"
+            android:layout_marginVertical="@dimen/margin_medium"
+            app:cardBackgroundColor="@color/backgroundColor"
+            app:cardCornerRadius="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/item_todo_title"
+            android:layout_width="@dimen/constraint_layout_match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:ellipsize="end"
+            android:fontFamily="@font/proxima_nova_bold"
+            android:maxLines="2"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_large"
+            app:layout_constraintBottom_toTopOf="@+id/item_todo_subtitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/item_todo_color"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Bucket List 2020" />
+
+        <TextView
+            android:id="@+id/item_todo_subtitle"
+            android:layout_width="@dimen/constraint_layout_match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_very_small"
+            android:fontFamily="@font/proxima_nova_light"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_x_small"
+            app:layout_constraintBottom_toTopOf="@+id/item_todo_content"
+            app:layout_constraintEnd_toEndOf="@+id/item_todo_title"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/item_todo_title"
+            app:layout_constraintTop_toBottomOf="@+id/item_todo_title"
+            tools:text="July 8, 2020" />
+
+        <TextView
+            android:id="@+id/item_todo_content"
+            android:layout_width="@dimen/constraint_layout_match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:ellipsize="end"
+            android:fontFamily="@font/proxima_nova_regular"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_small"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/item_todo_title"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/item_todo_title"
+            app:layout_constraintTop_toBottomOf="@+id/item_todo_subtitle"
+            tools:text="4 Items" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
