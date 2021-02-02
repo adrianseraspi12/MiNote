@@ -1,8 +1,6 @@
 package com.suzei.minote.utils.recycler_view.adapters
 
 import android.graphics.Color
-import com.suzei.minote.utils.recycler_view.adapters.ColorListAdapter
-import com.suzei.minote.utils.recycler_view.adapters.ColorListAdapterCallback
 
 object ColorListAdapterBuilder {
 
