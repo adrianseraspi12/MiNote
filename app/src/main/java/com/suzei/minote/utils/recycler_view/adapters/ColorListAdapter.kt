@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.suzei.minote.R
-import com.suzei.minote.utils.LogMe
 import kotlinx.android.synthetic.main.item_row_pick_color.view.*
 
 class ColorListAdapter(
@@ -21,23 +20,17 @@ class ColorListAdapter(
         val view = LayoutInflater
                 .from(parent.context)
                 .inflate(R.layout.item_row_pick_color, parent, false)
-        LogMe.info("DATA = $data")
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val colorData = data[position]
-        holder.bind(colorData.first, colorData.second)
-        holder.itemView.item_row_cv_pick_color.setOnClickListener {
-            val oldData = data[currentSelectedColorPos]
+        holder.setSelected(colorData.second)
 
-            if (position == data.lastIndex) {
-                //  Show Color Picker Dialog
-                callback.onShowColorWheel(oldData.first)
-                return@setOnClickListener
-            }
-            setSelectedColor(colorData.first)
-            callback.onChangedColor(colorData.first)
+        if (position == 5) {
+            holder.bindCustomColor()
+        } else {
+            holder.bind(colorData.first)
         }
     }
 
@@ -47,55 +40,74 @@ class ColorListAdapter(
 
     fun setSelectedColor(color: Int) {
         val oldData = data[currentSelectedColorPos]
-        var currentIndex = 0
+        val selectedColorPosition = getPosition(color)
 
-        for (pair in data) {
+        //  Set unselected Color
+        data[currentSelectedColorPos] = Pair(oldData.first, false)
+        notifyItemChanged(currentSelectedColorPos)
 
-            if (pair.first == color) {
-                //  Set unselected Color
-                data[currentSelectedColorPos] = Pair(oldData.first, false)
-                notifyItemChanged(currentSelectedColorPos)
+        currentSelectedColorPos = selectedColorPosition
+        if (selectedColorPosition == 5) {
+            //  Set selected color
+            val pair = data[selectedColorPosition]
+            data[selectedColorPosition] = Pair(pair.first, true)
+            notifyItemChanged(selectedColorPosition)
+            return
+        }
 
-                //  Set selected color
-                currentSelectedColorPos = currentIndex
-                data[currentIndex] = Pair(color, true)
-                notifyItemChanged(currentIndex)
-                break
+        //  Set selected color
+        data[selectedColorPosition] = Pair(color, true)
+        notifyItemChanged(selectedColorPosition)
+    }
 
-            } else if (currentIndex == 5) {
-                //  Set unselected Color
-                data[currentSelectedColorPos] = Pair(oldData.first, false)
-                notifyItemChanged(currentSelectedColorPos)
-
-                //  Set selected color
-                currentSelectedColorPos = currentIndex
-                data[currentIndex] = Pair(pair.first, true)
-                notifyItemChanged(currentIndex)
-            }
-
-            currentIndex++
+    private fun getPosition(color: Int): Int {
+        val colors = data.map { it.first }
+        return if (!colors.contains(color)) {
+            5
+        } else {
+            colors.indexOf(color)
         }
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(color: Int, isSelected: Boolean) {
-            if (adapterPosition == 5) {
-                //  Set a gradient custom color
-                val arr = intArrayOf(
-                        Color.parseColor("#FF6464"),
-                        Color.parseColor("#FFA500"),
-                        Color.parseColor("#FDEC61"),
-                        Color.parseColor("#96F07B"),
-                        Color.parseColor("#76A0FF"))
+        init {
+            itemView.item_row_cv_pick_color.setOnClickListener {
+                val colorData = data[adapterPosition]
+                val oldData = data[currentSelectedColorPos]
 
-                val gradientDrawable = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, arr)
-                gradientDrawable.cornerRadius = itemView.item_row_cv_pick_color.radius
-                itemView.item_row_cv_pick_color.background = gradientDrawable
-            } else {
-                itemView.item_row_cv_pick_color.setCardBackgroundColor(color)
+                if (adapterPosition == data.lastIndex) {
+                    //  Show Color Picker Dialog
+                    callback.onShowColorWheel(oldData.first)
+                    return@setOnClickListener
+                }
+                setSelectedColor(colorData.first)
+                callback.onChangedColor(colorData.first)
             }
+        }
 
+        fun bind(color: Int) {
+            val gradientDrawable = GradientDrawable()
+            gradientDrawable.cornerRadius = itemView.item_row_cv_pick_color.radius
+            gradientDrawable.setColor(color)
+            itemView.item_row_cv_pick_color.background = gradientDrawable
+        }
+
+        fun bindCustomColor() {
+            //  Set a gradient custom color
+            val arr = intArrayOf(
+                    Color.parseColor("#FF6464"),
+                    Color.parseColor("#FFA500"),
+                    Color.parseColor("#FDEC61"),
+                    Color.parseColor("#96F07B"),
+                    Color.parseColor("#76A0FF"))
+
+            val gradientDrawable = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, arr)
+            gradientDrawable.cornerRadius = itemView.item_row_cv_pick_color.radius
+            itemView.item_row_cv_pick_color.background = gradientDrawable
+        }
+
+        fun setSelected(isSelected: Boolean) {
             if (isSelected) {
                 itemView.item_row_cv_pick_color.strokeColor = Color.parseColor("#FAB73B")
             } else {
