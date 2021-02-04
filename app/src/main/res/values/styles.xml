@@ -21,6 +21,7 @@
 
     <style name="PasswordDialogStyle" parent="Theme.MaterialComponents.DialogWhenLarge">
         <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@color/backgroundColor</item>
         <item name="android:windowAnimationStyle">@style/Animation.AppCompat.Dialog</item>
     </style>
 
