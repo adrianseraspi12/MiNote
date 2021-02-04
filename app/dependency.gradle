@@ -6,9 +6,6 @@ def app_compat_version = "1.2.0"
 def material_version = "1.2.1"
 def constraint_layout_version = "2.0.4"
 
-//  Legacy Support
-def legacy_support_version = "1.0.0"
-
 //  Unit test
 def junit_version = "4.12"
 def mockito_version = "2.0.2-beta"
@@ -35,7 +32,6 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$app_compat_version"
     implementation "com.google.android.material:material:$material_version"
     implementation "androidx.constraintlayout:constraintlayout:$constraint_layout_version"
-    implementation "androidx.legacy:legacy-support-v4:$legacy_support_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     //  Unit test Junit/Mockito
