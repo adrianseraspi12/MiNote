@@ -1,9 +1,9 @@
 package com.suzei.minote
 
-import androidx.multidex.MultiDexApplication
+import android.app.Application
 import com.jakewharton.threetenabp.AndroidThreeTen
 
-class MiNoteApp : MultiDexApplication() {
+class MiNoteApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
