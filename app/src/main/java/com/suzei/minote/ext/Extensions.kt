@@ -7,10 +7,12 @@ import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import com.flask.colorpicker.ColorPickerView
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
+import com.suzei.minote.R
 import kotlin.math.roundToInt
 
 fun EditText.moveFocus() {
@@ -33,7 +35,8 @@ fun Int.convertToDp(resources: Resources): Int {
 fun Fragment.showColorWheel(title: String,
                             initialColor: Int,
                             onColorPicked: ((Int) -> Unit)) {
-    ColorPickerDialogBuilder.with(context!!)
+    ColorPickerDialogBuilder.with(ContextThemeWrapper(context!!, R.style.ColorPickerStyle))
+            .lightnessSliderOnly()
             .setTitle(title)
             .initialColor(initialColor)
             .density(6)
