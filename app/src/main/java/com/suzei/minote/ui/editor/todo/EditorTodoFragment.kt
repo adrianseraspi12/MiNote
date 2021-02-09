@@ -1,6 +1,5 @@
 package com.suzei.minote.ui.editor.todo
 
-
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -21,7 +20,6 @@ import com.suzei.minote.R
 import com.suzei.minote.data.entity.Todo
 import com.suzei.minote.data.entity.TodoItem
 import com.suzei.minote.ext.*
-import com.suzei.minote.utils.dialogs.PasswordDialog
 import com.suzei.minote.utils.recycler_view.adapters.ColorListAdapter
 import com.suzei.minote.utils.recycler_view.adapters.ColorListAdapterBuilder
 import com.suzei.minote.utils.recycler_view.adapters.ColorListAdapterCallback
@@ -33,6 +31,9 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
 
     companion object {
 
+        private const val EXTRA_NOTE_COLOR = "EXTRA_NOTE_COLOR"
+        private const val EXTRA_TEXT_COLOR = "EXTRA_TEXT_COLOR"
+
         internal fun newInstance(): EditorTodoFragment {
             return EditorTodoFragment()
         }
@@ -40,9 +41,9 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
     }
 
     private lateinit var presenter: EditorTodoContract.Presenter
-    private var mPassword: String? = null
     private var isNewSubtaskDone = false
-    private var textColor: Int = 0x000000
+    private var currentNoteColor = -1
+    private var currentTextColor = -1
     private var taskCount = 0
     private lateinit var noteColorsAdapter: ColorListAdapter
     private lateinit var textColorsAdapter: ColorListAdapter
@@ -67,7 +68,14 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_editor_todo, container, false)
+        val view = inflater.inflate(R.layout.fragment_editor_todo, container, false)
+
+        if (savedInstanceState != null) {
+            currentNoteColor = savedInstanceState.getInt(EXTRA_NOTE_COLOR, -1)
+            currentTextColor = savedInstanceState.getInt(EXTRA_TEXT_COLOR, -1)
+        }
+
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -76,13 +84,26 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
         setupBottomSheet()
         setupNoteColorRecyclerView()
         setupTextColorRecyclerView()
-        setupLock()
         setupSubTaskRecyclerView()
         editor_todo_cv_done.setOnClickListener(onNewSubTaskDoneClickListener)
         editor_todo_tv_text.addTextChangedListener(onAddSubTaskTextChangedListener)
         item_editor_todo_add.setOnClickListener(onAddNewSubTaskClickListener)
         editor_todo_save.setOnClickListener(onSaveClickListener)
         editor_todo_back_arrow.setOnClickListener(onBackClickListener)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (currentNoteColor != -1 || currentTextColor != -1) {
+            setNoteColor(currentNoteColor)
+            setTextColor(currentTextColor)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(EXTRA_NOTE_COLOR, currentNoteColor)
+        outState.putInt(EXTRA_TEXT_COLOR, currentTextColor)
     }
 
     override fun setPresenter(presenter: EditorTodoContract.Presenter) {
@@ -107,24 +128,25 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
     }
 
     override fun setNoteColor(color: Int) {
+
         editor_todo_root.setBackgroundColor(color)
     }
 
     override fun setTextColor(color: Int) {
-        this.textColor = color
-        todoSubtaskAdapter.change(textColor)
+        this.currentTextColor = color
+        todoSubtaskAdapter.change(currentTextColor)
 
-        editor_todo_back_arrow.setColorFilter(textColor)
-        editor_todo_iv_addsubtask.setColorFilter(textColor)
-        item_editor_todo_add.setColorFilter(textColor)
-        editor_todo_divider.setBackgroundColor(textColor.setAlpha(0.5f))
-        editor_todo_cv_done.strokeColor = textColor
-        editor_todo_title.setTextColor(textColor)
-        editor_todo_tv_subtask_count.setTextColor(textColor)
-        editor_todo_tv_subtask_title.setTextColor(textColor)
-        editor_todo_tv_text.setTextColor(textColor)
+        editor_todo_back_arrow.setColorFilter(currentTextColor)
+        editor_todo_iv_addsubtask.setColorFilter(currentTextColor)
+        item_editor_todo_add.setColorFilter(currentTextColor)
+        editor_todo_divider.setBackgroundColor(currentTextColor.setAlpha(0.5f))
+        editor_todo_cv_done.strokeColor = currentTextColor
+        editor_todo_title.setTextColor(currentTextColor)
+        editor_todo_tv_subtask_count.setTextColor(currentTextColor)
+        editor_todo_tv_subtask_title.setTextColor(currentTextColor)
+        editor_todo_tv_text.setTextColor(currentTextColor)
         if (isNewSubtaskDone) {
-            editor_todo_cv_done.setCardBackgroundColor(textColor)
+            editor_todo_cv_done.setCardBackgroundColor(currentTextColor)
         }
     }
 
@@ -167,7 +189,7 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
             editor_todo_cv_done.setCardBackgroundColor(transparent)
             false
         } else {
-            editor_todo_cv_done.setCardBackgroundColor(textColor)
+            editor_todo_cv_done.setCardBackgroundColor(currentTextColor)
             true
         }
     }
@@ -219,23 +241,6 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
             editor_todo_tv_subtask_count.text = "$taskCount Task"
         } else {
             editor_todo_tv_subtask_count.text = "$taskCount Tasks"
-        }
-    }
-
-    private fun setupLock() {
-        bottom_sheet_switch_lock.setOnCheckedChangeListener { _, isCheck ->
-            if (isCheck) {
-                val passwordDialog = PasswordDialog.instance(mPassword ?: "") {
-                    if (it.isEmpty()) {
-                        bottom_sheet_switch_lock.isChecked = false
-                    } else {
-                        mPassword = it
-                    }
-                }
-                passwordDialog.show(fragmentManager!!, "Password Dialog")
-            } else {
-                mPassword = null
-            }
         }
     }
 
