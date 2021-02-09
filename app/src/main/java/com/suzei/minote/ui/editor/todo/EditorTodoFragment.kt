@@ -128,13 +128,16 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
     }
 
     override fun setNoteColor(color: Int) {
-
+        this.currentNoteColor = color
+        activity?.window?.statusBarColor = color
         editor_todo_root.setBackgroundColor(color)
+        noteColorsAdapter.setSelectedColor(color)
     }
 
     override fun setTextColor(color: Int) {
         this.currentTextColor = color
         todoSubtaskAdapter.change(currentTextColor)
+        textColorsAdapter.setSelectedColor(color)
 
         editor_todo_back_arrow.setColorFilter(currentTextColor)
         editor_todo_iv_addsubtask.setColorFilter(currentTextColor)
@@ -254,7 +257,6 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
             override fun onShowColorWheel(color: Int) {
                 showColorWheel("Choose note color", color) {
                     setNoteColor(it)
-                    noteColorsAdapter.setSelectedColor(it)
                 }
             }
 
@@ -268,7 +270,6 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
             override fun onShowColorWheel(color: Int) {
                 showColorWheel("Choose text color", color) {
                     setTextColor(it)
-                    textColorsAdapter.setSelectedColor(it)
                 }
             }
 
