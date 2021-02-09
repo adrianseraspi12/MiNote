@@ -1,5 +1,6 @@
 package com.suzei.minote.ui.editor.note
 
+import android.graphics.Color
 import com.suzei.minote.data.DataSource
 import com.suzei.minote.data.DataSourceImpl
 import com.suzei.minote.data.entity.Notes
@@ -35,6 +36,8 @@ class EditorNotePresenter : EditorNoteContract.Presenter {
     override fun start() {
         if (itemId != null) {
             showNote()
+        } else {
+            showNewNote()
         }
     }
 
@@ -89,6 +92,11 @@ class EditorNotePresenter : EditorNoteContract.Presenter {
     private fun updateNote(note: Notes) {
         dataSourceImpl.updateNote(note)
         mView.showToastMessage("Note updated")
+    }
+
+    private fun showNewNote() {
+        mView.setNoteColor(Color.parseColor("#FF6464"))
+        mView.setTextColor(Color.parseColor("#000000"))
     }
 
     private fun showNote() {

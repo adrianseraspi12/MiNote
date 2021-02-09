@@ -117,6 +117,7 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
 
     override fun setNoteColor(noteColor: Int) {
         currentNoteColor = noteColor
+        activity?.window?.statusBarColor = noteColor
         editor_root.setBackgroundColor(noteColor)
         noteColorsAdapter.setSelectedColor(noteColor)
     }
@@ -161,7 +162,7 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
                 val passwordDialog = PasswordDialog.instance(mPassword ?: "") {
                     if (it.isEmpty()) {
                         bottom_sheet_switch_lock.isChecked = false
-                    } else{
+                    } else {
                         mPassword = it
                     }
                 }
@@ -227,13 +228,12 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
         noteColorsAdapter = ColorListAdapterBuilder.noteList(object : ColorListAdapterCallback {
 
             override fun onChangedColor(color: Int) {
-                editor_root.setBackgroundColor(color)
+                setNoteColor(color)
             }
 
             override fun onShowColorWheel(color: Int) {
                 showColorWheel("Choose note color", color) {
                     setNoteColor(it)
-                    noteColorsAdapter.setSelectedColor(it)
                 }
             }
 
@@ -241,15 +241,12 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
 
         textColorsAdapter = ColorListAdapterBuilder.textList(object : ColorListAdapterCallback {
             override fun onChangedColor(color: Int) {
-                editor_title.setTextColor(color)
-                editor_text.setTextColor(color)
-                editor_back_arrow.setColorFilter(color)
+                setTextColor(color)
             }
 
             override fun onShowColorWheel(color: Int) {
                 showColorWheel("Choose text color", color) {
                     setTextColor(it)
-                    textColorsAdapter.setSelectedColor(it)
                 }
             }
 
