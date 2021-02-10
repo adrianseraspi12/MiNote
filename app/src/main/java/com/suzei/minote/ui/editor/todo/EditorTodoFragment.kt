@@ -131,12 +131,14 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
         this.currentNoteColor = color
         activity?.window?.statusBarColor = color
         editor_todo_root.setBackgroundColor(color)
+        todoSubtaskAdapter.changeBackgroundColor(color)
         noteColorsAdapter.setSelectedColor(color)
+        editor_todo_iv_check.setColorFilter(color)
     }
 
     override fun setTextColor(color: Int) {
         this.currentTextColor = color
-        todoSubtaskAdapter.change(color)
+        todoSubtaskAdapter.changeTextColor(color)
 
         editor_todo_back_arrow.setColorFilter(color)
         editor_todo_iv_addsubtask.setColorFilter(color)
@@ -192,9 +194,11 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
         isNewSubtaskDone = if (isNewSubtaskDone) {
             val transparent = ContextCompat.getColor(context!!, android.R.color.transparent)
             editor_todo_cv_done.setCardBackgroundColor(transparent)
+            editor_todo_iv_check.visibility = View.GONE
             false
         } else {
             editor_todo_cv_done.setCardBackgroundColor(currentTextColor)
+            editor_todo_iv_check.visibility = View.VISIBLE
             true
         }
     }

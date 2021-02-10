@@ -39,4 +39,5 @@
     <string name="add_subtask">Add subtask</string>
     <string name="enter_title">Enter Title</string>
     <string name="sub_tasks">Sub Tasks</string>
+    <string name="done_todo">done todo</string>
 </resources>

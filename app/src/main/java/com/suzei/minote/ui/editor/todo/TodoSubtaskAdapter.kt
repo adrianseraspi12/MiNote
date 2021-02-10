@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.item_row_edit_todo.view.*
 class TodoSubtaskAdapter(var data: MutableList<TodoItem>, var onDeleteCallback: () -> Unit) : RecyclerView.Adapter<TodoSubtaskAdapter.ViewHolder>() {
 
     private var textColor: Int = 0xFFFFFF
+    private var backgroundColor: Int = 0xFFFFFF
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -56,8 +57,13 @@ class TodoSubtaskAdapter(var data: MutableList<TodoItem>, var onDeleteCallback: 
         notifyDataSetChanged()
     }
 
-    fun change(textColor: Int) {
-        this.textColor = textColor
+    fun changeTextColor(color: Int) {
+        this.textColor = color
+        notifyDataSetChanged()
+    }
+
+    fun changeBackgroundColor(color: Int) {
+        this.backgroundColor = color
         notifyDataSetChanged()
     }
 
@@ -89,12 +95,15 @@ class TodoSubtaskAdapter(var data: MutableList<TodoItem>, var onDeleteCallback: 
             itemView.item_edit_todo_remove.setColorFilter(textColor)
             itemView.item_row_edit_todo_cv_done.strokeColor = textColor
             itemView.item_row_edit_todo_divider.setBackgroundColor(textColor.setAlpha(0.5f))
+            itemView.item_row_edit_todo_iv_check.setColorFilter(backgroundColor)
 
             itemView.item_edit_todo_text.setText(todoItem.task)
             if (todoItem.completed == true) {
                 itemView.item_row_edit_todo_cv_done.setCardBackgroundColor(textColor)
+                itemView.item_row_edit_todo_iv_check.visibility = View.VISIBLE
             } else {
                 itemView.item_row_edit_todo_cv_done.setCardBackgroundColor(transparent)
+                itemView.item_row_edit_todo_iv_check.visibility = View.GONE
             }
         }
 
