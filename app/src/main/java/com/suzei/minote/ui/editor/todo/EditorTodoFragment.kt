@@ -136,21 +136,23 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
 
     override fun setTextColor(color: Int) {
         this.currentTextColor = color
-        todoSubtaskAdapter.change(currentTextColor)
-        textColorsAdapter.setSelectedColor(color)
+        todoSubtaskAdapter.change(color)
 
-        editor_todo_back_arrow.setColorFilter(currentTextColor)
-        editor_todo_iv_addsubtask.setColorFilter(currentTextColor)
-        item_editor_todo_add.setColorFilter(currentTextColor)
-        editor_todo_divider.setBackgroundColor(currentTextColor.setAlpha(0.5f))
-        editor_todo_cv_done.strokeColor = currentTextColor
-        editor_todo_title.setTextColor(currentTextColor)
-        editor_todo_tv_subtask_count.setTextColor(currentTextColor)
-        editor_todo_tv_subtask_title.setTextColor(currentTextColor)
-        editor_todo_tv_text.setTextColor(currentTextColor)
+        editor_todo_back_arrow.setColorFilter(color)
+        editor_todo_iv_addsubtask.setColorFilter(color)
+        item_editor_todo_add.setColorFilter(color)
+        editor_todo_divider.setBackgroundColor(color.setAlpha(0.5f))
+        editor_todo_cv_done.strokeColor = color
+        editor_todo_title.setTextColor(color)
+        editor_todo_title.setHintTextColor(color.setAlpha(0.5f))
+        editor_todo_tv_subtask_count.setTextColor(color)
+        editor_todo_tv_subtask_title.setTextColor(color)
+        editor_todo_tv_text.setTextColor(color)
+        editor_todo_tv_text.setHintTextColor(color.setAlpha(0.5f))
         if (isNewSubtaskDone) {
-            editor_todo_cv_done.setCardBackgroundColor(currentTextColor)
+            editor_todo_cv_done.setCardBackgroundColor(color)
         }
+        textColorsAdapter.setSelectedColor(color)
     }
 
     private var onBackClickListener = View.OnClickListener { activity!!.finish() }

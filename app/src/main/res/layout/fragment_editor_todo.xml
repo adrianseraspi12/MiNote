@@ -55,6 +55,7 @@
                     android:hint="@string/enter_title"
                     android:inputType="textMultiLine"
                     android:paddingVertical="@dimen/padding_small"
+                    android:textCursorDrawable="@null"
                     android:textSize="32sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -87,8 +88,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintHeight_default="wrap"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/editor_todo_tv_subtask_title" />
 
                 <com.google.android.material.card.MaterialCardView
@@ -127,6 +128,7 @@
                     android:inputType="textMultiLine"
                     android:padding="@dimen/padding_very_small"
                     android:textColor="@color/black"
+                    android:textCursorDrawable="@null"
                     app:layout_constraintBottom_toTopOf="@+id/editor_todo_divider"
                     app:layout_constraintEnd_toStartOf="@+id/item_editor_todo_add"
                     app:layout_constraintStart_toEndOf="@+id/editor_todo_iv_addsubtask"

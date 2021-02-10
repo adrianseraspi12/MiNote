@@ -28,6 +28,7 @@
         android:hint="@string/add_subtask"
         android:inputType="textMultiLine"
         android:padding="@dimen/padding_very_small"
+        android:textCursorDrawable="@null"
         app:layout_constraintBottom_toTopOf="@+id/item_row_edit_todo_divider"
         app:layout_constraintEnd_toStartOf="@+id/item_edit_todo_remove"
         app:layout_constraintStart_toEndOf="@+id/item_row_edit_todo_cv_done"

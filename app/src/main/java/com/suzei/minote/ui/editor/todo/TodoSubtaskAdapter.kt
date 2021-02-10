@@ -85,6 +85,7 @@ class TodoSubtaskAdapter(var data: MutableList<TodoItem>, var onDeleteCallback: 
             val transparent = ContextCompat.getColor(itemView.context!!,
                     android.R.color.transparent)
             itemView.item_edit_todo_text.setTextColor(textColor)
+            itemView.item_edit_todo_text.setHintTextColor(textColor.setAlpha(0.5f))
             itemView.item_edit_todo_remove.setColorFilter(textColor)
             itemView.item_row_edit_todo_cv_done.strokeColor = textColor
             itemView.item_row_edit_todo_divider.setBackgroundColor(textColor.setAlpha(0.5f))

@@ -16,6 +16,7 @@ import com.suzei.minote.R
 import com.suzei.minote.data.entity.Notes
 import com.suzei.minote.ext.convertToPx
 import com.suzei.minote.ext.moveFocus
+import com.suzei.minote.ext.setAlpha
 import com.suzei.minote.ext.showColorWheel
 import com.suzei.minote.utils.Turing
 import com.suzei.minote.utils.dialogs.PasswordDialog
@@ -127,6 +128,8 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
         editor_title.setTextColor(textColor)
         editor_text.setTextColor(textColor)
         editor_back_arrow.setColorFilter(textColor)
+        editor_title.setHintTextColor(textColor.setAlpha(0.5f))
+        editor_text.setHintTextColor(textColor.setAlpha(0.5f))
         textColorsAdapter.setSelectedColor(textColor)
     }
 
