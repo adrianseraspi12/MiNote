@@ -33,7 +33,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/list_guideline"
-        app:srcCompat="@drawable/add" />
+        app:srcCompat="@drawable/ic_add" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/list_guideline"

@@ -24,7 +24,7 @@
                 style="@style/ImageButton.Selectable"
                 android:layout_marginStart="@dimen/margin_small"
                 android:contentDescription="@string/back"
-                app:srcCompat="@drawable/back" />
+                app:srcCompat="@drawable/ic_back" />
 
         </com.google.android.material.appbar.MaterialToolbar>
 

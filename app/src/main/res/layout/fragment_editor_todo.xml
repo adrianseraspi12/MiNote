@@ -24,7 +24,7 @@
                 style="@style/ImageButton.Selectable"
                 android:layout_marginStart="@dimen/margin_small"
                 android:contentDescription="@string/back"
-                app:srcCompat="@drawable/back" />
+                app:srcCompat="@drawable/ic_back" />
 
         </com.google.android.material.appbar.MaterialToolbar>
 
@@ -113,7 +113,7 @@
                     app:layout_constraintBottom_toBottomOf="@+id/editor_todo_tv_text"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/editor_todo_tv_text"
-                    app:srcCompat="@drawable/add" />
+                    app:srcCompat="@drawable/ic_add" />
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editor_todo_tv_text"
@@ -144,7 +144,7 @@
                     app:layout_constraintBottom_toBottomOf="@+id/editor_todo_tv_text"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/editor_todo_tv_text"
-                    app:srcCompat="@drawable/add" />
+                    app:srcCompat="@drawable/ic_add" />
 
                 <View
                     android:id="@+id/editor_todo_divider"
