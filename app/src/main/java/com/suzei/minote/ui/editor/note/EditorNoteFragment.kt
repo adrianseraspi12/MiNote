@@ -207,7 +207,7 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
                             CoordinatorLayout.LayoutParams.MATCH_PARENT,
                             CoordinatorLayout.LayoutParams.MATCH_PARENT
                     )
-                    val bottomsheetSize = hiddenView.top + 32.convertToPx(resources)
+                    val bottomsheetSize = hiddenView.top + 56.convertToPx(resources)
                     params.setMargins(0, 56.convertToPx(resources),
                             0, bottomsheetSize)
 
