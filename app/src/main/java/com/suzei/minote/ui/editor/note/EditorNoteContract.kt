@@ -19,7 +19,7 @@ interface EditorNoteContract {
 
     interface Presenter {
 
-        fun start()
+        fun setup()
 
         fun saveNote(title: String,
                      message: String,

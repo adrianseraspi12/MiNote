@@ -33,7 +33,7 @@ class EditorNotePresenter : EditorNoteContract.Presenter {
         mView.setPresenter(this)
     }
 
-    override fun start() {
+    override fun setup() {
         if (itemId != null) {
             showNote()
         } else {

@@ -39,7 +39,7 @@ class EditorTodoPresenter : EditorTodoContract.Presenter {
         mView.setPresenter(this)
     }
 
-    override fun start() {
+    override fun setup() {
 
         if (itemId != null) {
             showTodo()

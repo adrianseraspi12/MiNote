@@ -21,7 +21,7 @@ interface EditorTodoContract {
 
     interface Presenter {
 
-        fun start()
+        fun setup()
 
         fun saveTodo(title: String,
                      todoItems: List<TodoItem>,

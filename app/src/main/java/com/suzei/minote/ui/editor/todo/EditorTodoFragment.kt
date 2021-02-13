@@ -80,7 +80,7 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.start()
+        presenter.setup()
         setupBottomSheet()
         setupNoteColorRecyclerView()
         setupTextColorRecyclerView()
