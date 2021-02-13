@@ -31,6 +31,8 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
 
     companion object {
 
+        const val TAG = "ListNoteFragment"
+
         internal fun newInstance(): ListNoteFragment {
             return ListNoteFragment()
         }
@@ -38,6 +40,7 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        LogMe.info("LOG ListNoteFragment = onCreate()")
         listActivity = activity as ListActivity
         listAdapter = ListNoteAdapter(ArrayList(), listAdapterCallback)
     }
@@ -64,6 +67,16 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
         super.onStart()
         LogMe.info("LOG ListNoteFragment = onStart()")
         presenter.start()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        LogMe.info("LOG ListNoteFragment = onPause()")
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        LogMe.info("LOG ListNoteFragment = onDetach()")
     }
 
     override fun onDestroyView() {

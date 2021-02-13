@@ -25,6 +25,8 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
 
     companion object {
 
+        const val TAG = "ListTodoFragment"
+
         internal fun newInstance(): ListTodoFragment {
             return ListTodoFragment()
         }

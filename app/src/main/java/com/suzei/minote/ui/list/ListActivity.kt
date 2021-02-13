@@ -37,7 +37,9 @@ class ListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list)
         fm = supportFragmentManager
-        setupSelectNoteDialog()
+        initSelectNoteDialog()
+        initPresenters()
+        setupFragmentTransaction()
         setupCustomBottomNavigation()
         setupFabClick()
     }
@@ -76,7 +78,35 @@ class ListActivity : AppCompatActivity() {
         }, 4000)
     }
 
-    private fun setupSelectNoteDialog() {
+
+    private fun setFragment(visibleFragment: Fragment, invisibleFragmnet: Fragment) {
+        fm.beginTransaction().apply {
+            show(visibleFragment)
+            hide(invisibleFragmnet)
+            commit()
+        }
+    }
+
+    private fun setupFragmentTransaction() {
+        fm.beginTransaction().apply {
+            add(list_container.id, listNoteFragment, ListNoteFragment.TAG)
+            add(list_container.id, listTodoFragment, ListTodoFragment.TAG)
+            show(listNoteFragment)
+            hide(listTodoFragment)
+            commit()
+        }
+    }
+
+    private fun initPresenters() {
+        ListNotePresenter(
+                Injection.provideDataSourceImpl(applicationContext),
+                listNoteFragment)
+        ListTodoPresenter(
+                Injection.provideTodoRepository(applicationContext),
+                listTodoFragment)
+    }
+
+    private fun initSelectNoteDialog() {
         selectNoteDialog = SelectNoteDialog.newInstance {
             selectNoteDialog.dismiss()
             when (it) {
@@ -93,34 +123,6 @@ class ListActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupCustomBottomNavigation() {
-        val selectedColor = ResourcesCompat.getColor(resources, R.color.secondaryColor, null)
-        val unselectedColor = ResourcesCompat.getColor(resources, R.color.unselectedColor, null)
-
-        btn_nav_notes.iconTint = ColorStateList.valueOf(selectedColor)
-        btn_nav_todo.iconTint = ColorStateList.valueOf(unselectedColor)
-        showFragment(listNoteFragment)
-
-        ListNotePresenter(
-                Injection.provideDataSourceImpl(applicationContext),
-                listNoteFragment)
-        ListTodoPresenter(
-                Injection.provideTodoRepository(applicationContext),
-                listTodoFragment)
-
-        btn_nav_notes.setOnClickListener {
-            btn_nav_notes.iconTint = ColorStateList.valueOf(selectedColor)
-            btn_nav_todo.iconTint = ColorStateList.valueOf(unselectedColor)
-            showFragment(listNoteFragment)
-        }
-
-        btn_nav_todo.setOnClickListener {
-            btn_nav_notes.iconTint = ColorStateList.valueOf(unselectedColor)
-            btn_nav_todo.iconTint = ColorStateList.valueOf(selectedColor)
-            showFragment(listTodoFragment)
-        }
-    }
-
     private fun setupFabClick() {
         list_fab.setOnClickListener(object : OnOneOffClickListener() {
             override fun onSingleClick(view: View?) {
@@ -131,7 +133,23 @@ class ListActivity : AppCompatActivity() {
         })
     }
 
-    private fun showFragment(fragment: Fragment) {
-        fm.beginTransaction().replace(list_container.id, fragment).commit()
+    private fun setupCustomBottomNavigation() {
+        val selectedColor = ResourcesCompat.getColor(resources, R.color.secondaryColor, null)
+        val unselectedColor = ResourcesCompat.getColor(resources, R.color.unselectedColor, null)
+
+        btn_nav_notes.iconTint = ColorStateList.valueOf(selectedColor)
+        btn_nav_todo.iconTint = ColorStateList.valueOf(unselectedColor)
+
+        btn_nav_notes.setOnClickListener {
+            btn_nav_notes.iconTint = ColorStateList.valueOf(selectedColor)
+            btn_nav_todo.iconTint = ColorStateList.valueOf(unselectedColor)
+            setFragment(listNoteFragment, listTodoFragment)
+        }
+
+        btn_nav_todo.setOnClickListener {
+            btn_nav_notes.iconTint = ColorStateList.valueOf(unselectedColor)
+            btn_nav_todo.iconTint = ColorStateList.valueOf(selectedColor)
+            setFragment(listTodoFragment, listNoteFragment)
+        }
     }
 }
