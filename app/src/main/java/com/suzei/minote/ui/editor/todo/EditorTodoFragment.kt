@@ -178,7 +178,7 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             val charSequence = p0 ?: ""
             if (charSequence.isNotEmpty()) {
-                editor_todo_iv_addsubtask.visibility = View.INVISIBLE
+                editor_todo_iv_addsubtask.visibility = View.GONE
                 item_editor_todo_add.visibility = View.VISIBLE
                 editor_todo_cv_done.visibility = View.VISIBLE
             } else {
