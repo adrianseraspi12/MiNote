@@ -69,21 +69,6 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
         presenter.start()
     }
 
-    override fun onPause() {
-        super.onPause()
-        LogMe.info("LOG ListNoteFragment = onPause()")
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        LogMe.info("LOG ListNoteFragment = onDetach()")
-    }
-
-    override fun onDestroyView() {
-        LogMe.info("LOG ListNoteFragment = onDestroyView()")
-        super.onDestroyView()
-    }
-
     override fun setPresenter(presenter: ListContract.Presenter<Notes>) {
         LogMe.info("LOG ListNoteFragment = setPresenter")
         this.presenter = presenter
@@ -119,6 +104,9 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
             listActivity.showToastUndo(
                     getString(R.string.note_deleted),
                     toastCallback(position))
+            if (listAdapter.itemCount == 0) {
+                showListUnavailable()
+            }
         }
 
         override fun onClearView() {
@@ -166,6 +154,9 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
 
         override fun onUndoClick() {
             listAdapter.retainDeletedItem(position)
+            if (listAdapter.itemCount > 0) {
+                list_empty_placeholder.visibility = View.GONE
+            }
         }
 
         override fun onToastDismiss() {

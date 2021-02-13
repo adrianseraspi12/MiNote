@@ -116,6 +116,9 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
             listActivity.showToastUndo(
                     getString(R.string.note_deleted),
                     toastCallback(position))
+            if (listTodoAdapter.itemCount == 0) {
+                showListUnavailable()
+            }
         }
 
         override fun onClearView() {
@@ -139,6 +142,9 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
 
         override fun onUndoClick() {
             listTodoAdapter.retainDeletedItem(position)
+            if (listTodoAdapter.itemCount > 0) {
+                list_empty_placeholder.visibility = View.GONE
+            }
         }
 
         override fun onToastDismiss() {
