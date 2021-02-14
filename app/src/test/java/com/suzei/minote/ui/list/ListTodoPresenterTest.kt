@@ -4,7 +4,7 @@ import com.suzei.minote.data.entity.Todo
 import com.suzei.minote.data.entity.TodoItem
 import com.suzei.minote.data.repository.Repository
 import com.suzei.minote.data.repository.TodoRepository
-import com.suzei.minote.ui.BaseUnitTest
+import com.suzei.minote.BaseUnitTest
 import com.suzei.minote.ui.list.todo.ListTodoFragment
 import com.suzei.minote.ui.list.todo.ListTodoPresenter
 import org.junit.Assert

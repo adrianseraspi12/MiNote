@@ -1,4 +1,4 @@
-package com.suzei.minote.ui
+package com.suzei.minote
 
 import org.mockito.ArgumentCaptor
 

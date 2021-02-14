@@ -3,7 +3,7 @@ package com.suzei.minote.ui.list
 import com.suzei.minote.data.entity.Notes
 import com.suzei.minote.data.repository.NotesRepository
 import com.suzei.minote.data.repository.Repository
-import com.suzei.minote.ui.BaseUnitTest
+import com.suzei.minote.BaseUnitTest
 import com.suzei.minote.ui.list.notes.ListNoteFragment
 import com.suzei.minote.ui.list.notes.ListNotePresenter
 import org.junit.Assert
