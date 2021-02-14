@@ -23,12 +23,6 @@ class ListNotePresenter internal constructor(
         dataSourceImpl.delete(data)
     }
 
-    override fun checkSizeOfList(size: Int) {
-        if (size == 0) {
-            mView.showListUnavailable()
-        }
-    }
-
     private fun showListOfNotes() {
         dataSourceImpl.getListOfData(object : Repository.ListListener<Notes> {
 
@@ -42,5 +36,4 @@ class ListNotePresenter internal constructor(
 
         })
     }
-
 }

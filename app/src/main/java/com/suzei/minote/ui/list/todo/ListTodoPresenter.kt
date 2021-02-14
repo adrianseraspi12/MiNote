@@ -32,10 +32,4 @@ class ListTodoPresenter(
     override fun delete(data: Todo) {
         repository.delete(data)
     }
-
-    override fun checkSizeOfList(size: Int) {
-        if (size == 0) {
-            mView.showListUnavailable()
-        }
-    }
 }

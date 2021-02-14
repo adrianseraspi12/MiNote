@@ -19,8 +19,6 @@ interface ListContract {
 
         fun delete(data: T)
 
-        fun checkSizeOfList(size: Int)
-
     }
 
 }
