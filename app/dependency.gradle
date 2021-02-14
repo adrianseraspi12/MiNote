@@ -8,7 +8,7 @@ def constraint_layout_version = "2.0.4"
 
 //  Unit test
 def junit_version = "4.12"
-def mockito_version = "2.0.2-beta"
+def mockito_version = "2.2.0"
 
 //  Room
 def room_version = "2.2.5"
@@ -36,7 +36,7 @@ dependencies {
 
     //  Unit test Junit/Mockito
     testImplementation "junit:junit:$junit_version"
-    testImplementation "org.mockito:mockito-all:$mockito_version"
+    testImplementation "com.nhaarman:mockito-kotlin:$mockito_version"
 
     //  Instrumentation Test Espresso
     androidTestImplementation "androidx.test.ext:junit:$android_junit_version"
