@@ -15,7 +15,7 @@ class ListTodoPresenter(
         mView.setPresenter(this)
     }
 
-    override fun start() {
+    override fun setup() {
         repository.getListOfData(object : Repository.ListListener<Todo> {
 
             override fun onDataAvailable(listOfData: MutableList<Todo>) {

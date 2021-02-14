@@ -15,7 +15,7 @@ interface ListContract {
 
     interface Presenter<T> {
 
-        fun start()
+        fun setup()
 
         fun delete(data: T)
 

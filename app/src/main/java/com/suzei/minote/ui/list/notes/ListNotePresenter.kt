@@ -15,7 +15,7 @@ class ListNotePresenter internal constructor(
         mView.setPresenter(this)
     }
 
-    override fun start() {
+    override fun setup() {
         showListOfNotes()
     }
 

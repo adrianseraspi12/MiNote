@@ -66,7 +66,7 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
     override fun onStart() {
         super.onStart()
         LogMe.info("LOG ListNoteFragment = onStart()")
-        presenter.start()
+        presenter.setup()
     }
 
     override fun setPresenter(presenter: ListContract.Presenter<Notes>) {

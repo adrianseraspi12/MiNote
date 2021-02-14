@@ -63,7 +63,7 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
     override fun onStart() {
         super.onStart()
         LogMe.info("LOG ListTodoFragment = onStart()")
-        presenter.start()
+        presenter.setup()
     }
 
     override fun onDestroyView() {
