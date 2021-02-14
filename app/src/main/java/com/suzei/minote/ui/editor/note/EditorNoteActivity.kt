@@ -34,11 +34,11 @@ class EditorNoteActivity : AppCompatActivity() {
 
             if (itemId != null) {
                 EditorNotePresenter(itemId,
-                        Injection.provideDataSourceImpl(applicationContext),
+                        Injection.provideNotesRepository(applicationContext),
                         editorFragment)
             } else {
-                EditorNotePresenter(Injection.provideDataSourceImpl(applicationContext),
-                                    editorFragment)
+                EditorNotePresenter(Injection.provideNotesRepository(applicationContext),
+                        editorFragment)
             }
 
         }

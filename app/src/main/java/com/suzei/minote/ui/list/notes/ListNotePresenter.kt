@@ -1,13 +1,12 @@
 package com.suzei.minote.ui.list.notes
 
-import com.suzei.minote.data.DataSource
 import com.suzei.minote.data.entity.Notes
+import com.suzei.minote.data.repository.Repository
 import com.suzei.minote.ui.list.ListContract
 import com.suzei.minote.utils.LogMe
 
 class ListNotePresenter internal constructor(
-        private val dataSourceImpl:
-        DataSource,
+        private val dataSourceImpl: Repository<Notes>,
         private val mView: ListContract.View<Notes>) :
         ListContract.Presenter<Notes> {
 
@@ -21,7 +20,7 @@ class ListNotePresenter internal constructor(
     }
 
     override fun delete(data: Notes) {
-        dataSourceImpl.deleteNote(data)
+        dataSourceImpl.delete(data)
     }
 
     override fun checkSizeOfList(size: Int) {
@@ -31,10 +30,10 @@ class ListNotePresenter internal constructor(
     }
 
     private fun showListOfNotes() {
-        dataSourceImpl.getListOfNotes(object : DataSource.ListNoteListener {
+        dataSourceImpl.getListOfData(object : Repository.ListListener<Notes> {
 
-            override fun onDataAvailable(listOfNote: MutableList<Notes>) {
-                mView.showListOfNotes(listOfNote)
+            override fun onDataAvailable(listOfData: MutableList<Notes>) {
+                mView.showListOfNotes(listOfData)
             }
 
             override fun onDataUnavailable() {

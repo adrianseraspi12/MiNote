@@ -1,15 +1,15 @@
 package com.suzei.minote.ui.editor.note
 
 import android.graphics.Color
-import com.suzei.minote.data.DataSource
-import com.suzei.minote.data.DataSourceImpl
 import com.suzei.minote.data.entity.Notes
+import com.suzei.minote.data.repository.NotesRepository
+import com.suzei.minote.data.repository.Repository
 import com.suzei.minote.utils.LogMe
 import org.threeten.bp.OffsetDateTime
 
 class EditorNotePresenter : EditorNoteContract.Presenter {
 
-    private var dataSourceImpl: DataSource
+    private var notesRepository: Repository<Notes>
 
     private var mView: EditorNoteContract.View
 
@@ -17,17 +17,17 @@ class EditorNotePresenter : EditorNoteContract.Presenter {
 
     private lateinit var createdDate: OffsetDateTime
 
-    internal constructor(itemId: String, dataSourceImpl: DataSourceImpl, mView: EditorNoteContract.View) {
-        this.dataSourceImpl = dataSourceImpl
+    internal constructor(itemId: String, notesRepository: Repository<Notes>, mView: EditorNoteContract.View) {
+        this.notesRepository = notesRepository
         this.mView = mView
         this.itemId = itemId
 
         mView.setPresenter(this)
     }
 
-    internal constructor(dataSourceImpl: DataSourceImpl,
+    internal constructor(notesRepository: NotesRepository,
                          mView: EditorNoteContract.View) {
-        this.dataSourceImpl = dataSourceImpl
+        this.notesRepository = notesRepository
         this.mView = mView
 
         mView.setPresenter(this)
@@ -73,7 +73,7 @@ class EditorNotePresenter : EditorNoteContract.Presenter {
     }
 
     private fun createNote(note: Notes) {
-        dataSourceImpl.saveNote(note, object : DataSource.ActionListener {
+        notesRepository.save(note, object : Repository.ActionListener {
 
             override fun onSuccess(itemId: String, createdDate: OffsetDateTime) {
                 this@EditorNotePresenter.itemId = itemId
@@ -90,7 +90,7 @@ class EditorNotePresenter : EditorNoteContract.Presenter {
     }
 
     private fun updateNote(note: Notes) {
-        dataSourceImpl.updateNote(note)
+        notesRepository.update(note)
         mView.showToastMessage("Note updated")
     }
 
@@ -100,15 +100,15 @@ class EditorNotePresenter : EditorNoteContract.Presenter {
     }
 
     private fun showNote() {
-        dataSourceImpl.getNote(itemId!!, object : DataSource.NoteListener {
+        notesRepository.getData(itemId!!, object : Repository.Listener<Notes> {
 
-            override fun onDataAvailable(note: Notes) {
+            override fun onDataAvailable(data: Notes) {
 
-                note.createdDate?.let {
+                data.createdDate?.let {
                     createdDate = it
                 }
 
-                mView.showNoteDetails(note)
+                mView.showNoteDetails(data)
             }
 
             override fun onDataUnavailable() {

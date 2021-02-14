@@ -1,16 +1,15 @@
 package com.suzei.minote
 
 import android.content.Context
-
-import com.suzei.minote.data.DataSourceImpl
 import com.suzei.minote.data.NotesDatabase
+import com.suzei.minote.data.repository.NotesRepository
 import com.suzei.minote.data.repository.TodoRepository
 import com.suzei.minote.utils.executors.AppExecutor
 
 object Injection {
 
-    fun provideDataSourceImpl(context: Context): DataSourceImpl {
-        return DataSourceImpl.getInstance(
+    fun provideNotesRepository(context: Context): NotesRepository {
+        return NotesRepository.getInstance(
                 AppExecutor.instance,
                 getDatabase(context).notesDao())
     }
