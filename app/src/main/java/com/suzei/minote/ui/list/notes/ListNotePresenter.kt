@@ -6,7 +6,7 @@ import com.suzei.minote.ui.list.ListContract
 import com.suzei.minote.utils.LogMe
 
 class ListNotePresenter internal constructor(
-        private val dataSourceImpl: Repository<Notes>,
+        private val notesRepository: Repository<Notes>,
         private val mView: ListContract.View<Notes>) :
         ListContract.Presenter<Notes> {
 
@@ -20,11 +20,11 @@ class ListNotePresenter internal constructor(
     }
 
     override fun delete(data: Notes) {
-        dataSourceImpl.delete(data)
+        notesRepository.delete(data)
     }
 
     private fun showListOfNotes() {
-        dataSourceImpl.getListOfData(object : Repository.ListListener<Notes> {
+        notesRepository.getListOfData(object : Repository.ListListener<Notes> {
 
             override fun onDataAvailable(listOfData: MutableList<Notes>) {
                 mView.showListOfNotes(listOfData)
