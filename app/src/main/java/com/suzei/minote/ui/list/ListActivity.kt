@@ -32,6 +32,7 @@ class ListActivity : AppCompatActivity() {
     private lateinit var selectNoteDialog: SelectNoteDialog
     private val listNoteFragment = ListNoteFragment.newInstance()
     private val listTodoFragment = ListTodoFragment.newInstance()
+    private var callback: ToastCallback? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +45,15 @@ class ListActivity : AppCompatActivity() {
         setupFabClick()
     }
 
+    override fun onPause() {
+        super.onPause()
+        if (toast_undo_delete_root.visibility == View.VISIBLE) {
+            hideToast()
+        }
+    }
+
     fun showToastUndo(message: String, callback: ToastCallback) {
+        this.callback = callback
         if (toast_undo_delete_root.visibility == View.VISIBLE) callback.onToastDismiss()
         toast_undo_delete_root.alpha = 0f
         toast_undo_delete_root.visibility = View.VISIBLE
@@ -69,15 +78,19 @@ class ListActivity : AppCompatActivity() {
                         .setListener(object : AnimatorListenerAdapter() {
                             override fun onAnimationEnd(animation: Animator?) {
                                 super.onAnimationEnd(animation)
-                                toast_undo_delete_root.visibility = View.GONE
-                                toast_undo_delete_root.animate().setListener(null)
-                                callback.onToastDismiss()
+                                hideToast()
                             }
                         })
             }
         }, 4000)
     }
 
+    private fun hideToast() {
+        toast_undo_delete_root.visibility = View.GONE
+        toast_undo_delete_root.animate().setListener(null)
+        callback?.onToastDismiss()
+        callback = null
+    }
 
     private fun setFragment(visibleFragment: Fragment, invisibleFragmnet: Fragment) {
         fm.beginTransaction().apply {
