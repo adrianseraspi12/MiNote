@@ -10,7 +10,7 @@ import org.threeten.bp.OffsetDateTime
 
 class EditorTodoPresenter : EditorTodoContract.Presenter {
 
-    private var repository: TodoRepository
+    private var repository: Repository<Todo>
 
     private var mView: EditorTodoContract.View
 
@@ -20,7 +20,7 @@ class EditorTodoPresenter : EditorTodoContract.Presenter {
 
     internal constructor(itemId: String,
                          repository:
-                         TodoRepository,
+                         Repository<Todo>,
                          view: EditorTodoContract.View) {
 
         this.itemId = itemId
@@ -30,7 +30,7 @@ class EditorTodoPresenter : EditorTodoContract.Presenter {
         mView.setPresenter(this)
     }
 
-    internal constructor(repository: TodoRepository,
+    internal constructor(repository: Repository<Todo>,
                          view: EditorTodoContract.View) {
 
         this.repository = repository
