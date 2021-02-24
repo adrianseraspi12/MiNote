@@ -25,7 +25,7 @@ class EditorNotePresenter : EditorNoteContract.Presenter {
         mView.setPresenter(this)
     }
 
-    internal constructor(notesRepository: NotesRepository,
+    internal constructor(notesRepository: Repository<Notes>,
                          mView: EditorNoteContract.View) {
         this.notesRepository = notesRepository
         this.mView = mView
