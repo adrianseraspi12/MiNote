@@ -12,7 +12,8 @@ import com.suzei.minote.data.entity.TodoItem
 import com.suzei.minote.ext.setAlpha
 import kotlinx.android.synthetic.main.item_row_edit_todo.view.*
 
-class TodoSubtaskAdapter(var data: MutableList<TodoItem>, var onDeleteCallback: () -> Unit) : RecyclerView.Adapter<TodoSubtaskAdapter.ViewHolder>() {
+class TodoSubtaskAdapter(var data: MutableList<TodoItem>,
+                         private var onDeleteCallback: () -> Unit) : RecyclerView.Adapter<TodoSubtaskAdapter.ViewHolder>() {
 
     private var textColor: Int = 0xFFFFFF
     private var backgroundColor: Int = 0xFFFFFF
