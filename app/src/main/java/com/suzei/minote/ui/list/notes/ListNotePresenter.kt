@@ -1,14 +1,13 @@
 package com.suzei.minote.ui.list.notes
 
-import com.suzei.minote.data.DataSource
 import com.suzei.minote.data.entity.Notes
+import com.suzei.minote.data.repository.Repository
 import com.suzei.minote.ui.list.ListContract
 import com.suzei.minote.utils.LogMe
 
 class ListNotePresenter internal constructor(
-        private val dataSourceImpl:
-        DataSource,
-        private val mView: ListContract.View<Notes>):
+        private val notesRepository: Repository<Notes>,
+        private val mView: ListContract.View<Notes>) :
         ListContract.Presenter<Notes> {
 
     init {
@@ -16,29 +15,19 @@ class ListNotePresenter internal constructor(
         mView.setPresenter(this)
     }
 
-    override fun start() {
+    override fun setup() {
         showListOfNotes()
     }
 
-    override fun delete(note: Notes) {
-        dataSourceImpl.deleteNote(note)
-    }
-
-    override fun showEditor(itemId: String) {
-        mView.redirectToEditorActivity(itemId)
-    }
-
-    override fun checkSizeOfList(size: Int) {
-        if (size == 0) {
-            mView.showListUnavailable()
-        }
+    override fun delete(data: Notes) {
+        notesRepository.delete(data)
     }
 
     private fun showListOfNotes() {
-        dataSourceImpl.getListOfNotes(object : DataSource.ListNoteListener {
+        notesRepository.getListOfData(object : Repository.ListListener<Notes> {
 
-            override fun onDataAvailable(listOfNote: MutableList<Notes>) {
-                mView.showListOfNotes(listOfNote)
+            override fun onDataAvailable(listOfData: MutableList<Notes>) {
+                mView.showListOfNotes(listOfData)
             }
 
             override fun onDataUnavailable() {
@@ -47,5 +36,4 @@ class ListNotePresenter internal constructor(
 
         })
     }
-
 }

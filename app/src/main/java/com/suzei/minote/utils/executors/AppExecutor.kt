@@ -4,10 +4,9 @@ import android.os.Handler
 import android.os.Looper
 import androidx.annotation.VisibleForTesting
 import java.util.concurrent.Executor
-import java.util.concurrent.Executors
 
 class AppExecutor @VisibleForTesting
-internal constructor(val diskIO: Executor, val mainThread: Executor, val networkIO: Executor) {
+internal constructor(val diskIO: Executor, val mainThread: Executor) {
 
     private class MainThreadExecutor : Executor {
 
@@ -21,16 +20,13 @@ internal constructor(val diskIO: Executor, val mainThread: Executor, val network
 
     companion object {
 
-        private val THREAD_COUNT = 3
-
         val instance: AppExecutor
 
             get() {
 
                 return AppExecutor(
                         DiskIOThreadExecutor(),
-                        MainThreadExecutor(),
-                        Executors.newFixedThreadPool(THREAD_COUNT))
+                        MainThreadExecutor())
             }
     }
 

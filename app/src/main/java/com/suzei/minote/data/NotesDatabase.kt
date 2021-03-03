@@ -2,7 +2,6 @@ package com.suzei.minote.data
 
 import android.content.ContentValues
 import android.content.Context
-import android.database.sqlite.SQLiteException
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -52,7 +51,7 @@ abstract class NotesDatabase : RoomDatabase() {
 
         }
 
-        private val MIGRATION_4_5: Migration = object: Migration(4, 5) {
+        private val MIGRATION_4_5: Migration = object : Migration(4, 5) {
 
             override fun migrate(database: SupportSQLiteDatabase) {
                 // Since we didn't alter the table, there's nothing else to do here.
@@ -60,7 +59,7 @@ abstract class NotesDatabase : RoomDatabase() {
 
         }
 
-        private val MIGRATION_3_6: Migration = object: Migration(3, 6) {
+        private val MIGRATION_3_6: Migration = object : Migration(3, 6) {
 
             override fun migrate(database: SupportSQLiteDatabase) {
                 try {
@@ -81,8 +80,7 @@ abstract class NotesDatabase : RoomDatabase() {
                             createNotesTable(database)
                             database.insert("notes", 0, cv)
 
-                        }
-                        else {
+                        } else {
 
                             database.execSQL("DROP TABLE IF EXISTS `customer`")
                             createNotesTable(database)
@@ -91,15 +89,14 @@ abstract class NotesDatabase : RoomDatabase() {
 
                     }
 
-                }
-                catch (e: Exception) {
+                } catch (e: Exception) {
                     LogMe.info("[DATABASE ROOM EXCEPTION] ${e.message}")
                 }
             }
 
         }
 
-        fun createNotesTable(database: SupportSQLiteDatabase){
+        fun createNotesTable(database: SupportSQLiteDatabase) {
             database.execSQL("""CREATE TABLE IF NOT EXISTS `notes` (
                             `_id` TEXT NOT NULL PRIMARY KEY,
                             `created_date` TEXT,

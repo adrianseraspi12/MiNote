@@ -1,27 +1,31 @@
 package com.suzei.minote.ui.list.todo
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.BaseTransientBottomBar
-import com.google.android.material.snackbar.Snackbar
 import com.suzei.minote.R
 import com.suzei.minote.data.entity.Todo
 import com.suzei.minote.ui.editor.todo.EditorTodoActivity
+import com.suzei.minote.ui.list.ListActivity
+import com.suzei.minote.ui.list.ListAdapterCallback
 import com.suzei.minote.ui.list.ListContract
+import com.suzei.minote.ui.list.ToastCallback
 import com.suzei.minote.utils.LogMe
+import com.suzei.minote.utils.recycler_view.callback.ItemMoveTouchHelper
+import kotlinx.android.synthetic.main.activity_list.*
+import kotlinx.android.synthetic.main.custom_bottom_navigation.*
 import kotlinx.android.synthetic.main.fragment_list.*
-import kotlinx.android.synthetic.main.item_row_notes_default.view.*
 
 class ListTodoFragment : Fragment(), ListContract.View<Todo> {
 
     companion object {
+
+        const val TAG = "ListTodoFragment"
 
         internal fun newInstance(): ListTodoFragment {
             return ListTodoFragment()
@@ -29,19 +33,13 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
     }
 
     private lateinit var presenter: ListContract.Presenter<Todo>
-
-    private lateinit var listOfTodo: MutableList<Todo>
-
-    private lateinit var adapter: ListAdapter
-
-    private var tempTodo: Todo? = null
-    private var consecutiveTodo: Todo? = null
-    private var tempPosition: Int = 0
+    private lateinit var listActivity: ListActivity
+    private lateinit var listTodoAdapter: ListTodoAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        adapter = ListAdapter()
-        listOfTodo = ArrayList()
+        listActivity = activity as ListActivity
+        listTodoAdapter = ListTodoAdapter(ArrayList(), listAdapterCallback)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -51,15 +49,21 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        list_tv_title.setText(R.string.todo)
+        val itemMoveTouchHelper = ItemMoveTouchHelper()
+        itemMoveTouchHelper.callback = itemTouchCallback
+
+        val itemTouchHelper = ItemTouchHelper(itemMoveTouchHelper)
+        itemTouchHelper.attachToRecyclerView(list_notes)
+
+        list_notes.adapter = listTodoAdapter
         list_notes.layoutManager = LinearLayoutManager(context)
-        list_notes.adapter = adapter
     }
 
     override fun onStart() {
         super.onStart()
         LogMe.info("LOG ListTodoFragment = onStart()")
-
-        presenter.start()
+        presenter.setup()
     }
 
     override fun onDestroyView() {
@@ -69,104 +73,84 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
 
     override fun setPresenter(presenter: ListContract.Presenter<Todo>) {
         LogMe.info("LOG ListTodoFragment = setPresenter()")
-
         this.presenter = presenter
     }
 
-    override fun showListOfNotes(listOfTodo: MutableList<Todo>) {
+    override fun showListOfNotes(listOfNotes: MutableList<Todo>) {
         list_empty_placeholder.visibility = View.GONE
-        this.listOfTodo = listOfTodo
-        adapter.notifyDataSetChanged()
+        listTodoAdapter.update(listOfNotes)
         list_notes.smoothScrollToPosition(0)
     }
 
     override fun showListUnavailable() {
         list_empty_placeholder.visibility = View.VISIBLE
+        list_iv_empty.setImageResource(R.drawable.ic_empty_todo)
+        list_tv_empty_title.setText(R.string.no_todo_found_title)
+        list_tv_empty_subtitle.setText(R.string.no_todo_found_subtitle)
     }
 
-    override fun insertNoteToList(data: Todo, position: Int) {
-        listOfTodo.add(position, data)
-        adapter.notifyItemInserted(position)
+    private var listAdapterCallback = object : ListAdapterCallback {
+
+        override fun onNoteClick(itemId: String) {
+            val intent = Intent(context, EditorTodoActivity::class.java)
+            intent.putExtra(EditorTodoActivity.EXTRA_TODO_ID, itemId)
+            startActivity(intent)
+        }
+
     }
 
-    override fun redirectToEditorActivity(itemId: String) {
-        val intent = Intent(context, EditorTodoActivity::class.java)
-        intent.putExtra(EditorTodoActivity.EXTRA_TODO_ID, itemId)
-        startActivity(intent)
-    }
+    private var itemTouchCallback = object : ItemMoveTouchHelper.MoveCallback {
 
-    inner class ListAdapter: RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
-            val view = layoutInflater.inflate(R.layout.item_row_notes_default, parent, false)
-            return ListViewHolder(view)
+        override fun isInDeleteArea(view: View): Boolean {
+            val firstPosition = IntArray(2)
+            val secondPosition = IntArray(2)
+            list_delete_container.getLocationOnScreen(firstPosition)
+            view.getLocationOnScreen(secondPosition)
+            val l = firstPosition[1]
+            val r = view.measuredHeight + secondPosition[1]
+            return r > l
         }
 
-        override fun getItemCount(): Int {
-            return listOfTodo.size
-        }
-
-        override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-            val todo = listOfTodo[position]
-            holder.bind(todo)
-        }
-
-        inner class ListViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-
-            fun bind(todo: Todo) {
-                itemView.item_notes_color.setBackgroundColor(Color.parseColor(todo.color))
-                itemView.item_notes_title.text = todo.title
-                itemView.setOnClickListener {
-                    todo.id?.let {
-                        presenter.showEditor(it)
-                    }
-                }
-
-                itemView.item_notes_delete.setOnClickListener {
-                    tempPosition = adapterPosition
-                    tempTodo = listOfTodo[tempPosition]
-
-                    listOfTodo.remove(tempTodo!!)
-                    adapter.notifyItemRemoved(tempPosition)
-
-                    presenter.checkSizeOfList(listOfTodo.size)
-                    showSnackbar()
-                }
+        override fun removeItem(position: Int) {
+            listTodoAdapter.removeTempItem(position)
+            listActivity.showToastUndo(
+                    getString(R.string.note_deleted),
+                    toastCallback(position))
+            if (listTodoAdapter.itemCount == 0) {
+                showListUnavailable()
             }
+        }
 
-            private fun showSnackbar() {
-                Snackbar.make(list_root, "Todo Deleted", Snackbar.LENGTH_SHORT)
-                        .setAction("Undo") { insertNoteToList(tempTodo!!, tempPosition) }
-                        .addCallback(object : Snackbar.Callback() {
+        override fun onClearView() {
+            val listActivity = activity as ListActivity
+            list_delete_container.visibility = View.GONE
+            listActivity.list_fab.visibility = View.VISIBLE
+            listActivity.list_bottom_navigation_view.visibility = View.VISIBLE
+        }
 
-                            override fun onShown(sb: Snackbar?) {
-                                super.onShown(sb)
-                                consecutiveTodo = tempTodo
-                            }
-
-                            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                                super.onDismissed(transientBottomBar, event)
-                                when (event) {
-
-                                    BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_CONSECUTIVE ->
-                                        presenter.delete(consecutiveTodo!!)
-
-                                    BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_TIMEOUT -> {
-                                        presenter.delete(tempTodo!!)
-                                        consecutiveTodo = null
-                                        tempTodo = null
-                                        tempPosition = -1
-                                    }
-                                }
-
-                            }
-
-                        })
-                        .show()
-            }
-
+        override fun onDrag() {
+            val listActivity = activity as ListActivity
+            list_delete_container.visibility = View.VISIBLE
+            listActivity.list_fab.visibility = View.GONE
+            listActivity.list_bottom_navigation_view.visibility = View.GONE
         }
 
     }
 
+
+    private fun toastCallback(position: Int) = object : ToastCallback {
+
+        override fun onUndoClick() {
+            listTodoAdapter.retainDeletedItem(position)
+            if (listTodoAdapter.itemCount > 0) {
+                list_empty_placeholder.visibility = View.GONE
+            }
+        }
+
+        override fun onToastDismiss() {
+            presenter.delete(listTodoAdapter.tempDeletedTodo!!)
+            listTodoAdapter.forceRemove()
+        }
+
+    }
 }

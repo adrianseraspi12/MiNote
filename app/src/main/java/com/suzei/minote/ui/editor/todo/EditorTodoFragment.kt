@@ -1,129 +1,109 @@
 package com.suzei.minote.ui.editor.todo
 
-
+import android.annotation.SuppressLint
 import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.flask.colorpicker.ColorPickerView
-import com.flask.colorpicker.builder.ColorPickerDialogBuilder
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdRequest
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.suzei.minote.R
 import com.suzei.minote.data.entity.Todo
 import com.suzei.minote.data.entity.TodoItem
-import com.suzei.minote.ext.moveFocus
-import com.suzei.minote.utils.ColorWheel
-import com.suzei.minote.utils.LogMe
-import com.suzei.minote.utils.dialogs.BottomSheetFragment
-import com.suzei.minote.utils.dialogs.InputDialog
-import com.suzei.minote.utils.dialogs.InputDialogListener
+import com.suzei.minote.ext.*
+import com.suzei.minote.utils.recycler_view.adapters.ColorListAdapter
+import com.suzei.minote.utils.recycler_view.adapters.ColorListAdapterBuilder
+import com.suzei.minote.utils.recycler_view.adapters.ColorListAdapterCallback
+import com.suzei.minote.utils.recycler_view.decorator.GridSpacingItemDecoration
+import kotlinx.android.synthetic.main.bottomsheet_edit_note.*
 import kotlinx.android.synthetic.main.fragment_editor_todo.*
-import kotlinx.android.synthetic.main.item_row_edit_todo.view.*
-import kotlinx.android.synthetic.main.item_row_notes_default.view.*
 
-/**
- * A simple [Fragment] subclass.
- */
-class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.View {
+class EditorTodoFragment : Fragment(), EditorTodoContract.View {
 
     companion object {
+
+        private const val EXTRA_NOTE_COLOR = "EXTRA_NOTE_COLOR"
+        private const val EXTRA_TEXT_COLOR = "EXTRA_TEXT_COLOR"
 
         internal fun newInstance(): EditorTodoFragment {
             return EditorTodoFragment()
         }
 
-        val INPUT_DIALOG_TAG = "INPUT_DIALOG_TAG"
-
     }
 
     private lateinit var presenter: EditorTodoContract.Presenter
-
-    private lateinit var todoItemList: MutableList<TodoItem>
-
-    private lateinit var todoItemListAdapter: TodoItemAdapter
+    private var isNewSubtaskDone = false
+    private var currentNoteColor = -1
+    private var currentTextColor = -1
+    private var taskCount = 0
+    private lateinit var noteColorsAdapter: ColorListAdapter
+    private lateinit var textColorsAdapter: ColorListAdapter
+    private lateinit var itemDecoration: GridSpacingItemDecoration
+    private lateinit var todoSubtaskAdapter: TodoSubtaskAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
-        todoItemList = ArrayList()
-        todoItemListAdapter = TodoItemAdapter(object : TodoAdapterClickListener {
-
-            override fun onEditClick(position: Int) {
-                val todoItem = todoItemList[position]
-
-                showAddItemDialog(
-                        "Edit Task",
-                        "Edit",
-                        todoItem.task!!,
-                        object: InputDialogListener {
-
-                            override fun onAddClick(message: String?) {
-
-                                val itemPosition = todoItemList.indexOf(todoItem)
-
-                                if (message!!.isNotEmpty()) {
-                                    todoItem.task = message
-                                    presenter.updateTask(itemPosition, todoItem)
-                                }
-
-                            }
-
-                        })
-            }
-
-            override fun onDeleteClick(position: Int) {
-                todoItemList.removeAt(position)
-                todoItemListAdapter.notifyDataSetChanged()
-                editor_todo_list.smoothScrollToPosition(position)
-            }
-
-            override fun onItemClick(position: Int) {
-                val todoItem = todoItemList[position]
-
-                if (todoItem.completed!!) {
-                    todoItem.completed = false
-                }
-                else {
-                    todoItem.completed = true
-                }
-
-                todoItemList[position] = todoItem
-                todoItemListAdapter.notifyDataSetChanged()
-                editor_todo_list.smoothScrollToPosition(position)
-            }
-
-        })
+        itemDecoration = GridSpacingItemDecoration(
+                6,
+                resources.getDimensionPixelSize(R.dimen.colorListSpacing),
+                false
+        )
+        initAdapters()
+        todoSubtaskAdapter = TodoSubtaskAdapter(ArrayList()) {
+            taskCount--
+            setTaskCount()
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_editor_todo, container, false)
+        val view = inflater.inflate(R.layout.fragment_editor_todo, container, false)
+
+        if (savedInstanceState != null) {
+            currentNoteColor = savedInstanceState.getInt(EXTRA_NOTE_COLOR, -1)
+            currentTextColor = savedInstanceState.getInt(EXTRA_TEXT_COLOR, -1)
+        }
+
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        editor_todo_save.setOnClickListener(this)
-        editor_todo_menu.setOnClickListener(this)
-        editor_todo_back_arrow.setOnClickListener(this)
-        editor_todo_add_task.setOnClickListener(this)
-
-        editor_todo_list.layoutManager = LinearLayoutManager(context)
-        editor_todo_list.adapter = todoItemListAdapter
+        presenter.setup()
+        setupBottomSheet()
+        setupNoteColorRecyclerView()
+        setupTextColorRecyclerView()
+        setupSubTaskRecyclerView()
+        editor_todo_cv_done.setOnClickListener(onNewSubTaskDoneClickListener)
+        editor_todo_tv_text.addTextChangedListener(onAddSubTaskTextChangedListener)
+        item_editor_todo_add.setOnClickListener(onAddNewSubTaskClickListener)
+        editor_todo_save.setOnClickListener(onSaveClickListener)
+        editor_todo_back_arrow.setOnClickListener(onBackClickListener)
     }
 
-    override fun onStart() {
-        super.onStart()
-        presenter.start()
+    override fun onResume() {
+        super.onResume()
+        if (currentNoteColor != -1 || currentTextColor != -1) {
+            setNoteColor(currentNoteColor)
+            setTextColor(currentTextColor)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(EXTRA_NOTE_COLOR, currentNoteColor)
+        outState.putInt(EXTRA_TEXT_COLOR, currentTextColor)
     }
 
     override fun setPresenter(presenter: EditorTodoContract.Presenter) {
@@ -131,82 +111,55 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
     }
 
     override fun showTodoDetails(todo: Todo) {
-        todoItemList = todo.todoItems?.toMutableList() ?: ArrayList()
-        todoItemListAdapter.changeTextColor(Color.parseColor(todo.textColor))
+        val todoItemList = todo.todoItems?.toMutableList() ?: ArrayList()
+        taskCount = todoItemList.size
+        todoSubtaskAdapter.updateData(todoItemList)
+        setTaskCount()
 
         editor_todo_title.setText(todo.title)
-        noteColor(Color.parseColor(todo.color))
-        textColor(Color.parseColor(todo.textColor))
+        setNoteColor(Color.parseColor(todo.color))
+        setTextColor(Color.parseColor(todo.textColor))
 
         editor_todo_title.moveFocus()
-    }
-
-    override fun showAddTask(todoItem: TodoItem) {
-        todoItemList.add(todoItem)
-        todoItemListAdapter.updateAdapter()
-    }
-
-    override fun showUpdatedTask(position: Int, todoItem: TodoItem) {
-        todoItemList[position] = todoItem
-        todoItemListAdapter.updateAdapter()
     }
 
     override fun showToastMessage(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun showColorWheel(title: String, initialColor: Int, colorWheel: ColorWheel) {
-        ColorPickerDialogBuilder.with(context!!)
-                .setTitle(title)
-                .initialColor(initialColor)
-                .density(6)
-                .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
-                .setPositiveButton("Choose") {
-                    dialogInterface,
-                    i,
-                    integers ->
-                    colorWheel.onPositiveClick(i)
-                }
-                .setNegativeButton("Cancel") {
-                    dialog,
-                    which ->
-                    dialog.dismiss()
-                }
-                .build()
-                .show()
+    override fun setNoteColor(color: Int) {
+        this.currentNoteColor = color
+        activity?.window?.statusBarColor = color
+        editor_todo_root.setBackgroundColor(color)
+        todoSubtaskAdapter.changeBackgroundColor(color)
+        noteColorsAdapter.setSelectedColor(color)
+        editor_todo_iv_check.setColorFilter(color)
     }
 
-    override fun noteColor(noteColor: Int) {
-        editor_todo_root.setBackgroundColor(noteColor)
-    }
+    override fun setTextColor(color: Int) {
+        this.currentTextColor = color
+        todoSubtaskAdapter.changeTextColor(color)
 
-    override fun textColor(textColor: Int) {
-        todoItemListAdapter.changeTextColor(textColor)
-        editor_todo_title.setTextColor(textColor)
-        editor_todo_back_arrow.setColorFilter(textColor)
-        editor_todo_save.setColorFilter(textColor)
-        editor_todo_add_task.setColorFilter(textColor)
-        editor_todo_task_input.setTextColor(textColor)
-        editor_todo_menu.setColorFilter(textColor)
-    }
-
-    override fun onClick(v: View?) {
-
-        when (v?.id) {
-
-            R.id.editor_todo_back_arrow -> activity!!.finish()
-
-            R.id.editor_todo_menu -> showMenu()
-
-            R.id.editor_todo_add_task -> addItem()
-
-            R.id.editor_todo_save -> saveTodo()
-
+        editor_todo_back_arrow.setColorFilter(color)
+        editor_todo_iv_addsubtask.setColorFilter(color)
+        item_editor_todo_add.setColorFilter(color)
+        editor_todo_divider.setBackgroundColor(color.setAlpha(0.5f))
+        editor_todo_cv_done.strokeColor = color
+        editor_todo_title.setTextColor(color)
+        editor_todo_title.setHintTextColor(color.setAlpha(0.5f))
+        editor_todo_tv_subtask_count.setTextColor(color)
+        editor_todo_tv_subtask_title.setTextColor(color)
+        editor_todo_tv_text.setTextColor(color)
+        editor_todo_tv_text.setHintTextColor(color.setAlpha(0.5f))
+        if (isNewSubtaskDone) {
+            editor_todo_cv_done.setCardBackgroundColor(color)
         }
-
+        textColorsAdapter.setSelectedColor(color)
     }
 
-    private fun saveTodo() {
+    private var onBackClickListener = View.OnClickListener { activity!!.finish() }
+
+    private var onSaveClickListener = View.OnClickListener {
         val noteColor = (editor_todo_root.background as ColorDrawable).color
         val hexNoteColor = String.format("#%06X", 0xFFFFFF and noteColor)
 
@@ -214,129 +167,157 @@ class EditorTodoFragment : Fragment(), View.OnClickListener, EditorTodoContract.
         val hexTextColor = String.format("#%06X", 0xFFFFFF and textColor)
 
         val title = editor_todo_title.text.toString()
+        val todoItemList = todoSubtaskAdapter.data
         presenter.saveTodo(title, todoItemList, hexNoteColor, hexTextColor)
     }
 
-    private fun showMenu() {
-        val bottomSheetFragment = BottomSheetFragment()
-        bottomSheetFragment.setPasswordVisibility(false)
-        bottomSheetFragment.retainInstance = true
-        bottomSheetFragment.setClickListener(object: BottomSheetFragment.ClickListener {
+    private var onAddSubTaskTextChangedListener = object : TextWatcher {
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+        override fun afterTextChanged(p0: Editable?) {}
 
-            override fun onEditPasswordClick() {
-                Toast.makeText(context, "Edit Password", Toast.LENGTH_SHORT).show()
+        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            val charSequence = p0 ?: ""
+            if (charSequence.isNotEmpty()) {
+                editor_todo_iv_addsubtask.visibility = View.GONE
+                item_editor_todo_add.visibility = View.VISIBLE
+                editor_todo_cv_done.visibility = View.VISIBLE
+            } else {
+                editor_todo_iv_addsubtask.visibility = View.VISIBLE
+                item_editor_todo_add.visibility = View.GONE
+                editor_todo_cv_done.visibility = View.GONE
+            }
+        }
+
+    }
+
+    private var onNewSubTaskDoneClickListener = View.OnClickListener {
+        isNewSubtaskDone = if (isNewSubtaskDone) {
+            val transparent = ContextCompat.getColor(context!!, android.R.color.transparent)
+            editor_todo_cv_done.setCardBackgroundColor(transparent)
+            editor_todo_iv_check.visibility = View.GONE
+            false
+        } else {
+            editor_todo_cv_done.setCardBackgroundColor(currentTextColor)
+            editor_todo_iv_check.visibility = View.VISIBLE
+            true
+        }
+    }
+
+    private var onAddNewSubTaskClickListener = View.OnClickListener {
+        val text = editor_todo_tv_text.text.toString()
+        val todoItem = TodoItem(text, isNewSubtaskDone)
+        val transparent = ContextCompat.getColor(context!!, android.R.color.transparent)
+
+        todoSubtaskAdapter.add(todoItem)
+        taskCount++
+
+        setTaskCount()
+
+        editor_todo_tv_text.text = null
+        isNewSubtaskDone = false
+        editor_todo_cv_done.setCardBackgroundColor(transparent)
+        editor_todo_tv_text.clearFocus()
+        hideKeyboard()
+        editor_todo_scroll_view.scrollToBottom()
+    }
+
+    private fun setupSubTaskRecyclerView() {
+        editor_todo_list.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = todoSubtaskAdapter
+        }
+    }
+
+    private fun setupNoteColorRecyclerView() {
+        bottomsheet_rv_note_color.apply {
+            adapter = noteColorsAdapter
+            layoutManager = GridLayoutManager(activity!!, 6)
+            addItemDecoration(itemDecoration)
+        }
+    }
+
+    private fun setupTextColorRecyclerView() {
+        bottomsheet_rv_text_color.apply {
+            adapter = textColorsAdapter
+            layoutManager = GridLayoutManager(activity!!, 6)
+            addItemDecoration(itemDecoration)
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setTaskCount() {
+        if (taskCount == 1) {
+            editor_todo_tv_subtask_count.text = "$taskCount Task"
+        } else {
+            editor_todo_tv_subtask_count.text = "$taskCount Tasks"
+        }
+    }
+
+    private fun initAdapters() {
+        noteColorsAdapter = ColorListAdapterBuilder.noteList(object : ColorListAdapterCallback {
+
+            override fun onChangedColor(color: Int) {
+                setNoteColor(color)
             }
 
-            override fun onChangeNoteColorClick() {
-                val noteColor = (editor_todo_root.background as ColorDrawable).color
-                presenter.noteColorWheel(noteColor)
-                bottomSheetFragment.dismiss()
-            }
-
-            override fun onChangeTextColorClick() {
-                val textColor = editor_todo_title.currentTextColor
-                presenter.textColorWheel(textColor)
-                bottomSheetFragment.dismiss()
+            override fun onShowColorWheel(color: Int) {
+                showColorWheel("Choose note color", color) {
+                    setNoteColor(it)
+                }
             }
 
         })
 
-        bottomSheetFragment.show(fragmentManager!!, bottomSheetFragment.tag)
-    }
-
-    private fun showAddItemDialog(title: String,
-                                  actionTitle: String,
-                                  message: String,
-                                  listener: InputDialogListener) {
-        val inputDialog = InputDialog.instance(title, actionTitle, message)
-        inputDialog.setOnAddClickListener(listener)
-        inputDialog.show(fragmentManager!!, INPUT_DIALOG_TAG)
-    }
-
-    private fun addItem() {
-        val task = editor_todo_task_input.text.toString()
-        presenter.addTask(task)
-    }
-
-    inner class TodoItemAdapter(var listener: TodoAdapterClickListener):
-            RecyclerView.Adapter<TodoItemAdapter.TodoItemViewHolder>() {
-
-        private var textColor: Int = 0
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoItemViewHolder {
-            val view = layoutInflater.inflate(R.layout.item_row_edit_todo, parent, false)
-            return TodoItemViewHolder(view, listener)
-        }
-
-        override fun getItemCount(): Int {
-            return todoItemList.size
-        }
-
-        override fun onBindViewHolder(holder: TodoItemViewHolder, position: Int) {
-            val todoItem = todoItemList[position]
-            holder.bind(todoItem, textColor)
-        }
-
-        fun updateAdapter() {
-            val adapterPosition = todoItemList.size - 1
-            if (adapterPosition >= 0) {
-                todoItemListAdapter.notifyDataSetChanged()
-                editor_todo_list.smoothScrollToPosition(adapterPosition)
-            }
-        }
-
-        fun changeTextColor(textColor: Int) {
-            this.textColor = textColor
-            todoItemListAdapter.updateAdapter()
-        }
-
-        inner class TodoItemViewHolder(itemView: View,
-                                       private var todoListener: TodoAdapterClickListener) :
-                RecyclerView.ViewHolder(itemView), View.OnClickListener {
-
-            init {
-                itemView.item_edit_todo_remove.setOnClickListener(this)
-                itemView.item_edit_todo_edit.setOnClickListener(this)
-                itemView.item_edit_todo_text.setOnClickListener(this)
+        textColorsAdapter = ColorListAdapterBuilder.textList(object : ColorListAdapterCallback {
+            override fun onChangedColor(color: Int) {
+                setTextColor(color)
             }
 
-            override fun onClick(v: View?) {
-
-                when (v?.id) {
-                    itemView.item_edit_todo_remove.id ->
-                        todoListener.onDeleteClick(adapterPosition)
-
-                    itemView.item_edit_todo_edit.id ->
-                        todoListener.onEditClick(adapterPosition)
-
-                    itemView.item_edit_todo_text.id -> {
-                        todoListener.onItemClick(adapterPosition)
-                    }
+            override fun onShowColorWheel(color: Int) {
+                showColorWheel("Choose text color", color) {
+                    setTextColor(it)
                 }
             }
 
-            fun bind(todoItem: TodoItem, textColor: Int) {
-                val position = adapterPosition + 1
-
-                if (todoItem.completed!!) {
-                    itemView.item_edit_todo_text.paintFlags = itemView.item_edit_todo_text.paintFlags or
-                            Paint.STRIKE_THRU_TEXT_FLAG
-                }
-                else {
-                    itemView.item_edit_todo_text.paintFlags = Paint.ANTI_ALIAS_FLAG
-                }
-
-                itemView.item_edit_todo_text.setTextColor(textColor)
-
-                itemView.item_edit_todo_text.setTextColor(textColor)
-                itemView.item_edit_todo_edit.setColorFilter(textColor)
-                itemView.item_edit_todo_remove.setColorFilter(textColor)
-
-                itemView.item_edit_todo_text.text = "$position.) " + todoItem.task
-            }
-
-        }
-
+        })
     }
 
+    private fun setupBottomSheet() {
+        bottom_sheet_switch_lock.visibility = View.GONE
+        bottomsheet_lock_title.visibility = View.GONE
+        bottomsheet_divider_bottom.visibility = View.GONE
+
+        //  Setup Bottomsheet Behavior
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomsheet_settings_container)
+        val hiddenView = bottomsheet_settings_container.getChildAt(2)
+
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_SETTLING) {
+                    //  Set Editor (EditText) a margin to avoid
+                    //  bottomsheet overlaps the editor
+                    val params = CoordinatorLayout.LayoutParams(
+                            CoordinatorLayout.LayoutParams.MATCH_PARENT,
+                            CoordinatorLayout.LayoutParams.MATCH_PARENT
+                    )
+                    val bottomsheetSize = hiddenView.top + 32.convertToPx(resources)
+                    params.setMargins(0, 56.convertToPx(resources),
+                            0, bottomsheetSize)
+
+                    editor_todo_container.layoutParams = params
+                    editor_todo_container.requestLayout()
+                    bottomSheetBehavior.removeBottomSheetCallback(this)
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+
+        })
+
+        bottomsheet_settings_container.viewTreeObserver.addOnGlobalLayoutListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            bottomSheetBehavior.setPeekHeight(hiddenView.top, true)
+        }
+    }
 }

@@ -1,7 +1,6 @@
 package com.suzei.minote.ui.editor.note
 
 import com.suzei.minote.data.entity.Notes
-import com.suzei.minote.utils.ColorWheel
 
 interface EditorNoteContract {
 
@@ -11,32 +10,22 @@ interface EditorNoteContract {
 
         fun showNoteDetails(note: Notes)
 
-        fun noteColor(noteColor: Int)
+        fun setNoteColor(noteColor: Int)
 
-        fun textColor(textColor: Int)
+        fun setTextColor(textColor: Int)
 
         fun showToastMessage(message: String)
-
-        fun showColorWheel(title: String, initialColor: Int, colorWheel: ColorWheel)
-
-        fun showPasswordDialog()
     }
 
     interface Presenter {
 
-        fun start()
+        fun setup()
 
         fun saveNote(title: String,
                      message: String,
                      noteColor: String,
                      textColor: String,
                      password: String?)
-
-        fun passwordDialog()
-
-        fun noteColorWheel(initialColor: Int)
-
-        fun textColorWheel(initialColor: Int)
 
     }
 

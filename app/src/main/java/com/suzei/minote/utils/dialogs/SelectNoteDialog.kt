@@ -4,26 +4,29 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
+import androidx.core.content.res.ResourcesCompat
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.suzei.minote.R
-
 import kotlinx.android.synthetic.main.dialog_create_note.*
 
-class SelectNoteDialog: DialogFragment(), View.OnClickListener {
+class SelectNoteDialog : BottomSheetDialogFragment() {
 
     companion object {
 
-        val NOTE_PAD = 0
-        val TODO_LIST = 1
+        const val NOTE_PAD = 0
+        const val TODO_LIST = 1
+        const val TAG = "SELECT_NOTE_DIALOG"
+
+        fun newInstance(selectNoteDialogListener: ((Int) -> Unit)?): SelectNoteDialog {
+            val fragment = SelectNoteDialog()
+            fragment.selectNoteDialogListener = selectNoteDialogListener
+            return fragment
+        }
 
     }
 
-    var selectNoteDialogListener: SelectNoteDialogListener? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.InputDialogStyle)
-    }
+    private var selectNoteDialogListener: ((Int) -> Unit)? = null
+    private var currentSelectedCatagory = NOTE_PAD
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.dialog_create_note, container, false)
@@ -31,48 +34,37 @@ class SelectNoteDialog: DialogFragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        dialog_create_note_button.setOnClickListener(this)
-        dialog_create_note_cancel.setOnClickListener(this)
+        setupViews()
     }
 
-    fun setOnCreateClickListener(listener: SelectNoteDialogListener) {
-        this.selectNoteDialogListener = listener
-    }
+    private fun setupViews() {
+        val primaryColor = ResourcesCompat.getColor(resources, R.color.primaryColor, null)
+        val secondaryColor = ResourcesCompat.getColor(resources, R.color.secondaryColor, null)
 
-    override fun dismiss() {
-        selectNoteDialogListener = null
-        super.dismiss()
-    }
+        create_note_container_note.setOnClickListener {
+            changeCategoryColor(secondaryColor, primaryColor)
+            currentSelectedCatagory = NOTE_PAD
+        }
 
-    override fun onClick(v: View?) {
-        when (v?.id) {
+        create_note_container_todo.setOnClickListener {
+            changeCategoryColor(primaryColor, secondaryColor)
+            currentSelectedCatagory = TODO_LIST
+        }
 
-            R.id.dialog_create_note_button -> {
-                val selectedId = dialog_create_note_types.checkedRadioButtonId
-
-                when(selectedId) {
-
-                    R.id.dialog_create_note_pad ->
-                        selectNoteDialogListener?.onCreateClick(NOTE_PAD)
-
-                    R.id.dialog_create_note_todo_list ->
-                        selectNoteDialogListener?.onCreateClick(TODO_LIST)
-
-                }
-
-                dismiss()
-
-            }
-
-            R.id.dialog_create_note_cancel -> dismiss()
-
+        create_note_btn_create.setOnClickListener {
+            selectNoteDialogListener?.invoke(currentSelectedCatagory)
         }
     }
 
-}
+    private fun changeCategoryColor(noteColor: Int, todoColor: Int) {
+        create_note_container_note.strokeColor = noteColor
+        create_note_container_todo.strokeColor = todoColor
+        create_note_container_note.invalidate()
+        create_note_container_todo.invalidate()
+    }
 
-interface SelectNoteDialogListener {
-
-    fun onCreateClick(type: Int)
-
+    override fun dismiss() {
+        currentSelectedCatagory = NOTE_PAD
+        super.dismiss()
+    }
 }

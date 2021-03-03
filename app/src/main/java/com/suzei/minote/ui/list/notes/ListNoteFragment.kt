@@ -1,41 +1,37 @@
 package com.suzei.minote.ui.list.notes
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.BaseTransientBottomBar
-import com.google.android.material.snackbar.Snackbar
 import com.suzei.minote.R
 import com.suzei.minote.data.entity.Notes
 import com.suzei.minote.ui.editor.note.EditorNoteActivity
+import com.suzei.minote.ui.list.ListActivity
+import com.suzei.minote.ui.list.ListAdapterCallback
 import com.suzei.minote.ui.list.ListContract
+import com.suzei.minote.ui.list.ToastCallback
 import com.suzei.minote.utils.LogMe
 import com.suzei.minote.utils.Turing
 import com.suzei.minote.utils.dialogs.PasswordDialog
+import com.suzei.minote.utils.recycler_view.callback.ItemMoveTouchHelper
+import kotlinx.android.synthetic.main.activity_list.*
+import kotlinx.android.synthetic.main.custom_bottom_navigation.*
 import kotlinx.android.synthetic.main.fragment_list.*
-import kotlinx.android.synthetic.main.item_row_notes_default.view.*
-import java.util.*
 
 class ListNoteFragment : Fragment(), ListContract.View<Notes> {
 
     private lateinit var presenter: ListContract.Presenter<Notes>
-
-    private lateinit var listOfNotes: MutableList<Notes>
-
-    private lateinit var listAdapter: ListAdapter
-
-    private var tempNote: Notes? = null
-    private var consecutiveNote: Notes? = null
-    private var tempPosition: Int = 0
+    private lateinit var listAdapter: ListNoteAdapter
+    private lateinit var listActivity: ListActivity
 
     companion object {
+
+        const val TAG = "ListNoteFragment"
 
         internal fun newInstance(): ListNoteFragment {
             return ListNoteFragment()
@@ -44,8 +40,9 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        listOfNotes = ArrayList()
-        listAdapter = ListAdapter()
+        LogMe.info("LOG ListNoteFragment = onCreate()")
+        listActivity = activity as ListActivity
+        listAdapter = ListNoteAdapter(ArrayList(), listAdapterCallback)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -55,19 +52,21 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val itemMoveTouchHelper = ItemMoveTouchHelper()
+        itemMoveTouchHelper.callback = itemTouchCallback
+
+        val itemTouchHelper = ItemTouchHelper(itemMoveTouchHelper)
+        itemTouchHelper.attachToRecyclerView(list_notes)
+
         list_notes.layoutManager = LinearLayoutManager(context)
         list_notes.adapter = listAdapter
+        list_tv_title.setText(R.string.notes)
     }
 
     override fun onStart() {
         super.onStart()
         LogMe.info("LOG ListNoteFragment = onStart()")
-        presenter.start()
-    }
-
-    override fun onDestroyView() {
-        LogMe.info("LOG ListNoteFragment = onDestroyView()")
-        super.onDestroyView()
+        presenter.setup()
     }
 
     override fun setPresenter(presenter: ListContract.Presenter<Notes>) {
@@ -77,137 +76,93 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
 
     override fun showListOfNotes(listOfNotes: MutableList<Notes>) {
         list_empty_placeholder.visibility = View.GONE
-        this.listOfNotes = listOfNotes
-        listAdapter.notifyDataSetChanged()
+        listAdapter.update(listOfNotes)
         list_notes.smoothScrollToPosition(0)
     }
 
     override fun showListUnavailable() {
         list_empty_placeholder.visibility = View.VISIBLE
+        list_iv_empty.setImageResource(R.drawable.ic_empty_notes)
+        list_tv_empty_title.setText(R.string.no_notes_found_title)
+        list_tv_empty_subtitle.setText(R.string.no_notes_found_subtitle)
     }
 
-    override fun insertNoteToList(note: Notes, position: Int) {
-        list_empty_placeholder.visibility = View.GONE
-        listOfNotes.add(position, note)
-        listAdapter.notifyItemInserted(position)
+    private var itemTouchCallback = object : ItemMoveTouchHelper.MoveCallback {
+
+        override fun isInDeleteArea(view: View): Boolean {
+            val firstPosition = IntArray(2)
+            val secondPosition = IntArray(2)
+            list_delete_container.getLocationOnScreen(firstPosition)
+            view.getLocationOnScreen(secondPosition)
+            val l = firstPosition[1]
+            val r = view.measuredHeight + secondPosition[1]
+            return r > l
+        }
+
+        override fun removeItem(position: Int) {
+            listAdapter.removeTempItem(position)
+            listActivity.showToastUndo(
+                    getString(R.string.note_deleted),
+                    toastCallback(position))
+            if (listAdapter.itemCount == 0) {
+                showListUnavailable()
+            }
+        }
+
+        override fun onClearView() {
+            val listActivity = activity as ListActivity
+            list_delete_container.visibility = View.GONE
+            listActivity.list_fab.visibility = View.VISIBLE
+            listActivity.list_bottom_navigation_view.visibility = View.VISIBLE
+        }
+
+        override fun onDrag() {
+            val listActivity = activity as ListActivity
+            list_delete_container.visibility = View.VISIBLE
+            listActivity.list_fab.visibility = View.GONE
+            listActivity.list_bottom_navigation_view.visibility = View.GONE
+        }
+
     }
 
-    override fun redirectToEditorActivity(itemId: String) {
+    private var listAdapterCallback = object : ListAdapterCallback {
+
+        override fun onNotePasswordClick(note: Notes) {
+            val decryptedPassword = note.password?.let { Turing.decrypt(it) } ?: ""
+            val passwordDialog = PasswordDialog.instance(decryptedPassword) { password ->
+                if (password.isEmpty()) return@instance
+                note.id?.let { noteId ->
+                    showEditor(noteId)
+                }
+            }
+            passwordDialog.show(fragmentManager!!, "PasswordDialog")
+        }
+
+        override fun onNoteClick(itemId: String) {
+            showEditor(itemId)
+        }
+
+    }
+
+    private fun showEditor(itemId: String) {
         val intent = Intent(context, EditorNoteActivity::class.java)
         intent.putExtra(EditorNoteActivity.EXTRA_NOTE_ID, itemId)
         startActivity(intent)
     }
 
-    inner class ListAdapter : RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
+    private fun toastCallback(position: Int) = object : ToastCallback {
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
-            val view = layoutInflater.inflate(
-                    R.layout.item_row_notes_default,
-                    parent,
-                    false)
-
-            return ListViewHolder(view)
+        override fun onUndoClick() {
+            listAdapter.retainDeletedItem(position)
+            if (listAdapter.itemCount > 0) {
+                list_empty_placeholder.visibility = View.GONE
+            }
         }
 
-        override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-            val note = listOfNotes[position]
-            holder.bindNote(note)
-        }
-
-        override fun getItemCount(): Int {
-            return listOfNotes.size
-        }
-
-        inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-            fun bindNote(note: Notes) {
-                itemView.item_notes_color.setBackgroundColor(Color.parseColor(note.color))
-                itemView.item_notes_title.text = note.title
-
-                itemView.item_notes_delete.setOnClickListener {
-
-                    tempPosition = adapterPosition
-                    tempNote = listOfNotes[tempPosition]
-
-                    listOfNotes.remove(tempNote!!)
-                    listAdapter.notifyItemRemoved(tempPosition)
-
-                    presenter.checkSizeOfList(listOfNotes.size)
-                    showSnackbar()
-
-                }
-
-                if (note.password != null) {
-                    itemView.item_notes_password.visibility = View.VISIBLE
-                    itemView.setOnClickListener { showPasswordDialog(note) }
-                }
-                else {
-                    itemView.item_notes_password.visibility = View.GONE
-                    itemView.setOnClickListener {
-                        note.id?.let {
-                            it1 -> presenter.showEditor(it1)
-                        }
-                    }
-                }
-            }
-
-            private fun showPasswordDialog(note: Notes) {
-                val decryptedPassword = note.password?.let { Turing.decrypt(it) }
-                val passwordDialog = PasswordDialog.instance
-
-                passwordDialog.setOnClosePasswordDialog(object: PasswordDialog.PasswordDialogListener {
-
-                    override fun onClose(password: String) {
-                        if (decryptedPassword != password) {
-                            Toast.makeText(context,
-                                    "Wrong Password, Please Try again",
-                                    Toast.LENGTH_SHORT).show()
-                        } else {
-                            note.id?.let {
-                                presenter.showEditor(it)
-                            }
-                        }
-                    }
-
-                })
-
-                passwordDialog.show(fragmentManager!!, "PasswordDialog")
-            }
-
-            private fun showSnackbar() {
-                Snackbar.make(list_root, "Note Deleted", Snackbar.LENGTH_SHORT)
-                        .setAction("Undo") { insertNoteToList(tempNote!!, tempPosition) }
-                        .addCallback(object : Snackbar.Callback() {
-
-                            override fun onShown(sb: Snackbar?) {
-                                super.onShown(sb)
-                                consecutiveNote = tempNote
-                            }
-
-                            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                                super.onDismissed(transientBottomBar, event)
-                                when (event) {
-
-                                    BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_CONSECUTIVE -> {
-                                        presenter.delete(consecutiveNote!!)
-                                    }
-
-                                    BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_TIMEOUT -> {
-                                        presenter.delete(tempNote!!)
-                                        consecutiveNote = null
-                                        tempNote = null
-                                        tempPosition = -1
-                                    }
-                                }
-
-                            }
-
-                        })
-                        .show()
-            }
-
+        override fun onToastDismiss() {
+            presenter.delete(listAdapter.tempDeletedNote!!)
+            listAdapter.forceRemove()
         }
 
     }
-
 }

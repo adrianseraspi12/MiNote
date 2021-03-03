@@ -1,17 +1,17 @@
 package com.suzei.minote.ui.list
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
-import androidx.preference.PreferenceManager
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdRequest
 import com.suzei.minote.Injection
 import com.suzei.minote.R
 import com.suzei.minote.ui.editor.note.EditorNoteActivity
@@ -20,152 +20,149 @@ import com.suzei.minote.ui.list.notes.ListNoteFragment
 import com.suzei.minote.ui.list.notes.ListNotePresenter
 import com.suzei.minote.ui.list.todo.ListTodoFragment
 import com.suzei.minote.ui.list.todo.ListTodoPresenter
-import com.suzei.minote.ui.settings.SettingsActivity
-import com.suzei.minote.utils.LogMe
+import com.suzei.minote.utils.OnOneOffClickListener
 import com.suzei.minote.utils.dialogs.SelectNoteDialog
-import com.suzei.minote.utils.dialogs.SelectNoteDialogListener
 import kotlinx.android.synthetic.main.activity_list.*
+import kotlinx.android.synthetic.main.custom_bottom_navigation.*
+import kotlinx.android.synthetic.main.toast_undo_delete.*
 
-class ListActivity : AppCompatActivity(), View.OnClickListener {
+class ListActivity : AppCompatActivity() {
 
     private lateinit var fm: FragmentManager
+    private lateinit var selectNoteDialog: SelectNoteDialog
+    private val listNoteFragment = ListNoteFragment.newInstance()
+    private val listTodoFragment = ListTodoFragment.newInstance()
+    private var callback: ToastCallback? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list)
-
-        LogMe.info("LOG ListActivity = onCreate()")
-
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
-
-        setSupportActionBar(list_toolbar)
-
         fm = supportFragmentManager
-
-        list_view_pager.adapter = ListTabPagerAdapter()
-        list_tab_layout.setupWithViewPager(list_view_pager)
-
-        list_fab.setOnClickListener(this)
-        adView.adListener = adListener
-
-        val adRequest = AdRequest.Builder().build()
-        adView.loadAd(adRequest)
+        initSelectNoteDialog()
+        initPresenters()
+        setupFragmentTransaction()
+        setupCustomBottomNavigation()
+        setupFabClick()
     }
 
-    override fun onClick(v: View?) {
-        if (v?.id == R.id.list_fab) {
-            val dialog = SelectNoteDialog()
-            dialog.setOnCreateClickListener(object : SelectNoteDialogListener {
-
-                override fun onCreateClick(type: Int) {
-
-                    when(type) {
-
-                        SelectNoteDialog.NOTE_PAD ->
-                            startActivity(Intent(
-                                this@ListActivity,
-                                EditorNoteActivity::class.java))
-
-                        SelectNoteDialog.TODO_LIST ->
-                            startActivity(Intent(
-                                this@ListActivity,
-                                EditorTodoActivity::class.java))
-
-                    }
-
-                }
-
-            })
-
-            dialog.show(fm, null)
+    override fun onPause() {
+        super.onPause()
+        if (toast_undo_delete_root.visibility == View.VISIBLE) {
+            hideToast()
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.activity_list_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        if (item.itemId == R.id.menu_settings) {
-            startActivity(Intent(
-                    this@ListActivity,
-                    SettingsActivity::class.java))
+    fun showToastUndo(message: String, callback: ToastCallback) {
+        this.callback = callback
+        if (toast_undo_delete_root.visibility == View.VISIBLE) callback.onToastDismiss()
+        toast_undo_delete_root.alpha = 0f
+        toast_undo_delete_root.visibility = View.VISIBLE
+        toast_undo_delete_root
+                .animate()
+                .alpha(1f)
+                .duration = 300
+        toast_undo_delete_tv_title.text = message
+        toast_delete_btn_undo.setOnClickListener {
+            callback.onUndoClick()
+            toast_undo_delete_root.visibility = View.GONE
+            toast_undo_delete_root.alpha = 0f
+            toast_undo_delete_root.animate().setListener(null)
         }
 
-        return super.onOptionsItemSelected(item)
-    }
-
-    override fun onDestroy() {
-        LogMe.info("LOG ListActivity = onDestroy()")
-        super.onDestroy()
-    }
-
-    private val adListener = object: AdListener() {
-
-        override fun onAdLoaded() {
-            super.onAdLoaded()
-            adView.visibility = View.VISIBLE
-        }
-
-        override fun onAdFailedToLoad(p0: Int) {
-            super.onAdFailedToLoad(p0)
-            adView.visibility = View.GONE
-        }
-
-    }
-
-    inner class ListTabPagerAdapter: FragmentPagerAdapter(supportFragmentManager) {
-
-        override fun getItem(position: Int): Fragment {
-            when (position) {
-
-                0 -> {
-                    LogMe.info("LOG ListTabPagerAdapter = set listNoteFragment")
-
-                    val listNoteFragment = ListNoteFragment.newInstance()
-
-                    ListNotePresenter(
-                            Injection.provideDataSourceImpl(applicationContext),
-                            listNoteFragment)
-
-                    return listNoteFragment
-                }
-
-                1 -> {
-                    LogMe.info("LOG ListTabPagerAdapter = set listTodoFragment")
-
-                    val listTodoFragment = ListTodoFragment.newInstance()
-
-                    ListTodoPresenter(
-                            Injection.provideTodoRepository(applicationContext),
-                            listTodoFragment)
-
-                    return listTodoFragment
-                }
-
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (toast_undo_delete_root.visibility == View.VISIBLE) {
+                toast_undo_delete_root
+                        .animate()
+                        .alpha(0f)
+                        .setDuration(300)
+                        .setListener(object : AnimatorListenerAdapter() {
+                            override fun onAnimationEnd(animation: Animator?) {
+                                super.onAnimationEnd(animation)
+                                hideToast()
+                            }
+                        })
             }
-
-            throw IllegalArgumentException("Invalid Position $position")
-        }
-
-        override fun getPageTitle(position: Int): CharSequence? {
-            when (position) {
-
-                0 -> return "Notes"
-
-                1 -> return "Todo"
-
-            }
-
-            return super.getPageTitle(position)
-        }
-
-        override fun getCount(): Int {
-            return 2
-        }
-
+        }, 4000)
     }
 
+    private fun hideToast() {
+        toast_undo_delete_root.visibility = View.GONE
+        toast_undo_delete_root.animate().setListener(null)
+        callback?.onToastDismiss()
+        callback = null
+    }
+
+    private fun setFragment(visibleFragment: Fragment, invisibleFragmnet: Fragment) {
+        fm.beginTransaction().apply {
+            show(visibleFragment)
+            hide(invisibleFragmnet)
+            commit()
+        }
+    }
+
+    private fun setupFragmentTransaction() {
+        fm.beginTransaction().apply {
+            add(list_container.id, listNoteFragment, ListNoteFragment.TAG)
+            add(list_container.id, listTodoFragment, ListTodoFragment.TAG)
+            show(listNoteFragment)
+            hide(listTodoFragment)
+            commit()
+        }
+    }
+
+    private fun initPresenters() {
+        ListNotePresenter(
+                Injection.provideNotesRepository(applicationContext),
+                listNoteFragment)
+        ListTodoPresenter(
+                Injection.provideTodoRepository(applicationContext),
+                listTodoFragment)
+    }
+
+    private fun initSelectNoteDialog() {
+        selectNoteDialog = SelectNoteDialog.newInstance {
+            selectNoteDialog.dismiss()
+            when (it) {
+                SelectNoteDialog.NOTE_PAD ->
+                    this.startActivity(Intent(
+                            this@ListActivity,
+                            EditorNoteActivity::class.java))
+
+                SelectNoteDialog.TODO_LIST ->
+                    this.startActivity(Intent(
+                            this@ListActivity,
+                            EditorTodoActivity::class.java))
+            }
+        }
+    }
+
+    private fun setupFabClick() {
+        list_fab.setOnClickListener(object : OnOneOffClickListener() {
+            override fun onSingleClick(view: View?) {
+                fm.let {
+                    selectNoteDialog.show(it, SelectNoteDialog.TAG)
+                }
+            }
+        })
+    }
+
+    private fun setupCustomBottomNavigation() {
+        val selectedColor = ResourcesCompat.getColor(resources, R.color.secondaryColor, null)
+        val unselectedColor = ResourcesCompat.getColor(resources, R.color.unselectedColor, null)
+
+        btn_nav_notes.iconTint = ColorStateList.valueOf(selectedColor)
+        btn_nav_todo.iconTint = ColorStateList.valueOf(unselectedColor)
+
+        btn_nav_notes.setOnClickListener {
+            btn_nav_notes.iconTint = ColorStateList.valueOf(selectedColor)
+            btn_nav_todo.iconTint = ColorStateList.valueOf(unselectedColor)
+            setFragment(listNoteFragment, listTodoFragment)
+        }
+
+        btn_nav_todo.setOnClickListener {
+            btn_nav_notes.iconTint = ColorStateList.valueOf(unselectedColor)
+            btn_nav_todo.iconTint = ColorStateList.valueOf(selectedColor)
+            setFragment(listTodoFragment, listNoteFragment)
+        }
+    }
 }

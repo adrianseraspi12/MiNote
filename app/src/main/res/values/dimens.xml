@@ -1,18 +1,36 @@
 <resources>
     <dimen name="margin_very_small">4dp</dimen>
     <dimen name="margin_small">8dp</dimen>
+    <dimen name="margin_mid">12dp</dimen>
     <dimen name="margin_medium">16dp</dimen>
+    <dimen name="margin_large">24dp</dimen>
+    <dimen name="margin_very_large">48dp</dimen>
+
+    <dimen name="padding_very_small">4dp</dimen>
+    <dimen name="padding_small">8dp</dimen>
 
     <dimen name="text_size_x_small">12sp</dimen>
     <dimen name="text_size_small">14sp</dimen>
-    <dimen name="text_size_medium">16sp</dimen>
-    <dimen name="text_size_large">20sp</dimen>
+    <dimen name="text_size_large">18sp</dimen>
+    <dimen name="text_size_extra_large">20sp</dimen>
 
-    <dimen name="card_corner_radius">2dp</dimen>
+    <dimen name="card_corner_radius">12dp</dimen>
     <dimen name="card_elevation">2dp</dimen>
 
-    <dimen name="icon_size">24dp</dimen>
+    <dimen name="constraint_layout_match_parent">0dp</dimen>
 
-    <dimen name="bottom_sheet_height">56dp</dimen>
-    
+    <dimen name="nav_fab_elevation">12dp</dimen>
+
+    <dimen name="dividerSize">1dp</dimen>
+    <dimen name="headerSize">40sp</dimen>
+    <dimen name="placeholderSubtitleSize">18sp</dimen>
+    <dimen name="placeholderTitleSize">30sp</dimen>
+    <dimen name="selectNoteSize">80dp</dimen>
+    <dimen name="pickColorSize">40dp</dimen>
+
+    <dimen name="colorListSpacing">16dp</dimen>
+
+    <dimen name="passcodeIconSize">16dp</dimen>
+    <dimen name="passcodeButtonTextSize">40sp</dimen>
+
 </resources>

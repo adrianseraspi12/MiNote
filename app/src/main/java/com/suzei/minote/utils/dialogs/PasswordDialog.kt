@@ -1,21 +1,39 @@
 package com.suzei.minote.utils.dialogs
 
+import android.graphics.Color
 import android.os.Bundle
-import android.text.TextUtils
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-
-import com.suzei.minote.R
+import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.DialogFragment
+import com.google.android.material.card.MaterialCardView
+import com.suzei.minote.R
 import kotlinx.android.synthetic.main.fullscreen_dialog_password.*
 
 open class PasswordDialog : DialogFragment(), View.OnClickListener {
 
-    private var listener: PasswordDialogListener? = null
+    private var currentPassword = ""
+    private var verifyPassword = ""
+    private var isVerifying = false
+    private var listener: ((String) -> Unit)? = null
 
-    private var password = ""
+    companion object {
+
+        fun instance(password: String = "", listener: ((String) -> Unit)): PasswordDialog {
+            val passwordDialog = PasswordDialog()
+            passwordDialog.currentPassword = password
+            passwordDialog.listener = listener
+            if (password.isNotEmpty()) {
+                passwordDialog.isVerifying = true
+            }
+            return passwordDialog
+        }
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +48,55 @@ open class PasswordDialog : DialogFragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupNumberBtnClickListener()
+        setupClearBtnClickListener()
+        dialog_password_btn_cancel.setOnClickListener {
+            listener?.invoke("")
+            dismiss()
+        }
+    }
+
+    override fun onClick(v: View?) {
+        val container = v as MaterialCardView
+        val childTextView = container.getChildAt(0) as TextView
+        val secondaryColor = ResourcesCompat.getColor(resources, R.color.secondaryColor, null)
+        val textNumber = childTextView.text.toString()
+
+        val textCount: Int
+
+        if (isVerifying) {
+            textCount = verifyPassword.length
+            verifyPassword += textNumber
+        } else {
+            textCount = currentPassword.length
+            currentPassword += textNumber
+        }
+
+        setCodeColor(textCount, secondaryColor)
+
+        if (textCount == 3) {
+            if (isVerifying) {
+                if (currentPassword == verifyPassword) {
+                    listener?.invoke(currentPassword)
+                    dismiss()
+                    return
+                }
+
+                dialog_password_tv_title.setText(R.string.wrong_passcode)
+                verifyPassword = ""
+                resetCodeColor()
+                return
+            }
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                isVerifying = true
+                dialog_password_tv_title.setText(R.string.verify_passcode)
+                resetCodeColor()
+            }, 500)
+        }
+    }
+
+    private fun setupNumberBtnClickListener() {
         buttonOne.setOnClickListener(this)
         buttonTwo.setOnClickListener(this)
         buttonThree.setOnClickListener(this)
@@ -40,50 +107,62 @@ open class PasswordDialog : DialogFragment(), View.OnClickListener {
         buttonEight.setOnClickListener(this)
         buttonNine.setOnClickListener(this)
         buttonZero.setOnClickListener(this)
-        buttonClear.setOnClickListener(this)
     }
 
-    override fun onClick(v: View?) {
-        val button = v as Button
-        val textNumber = button.text.toString()
+    private fun setupClearBtnClickListener() {
+        dialog_password_btn_clear.setOnClickListener {
+            val currentPasswordCount: Int
 
-        if (textNumber == "CLEAR" && !TextUtils.isEmpty(password)) {
-            password = password.substring(0, password.length -1)
-            password_dots.setText(password)
-            return
-        }
+            if (isVerifying) {
+                if (verifyPassword.isEmpty()) return@setOnClickListener
 
-        password_dots.append(textNumber)
-        password += textNumber
+                currentPasswordCount = verifyPassword.length
+                verifyPassword = verifyPassword.substring(0, verifyPassword.length - 1)
+            } else {
+                if (currentPassword.isEmpty()) return@setOnClickListener
 
-        if (password.length == PASSWORD_LENGTH) {
-            listener?.onClose(password)
-            dismiss()
+                currentPasswordCount = currentPassword.length
+                currentPassword = currentPassword.substring(0, currentPassword.length - 1)
+            }
+
+            setCodeColor(currentPasswordCount - 1, Color.TRANSPARENT)
         }
     }
 
-    fun setOnClosePasswordDialog(listener: PasswordDialogListener) {
-        this.listener = listener
+    private fun setCodeColor(position: Int, color: Int) {
+        when (position) {
+
+            0 -> {
+                dialog_password_first_code.setCardBackgroundColor(color)
+            }
+
+            1 -> {
+                dialog_password_second_code.setCardBackgroundColor(color)
+            }
+
+            2 -> {
+                dialog_password_third_code.setCardBackgroundColor(color)
+            }
+
+            3 -> {
+                dialog_password_fourth_code.setCardBackgroundColor(color)
+            }
+
+        }
+    }
+
+    private fun resetCodeColor() {
+        dialog_password_first_code.setCardBackgroundColor(Color.TRANSPARENT)
+        dialog_password_second_code.setCardBackgroundColor(Color.TRANSPARENT)
+        dialog_password_third_code.setCardBackgroundColor(Color.TRANSPARENT)
+        dialog_password_fourth_code.setCardBackgroundColor(Color.TRANSPARENT)
     }
 
     override fun onDestroyView() {
         if (dialog != null) {
+            listener = null
             dialog!!.setOnDismissListener(null)
         }
         super.onDestroyView()
-    }
-
-    interface PasswordDialogListener {
-
-        fun onClose(password: String)
-
-    }
-
-    companion object {
-
-        private val PASSWORD_LENGTH = 4
-
-        val instance: PasswordDialog
-            get() = PasswordDialog()
     }
 }

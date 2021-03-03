@@ -11,22 +11,21 @@ interface ListContract {
 
         fun showListUnavailable()
 
-        fun insertNoteToList(data: T, position: Int)
-
-        fun redirectToEditorActivity(itemId: String)
-
     }
 
     interface Presenter<T> {
 
-        fun start()
+        fun setup()
 
         fun delete(data: T)
 
-        fun checkSizeOfList(size: Int)
-
-        fun showEditor(itemId: String)
-
     }
+
+}
+
+interface ToastCallback {
+
+    fun onUndoClick()
+    fun onToastDismiss()
 
 }

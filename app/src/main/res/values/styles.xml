@@ -4,14 +4,13 @@
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/backgroundColor</item>
         <item name="colorAccent">@color/colorSecondary</item>
+        <item name="backgroundColor">@color/backgroundColor</item>
     </style>
 
-    <style name="SettingsTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorSecondary</item>
+    <style name="SplashScreenTheme" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/splash_background</item>
     </style>
 
     <style name="EditorTheme" parent="AppTheme">
@@ -19,24 +18,21 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
-    
+
     <style name="PasswordDialogStyle" parent="Theme.MaterialComponents.DialogWhenLarge">
         <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@color/backgroundColor</item>
         <item name="android:windowAnimationStyle">@style/Animation.AppCompat.Dialog</item>
     </style>
 
-    <style name="InputDialogStyle" parent="Theme.MaterialComponents.Dialog">
-        <item name="windowNoTitle">true</item>
-        <item name="android:windowAnimationStyle">@style/Animation.AppCompat.Dialog</item>
-        <item name="android:minWidth">280dp</item>
+    <style name="DialogButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/secondaryColor</item>
     </style>
-    
-    <style name="BottomSheetDialogStyle" parent="Theme.Design.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/BottomSheetModalStyle</item>
+
+    <style name="ColorPickerStyle" parent="Theme.MaterialComponents.Dialog.Alert">
+        <item name="android:windowBackground">@color/backgroundColor</item>
+        <item name="android:textColor">@color/textColor</item>
+        <item name="buttonBarPositiveButtonStyle">@style/DialogButtonStyle</item>
+        <item name="buttonBarNegativeButtonStyle">@style/DialogButtonStyle</item>
     </style>
-    
-    <style name="BottomSheetModalStyle" parent="Widget.Design.BottomSheet.Modal">
-        <item name="behavior_peekHeight">200dp</item>
-    </style>
-    
 </resources>
