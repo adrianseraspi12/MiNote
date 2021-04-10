@@ -14,10 +14,11 @@ import org.threeten.bp.format.DateTimeFormatter
 
 class ListNoteAdapter(
         private var listOfNotes: MutableList<Notes>,
-        private var listAdapterCallback: ListAdapterCallback
+        private var listAdapterCallback: ListAdapterCallback<Notes>
 ) : RecyclerView.Adapter<ListNoteAdapter.ViewHolder>() {
 
     var tempDeletedNote: Notes? = null
+    var tempDeletedPos: Int = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val context = parent.context
@@ -48,22 +49,33 @@ class ListNoteAdapter(
     }
 
     fun removeTempItem(position: Int) {
+        if (tempDeletedPos != -1) {
+            //  Remove old temporary note
+            listAdapterCallback.forceDelete(tempDeletedNote!!)
+            forceRemove()
+        }
         val note = listOfNotes[position]
         tempDeletedNote = note
+        tempDeletedPos = position
         listOfNotes.removeAt(position)
         notifyItemRemoved(position)
         notifyItemRangeChanged(position, listOfNotes.size)
     }
 
-    fun retainDeletedItem(position: Int) {
-        listOfNotes.add(position, tempDeletedNote!!)
-        notifyItemRemoved(position)
-        notifyItemRangeChanged(position, listOfNotes.size)
+    fun retainDeletedItem() {
+        listOfNotes.add(tempDeletedPos, tempDeletedNote!!)
+        notifyItemInserted(tempDeletedPos)
+        if (tempDeletedPos == 0) {
+            notifyItemChanged(tempDeletedPos + 1)
+        }
+        listAdapterCallback.scrollTo(tempDeletedPos)
         tempDeletedNote = null
+        tempDeletedPos = -1
     }
 
     fun forceRemove() {
         tempDeletedNote = null
+        tempDeletedPos = -1
     }
 
     inner class ViewHolder(val context: Context, itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -74,22 +86,24 @@ class ListNoteAdapter(
             itemView.item_notes_color.setCardBackgroundColor(Color.parseColor(note.color))
             itemView.item_notes_title.text = note.title
             itemView.item_notes_subtitle.text = note.createdDate?.format(datetimeFormatter)
+            itemView.row_notes_delete.setOnClickListener {
+                removeTempItem(adapterPosition)
+                listAdapterCallback.onNoteDeleted()
+            }
 
             if (note.password != null) {
                 itemView.item_notes_content.text = context.getString(R.string.locked)
-                itemView.setOnClickListener {
+                itemView.item_rootview.setOnClickListener {
                     listAdapterCallback.onNotePasswordClick(note)
                 }
             } else {
                 itemView.item_notes_content.text = note.message
-                itemView.setOnClickListener {
+                itemView.item_rootview.setOnClickListener {
                     note.id?.let { itemId ->
                         listAdapterCallback.onNoteClick(itemId)
                     }
                 }
             }
         }
-
     }
-
 }

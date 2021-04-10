@@ -54,7 +54,10 @@ class ListActivity : AppCompatActivity() {
 
     fun showToastUndo(message: String, callback: ToastCallback) {
         this.callback = callback
-        if (toast_undo_delete_root.visibility == View.VISIBLE) callback.onToastDismiss()
+        if (toast_undo_delete_root.visibility == View.VISIBLE) {
+            toast_undo_delete_root.visibility = View.GONE
+            toast_undo_delete_root.animate().setListener(null)
+        }
         toast_undo_delete_root.alpha = 0f
         toast_undo_delete_root.visibility = View.VISIBLE
         toast_undo_delete_root

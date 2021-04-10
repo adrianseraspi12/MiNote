@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.suzei.minote.R
 import com.suzei.minote.data.entity.Notes
@@ -18,7 +17,7 @@ import com.suzei.minote.ui.list.ToastCallback
 import com.suzei.minote.utils.LogMe
 import com.suzei.minote.utils.Turing
 import com.suzei.minote.utils.dialogs.PasswordDialog
-import com.suzei.minote.utils.recycler_view.callback.ItemMoveTouchHelper
+import com.suzei.minote.utils.recycler_view.decorator.LinearLayoutSpacing
 import kotlinx.android.synthetic.main.activity_list.*
 import kotlinx.android.synthetic.main.custom_bottom_navigation.*
 import kotlinx.android.synthetic.main.fragment_list.*
@@ -52,13 +51,9 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val itemMoveTouchHelper = ItemMoveTouchHelper()
-        itemMoveTouchHelper.callback = itemTouchCallback
-
-        val itemTouchHelper = ItemTouchHelper(itemMoveTouchHelper)
-        itemTouchHelper.attachToRecyclerView(list_notes)
-
+        val mediumSpacing = resources.getDimension(R.dimen.margin_medium).toInt()
         list_notes.layoutManager = LinearLayoutManager(context)
+        list_notes.addItemDecoration(LinearLayoutSpacing(mediumSpacing, mediumSpacing))
         list_notes.adapter = listAdapter
         list_tv_title.setText(R.string.notes)
     }
@@ -87,45 +82,7 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
         list_tv_empty_subtitle.setText(R.string.no_notes_found_subtitle)
     }
 
-    private var itemTouchCallback = object : ItemMoveTouchHelper.MoveCallback {
-
-        override fun isInDeleteArea(view: View): Boolean {
-            val firstPosition = IntArray(2)
-            val secondPosition = IntArray(2)
-            list_delete_container.getLocationOnScreen(firstPosition)
-            view.getLocationOnScreen(secondPosition)
-            val l = firstPosition[1]
-            val r = view.measuredHeight + secondPosition[1]
-            return r > l
-        }
-
-        override fun removeItem(position: Int) {
-            listAdapter.removeTempItem(position)
-            listActivity.showToastUndo(
-                    getString(R.string.note_deleted),
-                    toastCallback(position))
-            if (listAdapter.itemCount == 0) {
-                showListUnavailable()
-            }
-        }
-
-        override fun onClearView() {
-            val listActivity = activity as ListActivity
-            list_delete_container.visibility = View.GONE
-            listActivity.list_fab.visibility = View.VISIBLE
-            listActivity.list_bottom_navigation_view.visibility = View.VISIBLE
-        }
-
-        override fun onDrag() {
-            val listActivity = activity as ListActivity
-            list_delete_container.visibility = View.VISIBLE
-            listActivity.list_fab.visibility = View.GONE
-            listActivity.list_bottom_navigation_view.visibility = View.GONE
-        }
-
-    }
-
-    private var listAdapterCallback = object : ListAdapterCallback {
+    private var listAdapterCallback = object : ListAdapterCallback<Notes> {
 
         override fun onNotePasswordClick(note: Notes) {
             val decryptedPassword = note.password?.let { Turing.decrypt(it) } ?: ""
@@ -142,6 +99,23 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
             showEditor(itemId)
         }
 
+        override fun onNoteDeleted() {
+            listActivity.showToastUndo(
+                    getString(R.string.note_deleted),
+                    toastCallback)
+            if (listAdapter.itemCount == 0) {
+                showListUnavailable()
+            }
+        }
+
+        override fun scrollTo(position: Int) {
+            list_notes.scrollToPosition(position)
+        }
+
+        override fun forceDelete(data: Notes) {
+            presenter.delete(data)
+        }
+
     }
 
     private fun showEditor(itemId: String) {
@@ -150,18 +124,15 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
         startActivity(intent)
     }
 
-    private fun toastCallback(position: Int) = object : ToastCallback {
+    private var toastCallback = object : ToastCallback {
 
         override fun onUndoClick() {
-            listAdapter.retainDeletedItem(position)
-            if (listAdapter.itemCount > 0) {
-                list_empty_placeholder.visibility = View.GONE
-            }
+            listAdapter.retainDeletedItem()
+            list_empty_placeholder.visibility = View.GONE
         }
 
         override fun onToastDismiss() {
             presenter.delete(listAdapter.tempDeletedNote!!)
-            listAdapter.forceRemove()
         }
 
     }

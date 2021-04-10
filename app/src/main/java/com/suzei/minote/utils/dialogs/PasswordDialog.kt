@@ -1,5 +1,6 @@
 package com.suzei.minote.utils.dialogs
 
+import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
@@ -54,6 +55,19 @@ open class PasswordDialog : DialogFragment(), View.OnClickListener {
             listener?.invoke("")
             dismiss()
         }
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        listener?.invoke("")
+        super.onCancel(dialog)
+    }
+
+    override fun onDestroyView() {
+        if (dialog != null) {
+            listener = null
+            dialog!!.setOnDismissListener(null)
+        }
+        super.onDestroyView()
     }
 
     override fun onClick(v: View?) {
@@ -156,13 +170,5 @@ open class PasswordDialog : DialogFragment(), View.OnClickListener {
         dialog_password_second_code.setCardBackgroundColor(Color.TRANSPARENT)
         dialog_password_third_code.setCardBackgroundColor(Color.TRANSPARENT)
         dialog_password_fourth_code.setCardBackgroundColor(Color.TRANSPARENT)
-    }
-
-    override fun onDestroyView() {
-        if (dialog != null) {
-            listener = null
-            dialog!!.setOnDismissListener(null)
-        }
-        super.onDestroyView()
     }
 }
