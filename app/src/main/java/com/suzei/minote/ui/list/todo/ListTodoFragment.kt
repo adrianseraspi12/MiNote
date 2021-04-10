@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.suzei.minote.R
 import com.suzei.minote.data.entity.Todo
@@ -16,9 +15,7 @@ import com.suzei.minote.ui.list.ListAdapterCallback
 import com.suzei.minote.ui.list.ListContract
 import com.suzei.minote.ui.list.ToastCallback
 import com.suzei.minote.utils.LogMe
-import com.suzei.minote.utils.recycler_view.callback.ItemMoveTouchHelper
-import kotlinx.android.synthetic.main.activity_list.*
-import kotlinx.android.synthetic.main.custom_bottom_navigation.*
+import com.suzei.minote.utils.recycler_view.decorator.LinearLayoutSpacing
 import kotlinx.android.synthetic.main.fragment_list.*
 
 class ListTodoFragment : Fragment(), ListContract.View<Todo> {
@@ -49,13 +46,9 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val mediumSpacing = resources.getDimension(R.dimen.margin_medium).toInt()
         list_tv_title.setText(R.string.todo)
-        val itemMoveTouchHelper = ItemMoveTouchHelper()
-        itemMoveTouchHelper.callback = itemTouchCallback
-
-        val itemTouchHelper = ItemTouchHelper(itemMoveTouchHelper)
-        itemTouchHelper.attachToRecyclerView(list_notes)
-
+        list_notes.addItemDecoration(LinearLayoutSpacing(mediumSpacing, mediumSpacing))
         list_notes.adapter = listTodoAdapter
         list_notes.layoutManager = LinearLayoutManager(context)
     }
@@ -89,7 +82,7 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
         list_tv_empty_subtitle.setText(R.string.no_todo_found_subtitle)
     }
 
-    private var listAdapterCallback = object : ListAdapterCallback {
+    private var listAdapterCallback = object : ListAdapterCallback<Todo> {
 
         override fun onNoteClick(itemId: String) {
             val intent = Intent(context, EditorTodoActivity::class.java)
@@ -97,60 +90,34 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
             startActivity(intent)
         }
 
-    }
-
-    private var itemTouchCallback = object : ItemMoveTouchHelper.MoveCallback {
-
-        override fun isInDeleteArea(view: View): Boolean {
-            val firstPosition = IntArray(2)
-            val secondPosition = IntArray(2)
-            list_delete_container.getLocationOnScreen(firstPosition)
-            view.getLocationOnScreen(secondPosition)
-            val l = firstPosition[1]
-            val r = view.measuredHeight + secondPosition[1]
-            return r > l
-        }
-
-        override fun removeItem(position: Int) {
-            listTodoAdapter.removeTempItem(position)
+        override fun onNoteDeleted() {
             listActivity.showToastUndo(
                     getString(R.string.note_deleted),
-                    toastCallback(position))
+                    toastCallback)
             if (listTodoAdapter.itemCount == 0) {
                 showListUnavailable()
             }
         }
 
-        override fun onClearView() {
-            val listActivity = activity as ListActivity
-            list_delete_container.visibility = View.GONE
-            listActivity.list_fab.visibility = View.VISIBLE
-            listActivity.list_bottom_navigation_view.visibility = View.VISIBLE
+        override fun scrollTo(position: Int) {
+            list_notes.scrollToPosition(position)
         }
 
-        override fun onDrag() {
-            val listActivity = activity as ListActivity
-            list_delete_container.visibility = View.VISIBLE
-            listActivity.list_fab.visibility = View.GONE
-            listActivity.list_bottom_navigation_view.visibility = View.GONE
+        override fun forceDelete(data: Todo) {
+            presenter.delete(data)
         }
 
     }
 
-
-    private fun toastCallback(position: Int) = object : ToastCallback {
+    private var toastCallback = object : ToastCallback {
 
         override fun onUndoClick() {
-            listTodoAdapter.retainDeletedItem(position)
-            if (listTodoAdapter.itemCount > 0) {
-                list_empty_placeholder.visibility = View.GONE
-            }
+            listTodoAdapter.retainDeletedItem()
+            list_empty_placeholder.visibility = View.GONE
         }
 
         override fun onToastDismiss() {
             presenter.delete(listTodoAdapter.tempDeletedTodo!!)
-            listTodoAdapter.forceRemove()
         }
-
     }
 }
