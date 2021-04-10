@@ -13,9 +13,8 @@ android {
         applicationId "com.suzei.minote"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 11
-        versionName "1.2.0"
-//        testInstrumentationRunner "android.support.dialog_choose_color.runner.AndroidJUnitRunner"
+        versionCode 12
+        versionName "1.2.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         resConfigs "en"
