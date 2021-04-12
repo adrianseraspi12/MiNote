@@ -20,6 +20,7 @@ import com.suzei.minote.ui.list.notes.ListNoteFragment
 import com.suzei.minote.ui.list.notes.ListNotePresenter
 import com.suzei.minote.ui.list.todo.ListTodoFragment
 import com.suzei.minote.ui.list.todo.ListTodoPresenter
+import com.suzei.minote.utils.InAppReview
 import com.suzei.minote.utils.OnOneOffClickListener
 import com.suzei.minote.utils.dialogs.SelectNoteDialog
 import kotlinx.android.synthetic.main.activity_list.*
@@ -43,6 +44,7 @@ class ListActivity : AppCompatActivity() {
         setupFragmentTransaction()
         setupCustomBottomNavigation()
         setupFabClick()
+        InAppReview.run(this)
     }
 
     override fun onPause() {
