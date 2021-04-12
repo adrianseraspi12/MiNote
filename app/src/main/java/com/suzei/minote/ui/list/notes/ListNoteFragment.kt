@@ -51,21 +51,12 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val mediumSpacing = resources.getDimension(R.dimen.margin_medium).toInt()
-        list_notes.layoutManager = LinearLayoutManager(context)
-        list_notes.addItemDecoration(LinearLayoutSpacing(mediumSpacing, mediumSpacing))
-        list_notes.adapter = listAdapter
         list_tv_title.setText(R.string.notes)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        LogMe.info("LOG ListNoteFragment = onStart()")
+        setupRecyclerView()
         presenter.setup()
     }
 
     override fun setPresenter(presenter: ListContract.Presenter<Notes>) {
-        LogMe.info("LOG ListNoteFragment = setPresenter")
         this.presenter = presenter
     }
 
@@ -80,6 +71,32 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
         list_iv_empty.setImageResource(R.drawable.ic_empty_notes)
         list_tv_empty_title.setText(R.string.no_notes_found_title)
         list_tv_empty_subtitle.setText(R.string.no_notes_found_subtitle)
+    }
+
+    private fun showEditor(itemId: String) {
+        val intent = Intent(context, EditorNoteActivity::class.java)
+        intent.putExtra(EditorNoteActivity.EXTRA_NOTE_ID, itemId)
+        startActivity(intent)
+    }
+
+    private fun setupRecyclerView() {
+        val mediumSpacing = resources.getDimension(R.dimen.margin_medium).toInt()
+        list_notes.layoutManager = LinearLayoutManager(context)
+        list_notes.addItemDecoration(LinearLayoutSpacing(mediumSpacing, mediumSpacing))
+        list_notes.adapter = listAdapter
+    }
+
+    private var toastCallback = object : ToastCallback {
+
+        override fun onUndoClick() {
+            listAdapter.retainDeletedItem()
+            list_empty_placeholder.visibility = View.GONE
+        }
+
+        override fun onToastDismiss() {
+            presenter.delete(listAdapter.tempDeletedNote!!)
+        }
+
     }
 
     private var listAdapterCallback = object : ListAdapterCallback<Notes> {
@@ -114,25 +131,6 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
 
         override fun forceDelete(data: Notes) {
             presenter.delete(data)
-        }
-
-    }
-
-    private fun showEditor(itemId: String) {
-        val intent = Intent(context, EditorNoteActivity::class.java)
-        intent.putExtra(EditorNoteActivity.EXTRA_NOTE_ID, itemId)
-        startActivity(intent)
-    }
-
-    private var toastCallback = object : ToastCallback {
-
-        override fun onUndoClick() {
-            listAdapter.retainDeletedItem()
-            list_empty_placeholder.visibility = View.GONE
-        }
-
-        override fun onToastDismiss() {
-            presenter.delete(listAdapter.tempDeletedNote!!)
         }
 
     }

@@ -46,17 +46,14 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val mediumSpacing = resources.getDimension(R.dimen.margin_medium).toInt()
         list_tv_title.setText(R.string.todo)
-        list_notes.addItemDecoration(LinearLayoutSpacing(mediumSpacing, mediumSpacing))
-        list_notes.adapter = listTodoAdapter
-        list_notes.layoutManager = LinearLayoutManager(context)
+        setupRecyclerView()
+        presenter.setup()
     }
 
     override fun onStart() {
         super.onStart()
         LogMe.info("LOG ListTodoFragment = onStart()")
-        presenter.setup()
     }
 
     override fun onDestroyView() {
@@ -80,6 +77,25 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
         list_iv_empty.setImageResource(R.drawable.ic_empty_todo)
         list_tv_empty_title.setText(R.string.no_todo_found_title)
         list_tv_empty_subtitle.setText(R.string.no_todo_found_subtitle)
+    }
+
+    private fun setupRecyclerView() {
+        val mediumSpacing = resources.getDimension(R.dimen.margin_medium).toInt()
+        list_notes.addItemDecoration(LinearLayoutSpacing(mediumSpacing, mediumSpacing))
+        list_notes.adapter = listTodoAdapter
+        list_notes.layoutManager = LinearLayoutManager(context)
+    }
+
+    private var toastCallback = object : ToastCallback {
+
+        override fun onUndoClick() {
+            listTodoAdapter.retainDeletedItem()
+            list_empty_placeholder.visibility = View.GONE
+        }
+
+        override fun onToastDismiss() {
+            presenter.delete(listTodoAdapter.tempDeletedTodo!!)
+        }
     }
 
     private var listAdapterCallback = object : ListAdapterCallback<Todo> {
@@ -107,17 +123,5 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
             presenter.delete(data)
         }
 
-    }
-
-    private var toastCallback = object : ToastCallback {
-
-        override fun onUndoClick() {
-            listTodoAdapter.retainDeletedItem()
-            list_empty_placeholder.visibility = View.GONE
-        }
-
-        override fun onToastDismiss() {
-            presenter.delete(listTodoAdapter.tempDeletedTodo!!)
-        }
     }
 }
