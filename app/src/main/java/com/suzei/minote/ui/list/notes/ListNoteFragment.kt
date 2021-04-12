@@ -53,6 +53,10 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
         super.onViewCreated(view, savedInstanceState)
         list_tv_title.setText(R.string.notes)
         setupRecyclerView()
+    }
+
+    override fun onStart() {
+        super.onStart()
         presenter.setup()
     }
 
