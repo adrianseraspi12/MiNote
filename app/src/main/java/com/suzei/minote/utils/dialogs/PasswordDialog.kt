@@ -13,7 +13,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.card.MaterialCardView
 import com.suzei.minote.R
-import kotlinx.android.synthetic.main.fullscreen_dialog_password.*
+import com.suzei.minote.databinding.FullscreenDialogPasswordBinding
 
 open class PasswordDialog : DialogFragment(), View.OnClickListener {
 
@@ -21,6 +21,9 @@ open class PasswordDialog : DialogFragment(), View.OnClickListener {
     private var verifyPassword = ""
     private var isVerifying = false
     private var listener: ((String) -> Unit)? = null
+
+    private var _binding: FullscreenDialogPasswordBinding? = null
+    private val binding get() = _binding!!
 
     companion object {
 
@@ -43,15 +46,16 @@ open class PasswordDialog : DialogFragment(), View.OnClickListener {
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fullscreen_dialog_password, container, false)
+                              savedInstanceState: Bundle?): View {
+        _binding = FullscreenDialogPasswordBinding.inflate(layoutInflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupNumberBtnClickListener()
         setupClearBtnClickListener()
-        dialog_password_btn_cancel.setOnClickListener {
+        binding.dialogPasswordBtnCancel.setOnClickListener {
             listener?.invoke("")
             dismiss()
         }
@@ -63,6 +67,7 @@ open class PasswordDialog : DialogFragment(), View.OnClickListener {
     }
 
     override fun onDestroyView() {
+        _binding = null
         if (dialog != null) {
             listener = null
             dialog!!.setOnDismissListener(null)
@@ -96,7 +101,7 @@ open class PasswordDialog : DialogFragment(), View.OnClickListener {
                     return
                 }
 
-                dialog_password_tv_title.setText(R.string.wrong_passcode)
+                binding.dialogPasswordTvTitle.setText(R.string.wrong_passcode)
                 verifyPassword = ""
                 resetCodeColor()
                 return
@@ -104,27 +109,27 @@ open class PasswordDialog : DialogFragment(), View.OnClickListener {
 
             Handler(Looper.getMainLooper()).postDelayed({
                 isVerifying = true
-                dialog_password_tv_title.setText(R.string.verify_passcode)
+                binding.dialogPasswordTvTitle.setText(R.string.verify_passcode)
                 resetCodeColor()
             }, 500)
         }
     }
 
     private fun setupNumberBtnClickListener() {
-        buttonOne.setOnClickListener(this)
-        buttonTwo.setOnClickListener(this)
-        buttonThree.setOnClickListener(this)
-        buttonFour.setOnClickListener(this)
-        buttonFive.setOnClickListener(this)
-        buttonSix.setOnClickListener(this)
-        buttonSeven.setOnClickListener(this)
-        buttonEight.setOnClickListener(this)
-        buttonNine.setOnClickListener(this)
-        buttonZero.setOnClickListener(this)
+        binding.buttonOne.setOnClickListener(this)
+        binding.buttonTwo.setOnClickListener(this)
+        binding.buttonThree.setOnClickListener(this)
+        binding.buttonFour.setOnClickListener(this)
+        binding.buttonFive.setOnClickListener(this)
+        binding.buttonSix.setOnClickListener(this)
+        binding.buttonSeven.setOnClickListener(this)
+        binding.buttonEight.setOnClickListener(this)
+        binding.buttonNine.setOnClickListener(this)
+        binding.buttonZero.setOnClickListener(this)
     }
 
     private fun setupClearBtnClickListener() {
-        dialog_password_btn_clear.setOnClickListener {
+        binding.dialogPasswordBtnClear.setOnClickListener {
             val currentPasswordCount: Int
 
             if (isVerifying) {
@@ -147,28 +152,28 @@ open class PasswordDialog : DialogFragment(), View.OnClickListener {
         when (position) {
 
             0 -> {
-                dialog_password_first_code.setCardBackgroundColor(color)
+                binding.dialogPasswordFirstCode.setCardBackgroundColor(color)
             }
 
             1 -> {
-                dialog_password_second_code.setCardBackgroundColor(color)
+                binding.dialogPasswordSecondCode.setCardBackgroundColor(color)
             }
 
             2 -> {
-                dialog_password_third_code.setCardBackgroundColor(color)
+                binding.dialogPasswordThirdCode.setCardBackgroundColor(color)
             }
 
             3 -> {
-                dialog_password_fourth_code.setCardBackgroundColor(color)
+                binding.dialogPasswordFourthCode.setCardBackgroundColor(color)
             }
 
         }
     }
 
     private fun resetCodeColor() {
-        dialog_password_first_code.setCardBackgroundColor(Color.TRANSPARENT)
-        dialog_password_second_code.setCardBackgroundColor(Color.TRANSPARENT)
-        dialog_password_third_code.setCardBackgroundColor(Color.TRANSPARENT)
-        dialog_password_fourth_code.setCardBackgroundColor(Color.TRANSPARENT)
+        binding.dialogPasswordFirstCode.setCardBackgroundColor(Color.TRANSPARENT)
+        binding.dialogPasswordSecondCode.setCardBackgroundColor(Color.TRANSPARENT)
+        binding.dialogPasswordThirdCode.setCardBackgroundColor(Color.TRANSPARENT)
+        binding.dialogPasswordFourthCode.setCardBackgroundColor(Color.TRANSPARENT)
     }
 }

@@ -200,7 +200,9 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <include layout="@layout/bottomsheet_edit_note" />
+    <include
+        android:id="@+id/bottomsheet_edit_note"
+        layout="@layout/bottomsheet_edit_note" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/editor_todo_save"
@@ -208,7 +210,7 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/save_note_button"
         app:backgroundTint="@color/secondaryColor"
-        app:layout_anchor="@+id/bottomsheet_settings_container"
+        app:layout_anchor="@+id/bottomsheet_edit_note"
         app:layout_anchorGravity="center_horizontal"
         app:srcCompat="@drawable/ic_done" />
 

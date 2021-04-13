@@ -3,11 +3,9 @@ package com.suzei.minote.utils.recycler_view.adapters
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.suzei.minote.R
-import kotlinx.android.synthetic.main.item_row_pick_color.view.*
+import com.suzei.minote.databinding.ItemRowPickColorBinding
 
 class ColorListAdapter(
         private val data: MutableList<Pair<Int, Boolean>>,
@@ -17,10 +15,9 @@ class ColorListAdapter(
     private var currentSelectedColorPos = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater
-                .from(parent.context)
-                .inflate(R.layout.item_row_pick_color, parent, false)
-        return ViewHolder(view)
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val binding = ItemRowPickColorBinding.inflate(layoutInflater, parent, false)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -69,10 +66,10 @@ class ColorListAdapter(
         }
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(val binding: ItemRowPickColorBinding) : RecyclerView.ViewHolder(binding.root) {
 
         init {
-            itemView.item_row_cv_pick_color.setOnClickListener {
+            binding.itemRowCvPickColor.setOnClickListener {
                 val colorData = data[adapterPosition]
                 val oldData = data[currentSelectedColorPos]
 
@@ -88,9 +85,9 @@ class ColorListAdapter(
 
         fun bind(color: Int) {
             val gradientDrawable = GradientDrawable()
-            gradientDrawable.cornerRadius = itemView.item_row_cv_pick_color.radius
+            gradientDrawable.cornerRadius = binding.itemRowCvPickColor.radius
             gradientDrawable.setColor(color)
-            itemView.item_row_cv_pick_color.background = gradientDrawable
+            binding.itemRowCvPickColor.background = gradientDrawable
         }
 
         fun bindCustomColor() {
@@ -103,15 +100,15 @@ class ColorListAdapter(
                     Color.parseColor("#76A0FF"))
 
             val gradientDrawable = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, arr)
-            gradientDrawable.cornerRadius = itemView.item_row_cv_pick_color.radius
-            itemView.item_row_cv_pick_color.background = gradientDrawable
+            gradientDrawable.cornerRadius = binding.itemRowCvPickColor.radius
+            binding.itemRowCvPickColor.background = gradientDrawable
         }
 
         fun setSelected(isSelected: Boolean) {
             if (isSelected) {
-                itemView.item_row_cv_pick_color.strokeColor = Color.parseColor("#FAB73B")
+                binding.itemRowCvPickColor.strokeColor = Color.parseColor("#FAB73B")
             } else {
-                itemView.item_row_cv_pick_color.strokeColor = Color.TRANSPARENT
+                binding.itemRowCvPickColor.strokeColor = Color.TRANSPARENT
             }
         }
 
