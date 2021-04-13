@@ -1,6 +1,5 @@
 package com.suzei.minote.ui.editor.note
 
-
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -14,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.suzei.minote.R
 import com.suzei.minote.data.entity.Notes
+import com.suzei.minote.databinding.BottomsheetEditNoteBinding
 import com.suzei.minote.databinding.FragmentEditorBinding
 import com.suzei.minote.ext.convertToPx
 import com.suzei.minote.ext.moveFocus
@@ -25,8 +25,6 @@ import com.suzei.minote.utils.recycler_view.adapters.ColorListAdapter
 import com.suzei.minote.utils.recycler_view.adapters.ColorListAdapterBuilder
 import com.suzei.minote.utils.recycler_view.adapters.ColorListAdapterCallback
 import com.suzei.minote.utils.recycler_view.decorator.GridSpacingItemDecoration
-import kotlinx.android.synthetic.main.bottomsheet_edit_note.*
-import kotlinx.android.synthetic.main.fragment_editor.*
 
 class EditorNoteFragment : Fragment(), EditorNoteContract.View {
 
@@ -41,6 +39,8 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
 
     private var _binding: FragmentEditorBinding? = null
     private val binding get() = _binding!!
+    private var _bottomsheetEditNoteBinding: BottomsheetEditNoteBinding? = null
+    private val bottomsheetEditNoteBinding get() = _bottomsheetEditNoteBinding!!
 
     companion object {
 
@@ -68,7 +68,7 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
                               savedInstanceState: Bundle?): View {
         // Inflate the layout for this fragment
         _binding = FragmentEditorBinding.inflate(inflater, container, false)
-
+        _bottomsheetEditNoteBinding = binding.bottomsheetEditNote
         if (savedInstanceState != null) {
             currentNoteColor = savedInstanceState.getInt(EXTRA_NOTE_COLOR, -1)
             currentTextColor = savedInstanceState.getInt(EXTRA_TEXT_COLOR, -1)
@@ -104,8 +104,8 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        val noteColor = (editor_root.background as ColorDrawable).color
-        val textColor = editor_text.currentTextColor
+        val noteColor = (binding.editorRoot.background as ColorDrawable).color
+        val textColor = binding.editorText.currentTextColor
         outState.putString(EXTRA_PASSWORD, mPassword)
         outState.putInt(EXTRA_NOTE_COLOR, noteColor)
         outState.putInt(EXTRA_TEXT_COLOR, textColor)
@@ -117,28 +117,28 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
 
     override fun showNoteDetails(note: Notes) {
         mPassword = note.password?.let { Turing.decrypt(it) }
-        editor_title.setText(note.title)
-        editor_text.setText(note.message)
+        binding.editorTitle.setText(note.title)
+        binding.editorText.setText(note.message)
         setNoteColor(Color.parseColor(note.color))
         setTextColor(Color.parseColor(note.textColor))
 
-        editor_title.moveFocus()
+        binding.editorTitle.moveFocus()
     }
 
     override fun setNoteColor(noteColor: Int) {
         currentNoteColor = noteColor
         activity?.window?.statusBarColor = noteColor
-        editor_root.setBackgroundColor(noteColor)
+        binding.editorRoot.setBackgroundColor(noteColor)
         noteColorsAdapter.setSelectedColor(noteColor)
     }
 
     override fun setTextColor(textColor: Int) {
         currentTextColor = textColor
-        editor_title.setTextColor(textColor)
-        editor_text.setTextColor(textColor)
-        editor_back_arrow.setColorFilter(textColor)
-        editor_title.setHintTextColor(textColor.setAlpha(0.5f))
-        editor_text.setHintTextColor(textColor.setAlpha(0.5f))
+        binding.editorTitle.setTextColor(textColor)
+        binding.editorText.setTextColor(textColor)
+        binding.editorBackArrow.setColorFilter(textColor)
+        binding.editorTitle.setHintTextColor(textColor.setAlpha(0.5f))
+        binding.editorText.setHintTextColor(textColor.setAlpha(0.5f))
         textColorsAdapter.setSelectedColor(textColor)
     }
 
@@ -147,13 +147,13 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
     }
 
     private fun setupBack() {
-        editor_back_arrow.setOnClickListener {
+        binding.editorBackArrow.setOnClickListener {
             activity!!.finish()
         }
     }
 
     private fun setupNoteColorRecyclerView() {
-        bottomsheet_rv_note_color.apply {
+        bottomsheetEditNoteBinding.bottomsheetRvNoteColor.apply {
             adapter = noteColorsAdapter
             layoutManager = GridLayoutManager(activity!!, 6)
             addItemDecoration(itemDecoration)
@@ -161,7 +161,7 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
     }
 
     private fun setupTextColorRecyclerView() {
-        bottomsheet_rv_text_color.apply {
+        bottomsheetEditNoteBinding.bottomsheetRvTextColor.apply {
             adapter = textColorsAdapter
             layoutManager = GridLayoutManager(activity!!, 6)
             addItemDecoration(itemDecoration)
@@ -169,11 +169,11 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
     }
 
     private fun setupLock() {
-        bottom_sheet_switch_lock.setOnCheckedChangeListener { _, isCheck ->
+        bottomsheetEditNoteBinding.bottomSheetSwitchLock.setOnCheckedChangeListener { _, isCheck ->
             if (isCheck) {
                 val passwordDialog = PasswordDialog.instance(mPassword ?: "") {
                     if (it.isEmpty()) {
-                        bottom_sheet_switch_lock.isChecked = false
+                        bottomsheetEditNoteBinding.bottomSheetSwitchLock.isChecked = false
                     } else {
                         mPassword = it
                     }
@@ -186,15 +186,15 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
     }
 
     private fun setupSaveOnClick() {
-        editor_btn_save.setOnClickListener {
-            val noteColor = (editor_root.background as ColorDrawable).color
+        binding.editorBtnSave.setOnClickListener {
+            val noteColor = (binding.editorRoot.background as ColorDrawable).color
             val hexNoteColor = String.format("#%06X", 0xFFFFFF and noteColor)
 
-            val textColor = editor_text.currentTextColor
+            val textColor = binding.editorText.currentTextColor
             val hexTextColor = String.format("#%06X", 0xFFFFFF and textColor)
 
-            val title = editor_title.text.toString()
-            val message = editor_text.text.toString()
+            val title = binding.editorTitle.text.toString()
+            val message = binding.editorText.text.toString()
             val password = mPassword?.let { it1 -> Turing.encrypt(it1) }
 
             presenter.saveNote(title, message, hexNoteColor, hexTextColor, password)
@@ -203,8 +203,8 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
 
     private fun setupBottomSheet() {
         //  Setup Bottomsheet Behavior
-        val bottomSheetBehavior = BottomSheetBehavior.from(bottomsheet_settings_container)
-        val hiddenView = bottomsheet_settings_container.getChildAt(2)
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomsheetEditNote.bottomsheetSettingsContainer)
+        val hiddenView = binding.bottomsheetEditNote.bottomsheetSettingsContainer.getChildAt(2)
 
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
 
@@ -220,8 +220,8 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
                     params.setMargins(0, 56.convertToPx(resources),
                             0, bottomsheetSize)
 
-                    editor_edittext_container.layoutParams = params
-                    editor_edittext_container.requestLayout()
+                    binding.editorEdittextContainer.layoutParams = params
+                    binding.editorEdittextContainer.requestLayout()
                     bottomSheetBehavior.removeBottomSheetCallback(this)
                 }
             }
@@ -230,7 +230,7 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
 
         })
 
-        bottomsheet_settings_container.viewTreeObserver.addOnGlobalLayoutListener {
+        binding.bottomsheetEditNote.bottomsheetSettingsContainer.viewTreeObserver.addOnGlobalLayoutListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             bottomSheetBehavior.setPeekHeight(hiddenView.top, true)
         }
