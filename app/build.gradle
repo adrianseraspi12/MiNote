@@ -20,6 +20,9 @@ android {
         resConfigs "en"
     }
 
+    buildFeatures {
+        viewBinding true
+    }
     buildTypes {
         release {
             minifyEnabled true
