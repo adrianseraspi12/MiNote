@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.suzei.minote.R
 import com.suzei.minote.data.entity.Notes
+import com.suzei.minote.databinding.FragmentEditorBinding
 import com.suzei.minote.ext.convertToPx
 import com.suzei.minote.ext.moveFocus
 import com.suzei.minote.ext.setAlpha
@@ -38,6 +39,9 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
     private lateinit var textColorsAdapter: ColorListAdapter
     private lateinit var itemDecoration: GridSpacingItemDecoration
 
+    private var _binding: FragmentEditorBinding? = null
+    private val binding get() = _binding!!
+
     companion object {
 
         private const val EXTRA_PASSWORD = "EXTRA_PASSWORD"
@@ -61,9 +65,9 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_editor, container, false)
+        _binding = FragmentEditorBinding.inflate(inflater, container, false)
 
         if (savedInstanceState != null) {
             currentNoteColor = savedInstanceState.getInt(EXTRA_NOTE_COLOR, -1)
@@ -71,7 +75,7 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
             mPassword = savedInstanceState.getString(EXTRA_NOTE_COLOR, null)
         }
 
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -91,6 +95,11 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
             setNoteColor(currentNoteColor)
             setTextColor(currentTextColor)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
