@@ -1,6 +1,5 @@
 package com.suzei.minote.ui.list.notes
 
-import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -20,10 +19,9 @@ class ListNoteAdapter(
     var tempDeletedPos: Int = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val context = parent.context
-        val layoutInflater = LayoutInflater.from(context)
+        val layoutInflater = LayoutInflater.from(parent.context)
         val binding = ItemRowNotesBinding.inflate(layoutInflater, parent, false)
-        return ViewHolder(context, binding)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -75,7 +73,7 @@ class ListNoteAdapter(
         tempDeletedPos = -1
     }
 
-    inner class ViewHolder(val context: Context, val binding: ItemRowNotesBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(val binding: ItemRowNotesBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bindNote(note: Notes) {
             val datetimeFormatter = DateTimeFormatter.ofPattern("MMMM d, yyyy")
@@ -89,7 +87,7 @@ class ListNoteAdapter(
             }
 
             if (note.password != null) {
-                binding.itemNotesContent.text = context.getString(R.string.locked)
+                binding.itemNotesContent.text = itemView.context.getString(R.string.locked)
                 binding.itemRootview.setOnClickListener {
                     listAdapterCallback.onNotePasswordClick(note)
                 }
