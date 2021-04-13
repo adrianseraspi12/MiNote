@@ -3,13 +3,11 @@ package com.suzei.minote.ui.list.todo
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.suzei.minote.R
 import com.suzei.minote.data.entity.Todo
+import com.suzei.minote.databinding.ItemRowTodoBinding
 import com.suzei.minote.ui.list.ListAdapterCallback
-import kotlinx.android.synthetic.main.item_row_todo.view.*
 import org.threeten.bp.format.DateTimeFormatter
 
 class ListTodoAdapter(var data: MutableList<Todo>,
@@ -19,7 +17,8 @@ class ListTodoAdapter(var data: MutableList<Todo>,
     var tempDeletedPos: Int = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_row_todo, parent, false)
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val view = ItemRowTodoBinding.inflate(layoutInflater, parent, false)
         return ViewHolder(view)
     }
 
@@ -71,28 +70,28 @@ class ListTodoAdapter(var data: MutableList<Todo>,
         tempDeletedTodo = null
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(private val binding: ItemRowTodoBinding) : RecyclerView.ViewHolder(binding.root) {
 
         @SuppressLint("SetTextI18n")
         fun bind(todo: Todo) {
             val datetimeFormatter = DateTimeFormatter.ofPattern("MMMM d, yyyy")
             val subtaskCount = todo.todoItems?.size ?: 0
 
-            itemView.item_todo_color.setCardBackgroundColor(Color.parseColor(todo.color))
-            itemView.item_todo_title.text = todo.title
-            itemView.item_todo_subtitle.text = todo.createdDate?.format(datetimeFormatter)
-            itemView.row_notes_delete.setOnClickListener {
+            binding.itemTodoColor.setCardBackgroundColor(Color.parseColor(todo.color))
+            binding.itemTodoTitle.text = todo.title
+            binding.itemTodoSubtitle.text = todo.createdDate?.format(datetimeFormatter)
+            binding.rowNotesDelete.setOnClickListener {
                 removeTempItem(adapterPosition)
                 listAdapterCallback.onNoteDeleted()
             }
 
             if (subtaskCount < 2) {
-                itemView.item_todo_content.text = "$subtaskCount Item"
+                binding.itemTodoContent.text = "$subtaskCount Item"
             } else {
-                itemView.item_todo_content.text = "$subtaskCount Items"
+                binding.itemTodoContent.text = "$subtaskCount Items"
             }
 
-            itemView.item_rootview.setOnClickListener {
+            binding.itemRootview.setOnClickListener {
                 todo.id?.let { itemId ->
                     listAdapterCallback.onNoteClick(itemId)
                 }
