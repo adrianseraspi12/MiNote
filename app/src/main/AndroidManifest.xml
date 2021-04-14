@@ -14,9 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="m">
+        <activity android:name=".ui.settings.SettingsActivity" />
+
         <meta-data
             android:name="firebase_crashlytics_collection_enabled"
             android:value="${crashlyticsCollectionEnabled}" />
+
         <activity
             android:name=".ui.SplashActivity"
             android:theme="@style/SplashScreenTheme">
@@ -30,17 +33,16 @@
             android:name=".ui.list.ListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-
         <activity
             android:name=".ui.editor.todo.EditorTodoActivity"
             android:screenOrientation="portrait"
             android:theme="@style/EditorTheme"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
-
         <activity
             android:name=".ui.editor.note.EditorNoteActivity"
             android:screenOrientation="portrait"
             android:theme="@style/EditorTheme"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
     </application>
+
 </manifest>
