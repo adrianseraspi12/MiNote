@@ -14,67 +14,75 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.suzei.minote.Injection
 import com.suzei.minote.R
+import com.suzei.minote.databinding.ActivityListBinding
+import com.suzei.minote.databinding.CustomBottomNavigationBinding
+import com.suzei.minote.databinding.ToastUndoDeleteBinding
 import com.suzei.minote.ui.editor.note.EditorNoteActivity
 import com.suzei.minote.ui.editor.todo.EditorTodoActivity
 import com.suzei.minote.ui.list.notes.ListNoteFragment
 import com.suzei.minote.ui.list.notes.ListNotePresenter
 import com.suzei.minote.ui.list.todo.ListTodoFragment
 import com.suzei.minote.ui.list.todo.ListTodoPresenter
+import com.suzei.minote.utils.InAppReview
 import com.suzei.minote.utils.OnOneOffClickListener
 import com.suzei.minote.utils.dialogs.SelectNoteDialog
-import kotlinx.android.synthetic.main.activity_list.*
-import kotlinx.android.synthetic.main.custom_bottom_navigation.*
-import kotlinx.android.synthetic.main.toast_undo_delete.*
 
 class ListActivity : AppCompatActivity() {
 
     private lateinit var fm: FragmentManager
     private lateinit var selectNoteDialog: SelectNoteDialog
+    private lateinit var activityListBinding: ActivityListBinding
+    private lateinit var toastUndoBinding: ToastUndoDeleteBinding
+    private lateinit var bottomNavigationBinding: CustomBottomNavigationBinding
     private val listNoteFragment = ListNoteFragment.newInstance()
     private val listTodoFragment = ListTodoFragment.newInstance()
     private var callback: ToastCallback? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_list)
+        activityListBinding = ActivityListBinding.inflate(layoutInflater)
+        toastUndoBinding = activityListBinding.listToastUndo
+        bottomNavigationBinding = activityListBinding.listBottomNavigation
+        setContentView(activityListBinding.root)
         fm = supportFragmentManager
         initSelectNoteDialog()
         initPresenters()
         setupFragmentTransaction()
         setupCustomBottomNavigation()
         setupFabClick()
+        InAppReview.run(this)
     }
 
     override fun onPause() {
         super.onPause()
-        if (toast_undo_delete_root.visibility == View.VISIBLE) {
+        if (toastUndoBinding.toastUndoDeleteRoot.visibility == View.VISIBLE) {
             hideToast()
         }
     }
 
     fun showToastUndo(message: String, callback: ToastCallback) {
         this.callback = callback
-        if (toast_undo_delete_root.visibility == View.VISIBLE) {
-            toast_undo_delete_root.visibility = View.GONE
-            toast_undo_delete_root.animate().setListener(null)
+        if (toastUndoBinding.toastUndoDeleteRoot.visibility == View.VISIBLE) {
+            toastUndoBinding.toastUndoDeleteRoot.visibility = View.GONE
+            toastUndoBinding.toastUndoDeleteRoot.animate().setListener(null)
         }
-        toast_undo_delete_root.alpha = 0f
-        toast_undo_delete_root.visibility = View.VISIBLE
-        toast_undo_delete_root
+        toastUndoBinding.toastUndoDeleteRoot.alpha = 0f
+        toastUndoBinding.toastUndoDeleteRoot.visibility = View.VISIBLE
+        toastUndoBinding.toastUndoDeleteRoot
                 .animate()
                 .alpha(1f)
                 .duration = 300
-        toast_undo_delete_tv_title.text = message
-        toast_delete_btn_undo.setOnClickListener {
+        toastUndoBinding.toastUndoDeleteTvTitle.text = message
+        toastUndoBinding.toastDeleteBtnUndo.setOnClickListener {
             callback.onUndoClick()
-            toast_undo_delete_root.visibility = View.GONE
-            toast_undo_delete_root.alpha = 0f
-            toast_undo_delete_root.animate().setListener(null)
+            toastUndoBinding.toastUndoDeleteRoot.visibility = View.GONE
+            toastUndoBinding.toastUndoDeleteRoot.alpha = 0f
+            toastUndoBinding.toastUndoDeleteRoot.animate().setListener(null)
         }
 
         Handler(Looper.getMainLooper()).postDelayed({
-            if (toast_undo_delete_root.visibility == View.VISIBLE) {
-                toast_undo_delete_root
+            if (toastUndoBinding.toastUndoDeleteRoot.visibility == View.VISIBLE) {
+                toastUndoBinding.toastUndoDeleteRoot
                         .animate()
                         .alpha(0f)
                         .setDuration(300)
@@ -89,8 +97,8 @@ class ListActivity : AppCompatActivity() {
     }
 
     private fun hideToast() {
-        toast_undo_delete_root.visibility = View.GONE
-        toast_undo_delete_root.animate().setListener(null)
+        toastUndoBinding.toastUndoDeleteRoot.visibility = View.GONE
+        toastUndoBinding.toastUndoDeleteRoot.animate().setListener(null)
         callback?.onToastDismiss()
         callback = null
     }
@@ -105,8 +113,8 @@ class ListActivity : AppCompatActivity() {
 
     private fun setupFragmentTransaction() {
         fm.beginTransaction().apply {
-            add(list_container.id, listNoteFragment, ListNoteFragment.TAG)
-            add(list_container.id, listTodoFragment, ListTodoFragment.TAG)
+            add(activityListBinding.listContainer.id, listNoteFragment, ListNoteFragment.TAG)
+            add(activityListBinding.listContainer.id, listTodoFragment, ListTodoFragment.TAG)
             show(listNoteFragment)
             hide(listTodoFragment)
             commit()
@@ -140,7 +148,7 @@ class ListActivity : AppCompatActivity() {
     }
 
     private fun setupFabClick() {
-        list_fab.setOnClickListener(object : OnOneOffClickListener() {
+        activityListBinding.listFab.setOnClickListener(object : OnOneOffClickListener() {
             override fun onSingleClick(view: View?) {
                 fm.let {
                     selectNoteDialog.show(it, SelectNoteDialog.TAG)
@@ -153,18 +161,18 @@ class ListActivity : AppCompatActivity() {
         val selectedColor = ResourcesCompat.getColor(resources, R.color.secondaryColor, null)
         val unselectedColor = ResourcesCompat.getColor(resources, R.color.unselectedColor, null)
 
-        btn_nav_notes.iconTint = ColorStateList.valueOf(selectedColor)
-        btn_nav_todo.iconTint = ColorStateList.valueOf(unselectedColor)
+        bottomNavigationBinding.btnNavNotes.iconTint = ColorStateList.valueOf(selectedColor)
+        bottomNavigationBinding.btnNavTodo.iconTint = ColorStateList.valueOf(unselectedColor)
 
-        btn_nav_notes.setOnClickListener {
-            btn_nav_notes.iconTint = ColorStateList.valueOf(selectedColor)
-            btn_nav_todo.iconTint = ColorStateList.valueOf(unselectedColor)
+        bottomNavigationBinding.btnNavNotes.setOnClickListener {
+            bottomNavigationBinding.btnNavNotes.iconTint = ColorStateList.valueOf(selectedColor)
+            bottomNavigationBinding.btnNavTodo.iconTint = ColorStateList.valueOf(unselectedColor)
             setFragment(listNoteFragment, listTodoFragment)
         }
 
-        btn_nav_todo.setOnClickListener {
-            btn_nav_notes.iconTint = ColorStateList.valueOf(unselectedColor)
-            btn_nav_todo.iconTint = ColorStateList.valueOf(selectedColor)
+        bottomNavigationBinding.btnNavTodo.setOnClickListener {
+            bottomNavigationBinding.btnNavNotes.iconTint = ColorStateList.valueOf(unselectedColor)
+            bottomNavigationBinding.btnNavTodo.iconTint = ColorStateList.valueOf(selectedColor)
             setFragment(listTodoFragment, listNoteFragment)
         }
     }

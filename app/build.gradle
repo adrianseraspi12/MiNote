@@ -1,8 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'io.fabric'
+apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'com.google.gms.google-services'
 apply from: 'dependency.gradle'
 
@@ -20,11 +19,18 @@ android {
         resConfigs "en"
     }
 
+    buildFeatures {
+        viewBinding true
+    }
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            manifestPlaceholders = [crashlyticsCollectionEnabled: "true"]
+        }
+        debug {
+            manifestPlaceholders = [crashlyticsCollectionEnabled: "false"]
         }
     }
     lintOptions {

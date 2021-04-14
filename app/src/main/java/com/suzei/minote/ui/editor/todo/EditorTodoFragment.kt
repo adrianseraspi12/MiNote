@@ -19,13 +19,13 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.suzei.minote.R
 import com.suzei.minote.data.entity.Todo
 import com.suzei.minote.data.entity.TodoItem
+import com.suzei.minote.databinding.BottomsheetEditNoteBinding
+import com.suzei.minote.databinding.FragmentEditorTodoBinding
 import com.suzei.minote.ext.*
 import com.suzei.minote.utils.recycler_view.adapters.ColorListAdapter
 import com.suzei.minote.utils.recycler_view.adapters.ColorListAdapterBuilder
 import com.suzei.minote.utils.recycler_view.adapters.ColorListAdapterCallback
 import com.suzei.minote.utils.recycler_view.decorator.GridSpacingItemDecoration
-import kotlinx.android.synthetic.main.bottomsheet_edit_note.*
-import kotlinx.android.synthetic.main.fragment_editor_todo.*
 
 class EditorTodoFragment : Fragment(), EditorTodoContract.View {
 
@@ -49,6 +49,11 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
     private lateinit var textColorsAdapter: ColorListAdapter
     private lateinit var itemDecoration: GridSpacingItemDecoration
     private lateinit var todoSubtaskAdapter: TodoSubtaskAdapter
+    private var _binding: FragmentEditorTodoBinding? = null
+    private val binding get() = _binding!!
+
+    private var _bottomsheetEditNoteBinding: BottomsheetEditNoteBinding? = null
+    private val bottomsheetEditNoteBinding get() = _bottomsheetEditNoteBinding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,16 +71,17 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_editor_todo, container, false)
+        _binding = FragmentEditorTodoBinding.inflate(inflater, container, false)
+        _bottomsheetEditNoteBinding = binding.bottomsheetEditNote
 
         if (savedInstanceState != null) {
             currentNoteColor = savedInstanceState.getInt(EXTRA_NOTE_COLOR, -1)
             currentTextColor = savedInstanceState.getInt(EXTRA_TEXT_COLOR, -1)
         }
 
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -85,11 +91,11 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
         setupNoteColorRecyclerView()
         setupTextColorRecyclerView()
         setupSubTaskRecyclerView()
-        editor_todo_cv_done.setOnClickListener(onNewSubTaskDoneClickListener)
-        editor_todo_tv_text.addTextChangedListener(onAddSubTaskTextChangedListener)
-        item_editor_todo_add.setOnClickListener(onAddNewSubTaskClickListener)
-        editor_todo_save.setOnClickListener(onSaveClickListener)
-        editor_todo_back_arrow.setOnClickListener(onBackClickListener)
+        binding.editorTodoCvDone.setOnClickListener(onNewSubTaskDoneClickListener)
+        binding.editorTodoTvText.addTextChangedListener(onAddSubTaskTextChangedListener)
+        binding.itemEditorTodoAdd.setOnClickListener(onAddNewSubTaskClickListener)
+        binding.editorTodoSave.setOnClickListener(onSaveClickListener)
+        binding.editorTodoBackArrow.setOnClickListener(onBackClickListener)
     }
 
     override fun onResume() {
@@ -98,6 +104,12 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
             setNoteColor(currentNoteColor)
             setTextColor(currentTextColor)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+        _bottomsheetEditNoteBinding = null
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -116,11 +128,11 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
         todoSubtaskAdapter.updateData(todoItemList)
         setTaskCount()
 
-        editor_todo_title.setText(todo.title)
+        binding.editorTodoTitle.setText(todo.title)
         setNoteColor(Color.parseColor(todo.color))
         setTextColor(Color.parseColor(todo.textColor))
 
-        editor_todo_title.moveFocus()
+        binding.editorTodoTitle.moveFocus()
     }
 
     override fun showToastMessage(message: String) {
@@ -130,29 +142,29 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
     override fun setNoteColor(color: Int) {
         this.currentNoteColor = color
         activity?.window?.statusBarColor = color
-        editor_todo_root.setBackgroundColor(color)
+        binding.editorTodoRoot.setBackgroundColor(color)
         todoSubtaskAdapter.changeBackgroundColor(color)
         noteColorsAdapter.setSelectedColor(color)
-        editor_todo_iv_check.setColorFilter(color)
+        binding.editorTodoIvCheck.setColorFilter(color)
     }
 
     override fun setTextColor(color: Int) {
         this.currentTextColor = color
         todoSubtaskAdapter.changeTextColor(color)
 
-        editor_todo_back_arrow.setColorFilter(color)
-        editor_todo_iv_addsubtask.setColorFilter(color)
-        item_editor_todo_add.setColorFilter(color)
-        editor_todo_divider.setBackgroundColor(color.setAlpha(0.5f))
-        editor_todo_cv_done.strokeColor = color
-        editor_todo_title.setTextColor(color)
-        editor_todo_title.setHintTextColor(color.setAlpha(0.5f))
-        editor_todo_tv_subtask_count.setTextColor(color)
-        editor_todo_tv_subtask_title.setTextColor(color)
-        editor_todo_tv_text.setTextColor(color)
-        editor_todo_tv_text.setHintTextColor(color.setAlpha(0.5f))
+        binding.editorTodoBackArrow.setColorFilter(color)
+        binding.editorTodoIvAddsubtask.setColorFilter(color)
+        binding.itemEditorTodoAdd.setColorFilter(color)
+        binding.editorTodoDivider.setBackgroundColor(color.setAlpha(0.5f))
+        binding.editorTodoCvDone.strokeColor = color
+        binding.editorTodoTitle.setTextColor(color)
+        binding.editorTodoTitle.setHintTextColor(color.setAlpha(0.5f))
+        binding.editorTodoTvSubtaskCount.setTextColor(color)
+        binding.editorTodoTvSubtaskTitle.setTextColor(color)
+        binding.editorTodoTvText.setTextColor(color)
+        binding.editorTodoTvText.setHintTextColor(color.setAlpha(0.5f))
         if (isNewSubtaskDone) {
-            editor_todo_cv_done.setCardBackgroundColor(color)
+            binding.editorTodoCvDone.setCardBackgroundColor(color)
         }
         textColorsAdapter.setSelectedColor(color)
     }
@@ -160,13 +172,13 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
     private var onBackClickListener = View.OnClickListener { activity!!.finish() }
 
     private var onSaveClickListener = View.OnClickListener {
-        val noteColor = (editor_todo_root.background as ColorDrawable).color
+        val noteColor = (binding.editorTodoRoot.background as ColorDrawable).color
         val hexNoteColor = String.format("#%06X", 0xFFFFFF and noteColor)
 
-        val textColor = editor_todo_title.currentTextColor
+        val textColor = binding.editorTodoTitle.currentTextColor
         val hexTextColor = String.format("#%06X", 0xFFFFFF and textColor)
 
-        val title = editor_todo_title.text.toString()
+        val title = binding.editorTodoTitle.text.toString()
         val todoItemList = todoSubtaskAdapter.data
         presenter.saveTodo(title, todoItemList, hexNoteColor, hexTextColor)
     }
@@ -178,13 +190,13 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             val charSequence = p0 ?: ""
             if (charSequence.isNotEmpty()) {
-                editor_todo_iv_addsubtask.visibility = View.GONE
-                item_editor_todo_add.visibility = View.VISIBLE
-                editor_todo_cv_done.visibility = View.VISIBLE
+                binding.editorTodoIvAddsubtask.visibility = View.GONE
+                binding.itemEditorTodoAdd.visibility = View.VISIBLE
+                binding.editorTodoCvDone.visibility = View.VISIBLE
             } else {
-                editor_todo_iv_addsubtask.visibility = View.VISIBLE
-                item_editor_todo_add.visibility = View.GONE
-                editor_todo_cv_done.visibility = View.GONE
+                binding.editorTodoIvAddsubtask.visibility = View.VISIBLE
+                binding.itemEditorTodoAdd.visibility = View.GONE
+                binding.editorTodoCvDone.visibility = View.GONE
             }
         }
 
@@ -193,18 +205,18 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
     private var onNewSubTaskDoneClickListener = View.OnClickListener {
         isNewSubtaskDone = if (isNewSubtaskDone) {
             val transparent = ContextCompat.getColor(context!!, android.R.color.transparent)
-            editor_todo_cv_done.setCardBackgroundColor(transparent)
-            editor_todo_iv_check.visibility = View.GONE
+            binding.editorTodoCvDone.setCardBackgroundColor(transparent)
+            binding.editorTodoIvCheck.visibility = View.GONE
             false
         } else {
-            editor_todo_cv_done.setCardBackgroundColor(currentTextColor)
-            editor_todo_iv_check.visibility = View.VISIBLE
+            binding.editorTodoCvDone.setCardBackgroundColor(currentTextColor)
+            binding.editorTodoIvCheck.visibility = View.VISIBLE
             true
         }
     }
 
     private var onAddNewSubTaskClickListener = View.OnClickListener {
-        val text = editor_todo_tv_text.text.toString()
+        val text = binding.editorTodoTvText.text.toString()
         val todoItem = TodoItem(text, isNewSubtaskDone)
         val transparent = ContextCompat.getColor(context!!, android.R.color.transparent)
 
@@ -213,23 +225,23 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
 
         setTaskCount()
 
-        editor_todo_tv_text.text = null
+        binding.editorTodoTvText.text = null
         isNewSubtaskDone = false
-        editor_todo_cv_done.setCardBackgroundColor(transparent)
-        editor_todo_tv_text.clearFocus()
+        binding.editorTodoCvDone.setCardBackgroundColor(transparent)
+        binding.editorTodoTvText.clearFocus()
         hideKeyboard()
-        editor_todo_scroll_view.scrollToBottom()
+        binding.editorTodoScrollView.scrollToBottom()
     }
 
     private fun setupSubTaskRecyclerView() {
-        editor_todo_list.apply {
+        binding.editorTodoList.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = todoSubtaskAdapter
         }
     }
 
     private fun setupNoteColorRecyclerView() {
-        bottomsheet_rv_note_color.apply {
+        bottomsheetEditNoteBinding.bottomsheetRvNoteColor.apply {
             adapter = noteColorsAdapter
             layoutManager = GridLayoutManager(activity!!, 6)
             addItemDecoration(itemDecoration)
@@ -237,7 +249,7 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
     }
 
     private fun setupTextColorRecyclerView() {
-        bottomsheet_rv_text_color.apply {
+        bottomsheetEditNoteBinding.bottomsheetRvTextColor.apply {
             adapter = textColorsAdapter
             layoutManager = GridLayoutManager(activity!!, 6)
             addItemDecoration(itemDecoration)
@@ -247,9 +259,9 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
     @SuppressLint("SetTextI18n")
     private fun setTaskCount() {
         if (taskCount == 1) {
-            editor_todo_tv_subtask_count.text = "$taskCount Task"
+            binding.editorTodoTvSubtaskCount.text = "$taskCount Task"
         } else {
-            editor_todo_tv_subtask_count.text = "$taskCount Tasks"
+            binding.editorTodoTvSubtaskCount.text = "$taskCount Tasks"
         }
     }
 
@@ -283,13 +295,13 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
     }
 
     private fun setupBottomSheet() {
-        bottom_sheet_switch_lock.visibility = View.GONE
-        bottomsheet_lock_title.visibility = View.GONE
-        bottomsheet_divider_bottom.visibility = View.GONE
+        bottomsheetEditNoteBinding.bottomSheetSwitchLock.visibility = View.GONE
+        bottomsheetEditNoteBinding.bottomsheetLockTitle.visibility = View.GONE
+        bottomsheetEditNoteBinding.bottomsheetDividerBottom.visibility = View.GONE
 
         //  Setup Bottomsheet Behavior
-        val bottomSheetBehavior = BottomSheetBehavior.from(bottomsheet_settings_container)
-        val hiddenView = bottomsheet_settings_container.getChildAt(2)
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomsheetEditNote.bottomsheetSettingsContainer)
+        val hiddenView = binding.bottomsheetEditNote.bottomsheetSettingsContainer.getChildAt(2)
 
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
 
@@ -305,8 +317,8 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
                     params.setMargins(0, 56.convertToPx(resources),
                             0, bottomsheetSize)
 
-                    editor_todo_container.layoutParams = params
-                    editor_todo_container.requestLayout()
+                    binding.editorTodoContainer.layoutParams = params
+                    binding.editorTodoContainer.requestLayout()
                     bottomSheetBehavior.removeBottomSheetCallback(this)
                 }
             }
@@ -315,7 +327,7 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
 
         })
 
-        bottomsheet_settings_container.viewTreeObserver.addOnGlobalLayoutListener {
+        binding.bottomsheetEditNote.bottomsheetSettingsContainer.viewTreeObserver.addOnGlobalLayoutListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             bottomSheetBehavior.setPeekHeight(hiddenView.top, true)
         }

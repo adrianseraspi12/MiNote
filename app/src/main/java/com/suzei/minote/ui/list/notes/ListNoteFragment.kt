@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.suzei.minote.R
 import com.suzei.minote.data.entity.Notes
+import com.suzei.minote.databinding.FragmentListBinding
 import com.suzei.minote.ui.editor.note.EditorNoteActivity
 import com.suzei.minote.ui.list.ListActivity
 import com.suzei.minote.ui.list.ListAdapterCallback
@@ -18,15 +19,14 @@ import com.suzei.minote.utils.LogMe
 import com.suzei.minote.utils.Turing
 import com.suzei.minote.utils.dialogs.PasswordDialog
 import com.suzei.minote.utils.recycler_view.decorator.LinearLayoutSpacing
-import kotlinx.android.synthetic.main.activity_list.*
-import kotlinx.android.synthetic.main.custom_bottom_navigation.*
-import kotlinx.android.synthetic.main.fragment_list.*
 
 class ListNoteFragment : Fragment(), ListContract.View<Notes> {
 
     private lateinit var presenter: ListContract.Presenter<Notes>
     private lateinit var listAdapter: ListNoteAdapter
     private lateinit var listActivity: ListActivity
+    private var _binding: FragmentListBinding? = null
+    private val binding get() = _binding!!
 
     companion object {
 
@@ -45,41 +45,68 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_list, container, false)
+                              savedInstanceState: Bundle?): View {
+        _binding = FragmentListBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val mediumSpacing = resources.getDimension(R.dimen.margin_medium).toInt()
-        list_notes.layoutManager = LinearLayoutManager(context)
-        list_notes.addItemDecoration(LinearLayoutSpacing(mediumSpacing, mediumSpacing))
-        list_notes.adapter = listAdapter
-        list_tv_title.setText(R.string.notes)
+        binding.listTvTitle.setText(R.string.notes)
+        setupRecyclerView()
     }
 
     override fun onStart() {
         super.onStart()
-        LogMe.info("LOG ListNoteFragment = onStart()")
         presenter.setup()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     override fun setPresenter(presenter: ListContract.Presenter<Notes>) {
-        LogMe.info("LOG ListNoteFragment = setPresenter")
         this.presenter = presenter
     }
 
     override fun showListOfNotes(listOfNotes: MutableList<Notes>) {
-        list_empty_placeholder.visibility = View.GONE
+        binding.listEmptyPlaceholder.visibility = View.GONE
         listAdapter.update(listOfNotes)
-        list_notes.smoothScrollToPosition(0)
+        binding.listNotes.smoothScrollToPosition(0)
     }
 
     override fun showListUnavailable() {
-        list_empty_placeholder.visibility = View.VISIBLE
-        list_iv_empty.setImageResource(R.drawable.ic_empty_notes)
-        list_tv_empty_title.setText(R.string.no_notes_found_title)
-        list_tv_empty_subtitle.setText(R.string.no_notes_found_subtitle)
+        binding.listEmptyPlaceholder.visibility = View.VISIBLE
+        binding.listIvEmpty.setImageResource(R.drawable.ic_empty_notes)
+        binding.listTvEmptyTitle.setText(R.string.no_notes_found_title)
+        binding.listTvEmptySubtitle.setText(R.string.no_notes_found_subtitle)
+    }
+
+    private fun showEditor(itemId: String) {
+        val intent = Intent(context, EditorNoteActivity::class.java)
+        intent.putExtra(EditorNoteActivity.EXTRA_NOTE_ID, itemId)
+        startActivity(intent)
+    }
+
+    private fun setupRecyclerView() {
+        val mediumSpacing = resources.getDimension(R.dimen.margin_medium).toInt()
+        binding.listNotes.layoutManager = LinearLayoutManager(context)
+        binding.listNotes.addItemDecoration(LinearLayoutSpacing(mediumSpacing, mediumSpacing))
+        binding.listNotes.adapter = listAdapter
+    }
+
+    private var toastCallback = object : ToastCallback {
+
+        override fun onUndoClick() {
+            listAdapter.retainDeletedItem()
+            binding.listEmptyPlaceholder.visibility = View.GONE
+        }
+
+        override fun onToastDismiss() {
+            presenter.delete(listAdapter.tempDeletedNote!!)
+        }
+
     }
 
     private var listAdapterCallback = object : ListAdapterCallback<Notes> {
@@ -109,30 +136,11 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
         }
 
         override fun scrollTo(position: Int) {
-            list_notes.scrollToPosition(position)
+            binding.listNotes.scrollToPosition(position)
         }
 
         override fun forceDelete(data: Notes) {
             presenter.delete(data)
-        }
-
-    }
-
-    private fun showEditor(itemId: String) {
-        val intent = Intent(context, EditorNoteActivity::class.java)
-        intent.putExtra(EditorNoteActivity.EXTRA_NOTE_ID, itemId)
-        startActivity(intent)
-    }
-
-    private var toastCallback = object : ToastCallback {
-
-        override fun onUndoClick() {
-            listAdapter.retainDeletedItem()
-            list_empty_placeholder.visibility = View.GONE
-        }
-
-        override fun onToastDismiss() {
-            presenter.delete(listAdapter.tempDeletedNote!!)
         }
 
     }

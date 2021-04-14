@@ -11,16 +11,19 @@
         android:id="@+id/list_container"
         android:layout_width="@dimen/constraint_layout_match_parent"
         android:layout_height="@dimen/constraint_layout_match_parent"
-        app:layout_constraintBottom_toTopOf="@+id/list_bottom_navigation_view"
+        app:layout_constraintBottom_toTopOf="@+id/list_bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <include
+        android:id="@+id/list_toast_undo"
         layout="@layout/toast_undo_delete"
         android:visibility="gone" />
 
-    <include layout="@layout/custom_bottom_navigation" />
+    <include
+        android:id="@+id/list_bottom_navigation"
+        layout="@layout/custom_bottom_navigation" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/list_fab"
