@@ -15,6 +15,7 @@ import com.suzei.minote.ui.list.ListActivity
 import com.suzei.minote.ui.list.ListAdapterCallback
 import com.suzei.minote.ui.list.ListContract
 import com.suzei.minote.ui.list.ToastCallback
+import com.suzei.minote.ui.settings.SettingsActivity
 import com.suzei.minote.utils.LogMe
 import com.suzei.minote.utils.Turing
 import com.suzei.minote.utils.dialogs.PasswordDialog
@@ -54,6 +55,7 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
         super.onViewCreated(view, savedInstanceState)
         binding.listTvTitle.setText(R.string.notes)
         setupRecyclerView()
+        setupSettingsButton()
     }
 
     override fun onStart() {
@@ -87,6 +89,13 @@ class ListNoteFragment : Fragment(), ListContract.View<Notes> {
         val intent = Intent(context, EditorNoteActivity::class.java)
         intent.putExtra(EditorNoteActivity.EXTRA_NOTE_ID, itemId)
         startActivity(intent)
+    }
+
+    private fun setupSettingsButton() {
+        binding.listBtnSettings.setOnClickListener {
+            val intent = Intent(context, SettingsActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun setupRecyclerView() {

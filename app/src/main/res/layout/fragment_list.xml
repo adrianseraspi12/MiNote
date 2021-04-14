@@ -21,6 +21,18 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/notes" />
 
+    <ImageButton
+        android:id="@+id/list_btn_settings"
+        style="@style/ImageButton.Selectable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_large"
+        android:contentDescription="@string/settings"
+        android:src="@drawable/ic_settings"
+        app:layout_constraintBottom_toBottomOf="@+id/list_tv_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/list_tv_title" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_notes"
         android:layout_width="@dimen/constraint_layout_match_parent"
