@@ -15,6 +15,7 @@ import com.suzei.minote.ui.list.ListActivity
 import com.suzei.minote.ui.list.ListAdapterCallback
 import com.suzei.minote.ui.list.ListContract
 import com.suzei.minote.ui.list.ToastCallback
+import com.suzei.minote.ui.settings.SettingsActivity
 import com.suzei.minote.utils.LogMe
 import com.suzei.minote.utils.recycler_view.decorator.LinearLayoutSpacing
 
@@ -51,6 +52,7 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
         super.onViewCreated(view, savedInstanceState)
         binding.listTvTitle.setText(R.string.todo)
         setupRecyclerView()
+        setupSettingsButton()
         presenter.setup()
     }
 
@@ -80,6 +82,13 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
         binding.listIvEmpty.setImageResource(R.drawable.ic_empty_todo)
         binding.listTvEmptyTitle.setText(R.string.no_todo_found_title)
         binding.listTvEmptySubtitle.setText(R.string.no_todo_found_subtitle)
+    }
+
+    private fun setupSettingsButton() {
+        binding.listBtnSettings.setOnClickListener {
+            val intent = Intent(context, SettingsActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun setupRecyclerView() {
