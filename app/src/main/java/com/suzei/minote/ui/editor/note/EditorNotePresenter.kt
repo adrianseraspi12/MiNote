@@ -1,8 +1,8 @@
 package com.suzei.minote.ui.editor.note
 
+import android.content.SharedPreferences
 import android.graphics.Color
 import com.suzei.minote.data.entity.Notes
-import com.suzei.minote.data.repository.NotesRepository
 import com.suzei.minote.data.repository.Repository
 import com.suzei.minote.utils.LogMe
 import org.threeten.bp.OffsetDateTime
@@ -10,14 +10,18 @@ import org.threeten.bp.OffsetDateTime
 class EditorNotePresenter : EditorNoteContract.Presenter {
 
     private var notesRepository: Repository<Notes>
-
     private var mView: EditorNoteContract.View
-
+    private var sharedPrefs: SharedPreferences
     private var itemId: String? = null
+
 
     private lateinit var createdDate: OffsetDateTime
 
-    internal constructor(itemId: String, notesRepository: Repository<Notes>, mView: EditorNoteContract.View) {
+    internal constructor(itemId: String,
+                         sharedPreferences: SharedPreferences,
+                         notesRepository: Repository<Notes>,
+                         mView: EditorNoteContract.View) {
+        this.sharedPrefs = sharedPreferences
         this.notesRepository = notesRepository
         this.mView = mView
         this.itemId = itemId
@@ -26,7 +30,9 @@ class EditorNotePresenter : EditorNoteContract.Presenter {
     }
 
     internal constructor(notesRepository: Repository<Notes>,
+                         sharedPreferences: SharedPreferences,
                          mView: EditorNoteContract.View) {
+        this.sharedPrefs = sharedPreferences
         this.notesRepository = notesRepository
         this.mView = mView
 
@@ -34,6 +40,9 @@ class EditorNotePresenter : EditorNoteContract.Presenter {
     }
 
     override fun setup() {
+        val isAutoSaveEnable = sharedPrefs.getBoolean("auto_save", false)
+        mView.setSaveBtnVisibility(isAutoSaveEnable)
+
         if (itemId != null) {
             showNote()
         } else {

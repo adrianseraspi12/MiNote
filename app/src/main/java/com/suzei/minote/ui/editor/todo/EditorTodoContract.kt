@@ -15,6 +15,8 @@ interface EditorTodoContract {
 
         fun setNoteColor(color: Int)
 
+        fun setSaveBtnVisibility(isAutoSaveEnable: Boolean)
+
         fun setTextColor(color: Int)
 
     }

@@ -1,28 +1,27 @@
 package com.suzei.minote.ui.editor.todo
 
+import android.content.SharedPreferences
 import android.graphics.Color
 import com.suzei.minote.data.entity.Todo
 import com.suzei.minote.data.entity.TodoItem
 import com.suzei.minote.data.repository.Repository
-import com.suzei.minote.data.repository.TodoRepository
 import com.suzei.minote.utils.LogMe
 import org.threeten.bp.OffsetDateTime
 
 class EditorTodoPresenter : EditorTodoContract.Presenter {
 
     private var repository: Repository<Todo>
-
     private var mView: EditorTodoContract.View
-
+    private var sharedPrefs: SharedPreferences
     private var itemId: String? = null
 
     private var createdDate: OffsetDateTime? = null
 
     internal constructor(itemId: String,
-                         repository:
-                         Repository<Todo>,
+                         sharedPreferences: SharedPreferences,
+                         repository: Repository<Todo>,
                          view: EditorTodoContract.View) {
-
+        this.sharedPrefs = sharedPreferences
         this.itemId = itemId
         this.repository = repository
         this.mView = view
@@ -30,9 +29,10 @@ class EditorTodoPresenter : EditorTodoContract.Presenter {
         mView.setPresenter(this)
     }
 
-    internal constructor(repository: Repository<Todo>,
+    internal constructor(sharedPreferences: SharedPreferences,
+                         repository: Repository<Todo>,
                          view: EditorTodoContract.View) {
-
+        this.sharedPrefs = sharedPreferences
         this.repository = repository
         this.mView = view
 
@@ -40,6 +40,8 @@ class EditorTodoPresenter : EditorTodoContract.Presenter {
     }
 
     override fun setup() {
+        val isAutoSaveEnable = sharedPrefs.getBoolean("auto_save", false)
+        mView.setSaveBtnVisibility(isAutoSaveEnable)
 
         if (itemId != null) {
             showTodo()

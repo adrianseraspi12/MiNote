@@ -20,9 +20,7 @@ class EditorTodoActivity : AppCompatActivity() {
         setContentView(R.layout.activity_editor_todo)
 
         val itemId = intent.getStringExtra(EXTRA_TODO_ID)
-
         val fm = supportFragmentManager
-
         var editorFragment = fm.findFragmentByTag(FRAGMENT_EDITOR_TODO_TAG) as EditorTodoFragment?
 
         if (editorFragment == null) {
@@ -34,10 +32,12 @@ class EditorTodoActivity : AppCompatActivity() {
 
             if (itemId != null) {
                 EditorTodoPresenter(itemId,
+                        Injection.provideSharedPreference(this),
                         Injection.provideTodoRepository(applicationContext),
                         editorFragment)
             } else {
-                EditorTodoPresenter(Injection.provideTodoRepository(applicationContext),
+                EditorTodoPresenter(Injection.provideSharedPreference(this),
+                        Injection.provideTodoRepository(applicationContext),
                         editorFragment)
             }
 
