@@ -148,6 +148,14 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
         binding.editorTodoIvCheck.setColorFilter(color)
     }
 
+    override fun setSaveBtnVisibility(isAutoSaveEnable: Boolean) {
+        if (isAutoSaveEnable) {
+            binding.editorTodoSave.visibility = View.GONE
+        } else {
+            binding.editorTodoSave.visibility = View.VISIBLE
+        }
+    }
+
     override fun setTextColor(color: Int) {
         this.currentTextColor = color
         todoSubtaskAdapter.changeTextColor(color)

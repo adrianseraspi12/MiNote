@@ -19,9 +19,7 @@ class EditorNoteActivity : AppCompatActivity() {
         setContentView(R.layout.activity_editor)
 
         val itemId = intent.getStringExtra(EXTRA_NOTE_ID)
-
         val fm = supportFragmentManager
-
         var editorFragment = fm.findFragmentByTag(FRAGMENT_EDITOR_NOTE_TAG) as EditorNoteFragment?
 
         if (editorFragment == null) {
@@ -34,13 +32,14 @@ class EditorNoteActivity : AppCompatActivity() {
 
             if (itemId != null) {
                 EditorNotePresenter(itemId,
+                        Injection.provideSharedPreference(this),
                         Injection.provideNotesRepository(applicationContext),
                         editorFragment)
             } else {
                 EditorNotePresenter(Injection.provideNotesRepository(applicationContext),
+                        Injection.provideSharedPreference(this),
                         editorFragment)
             }
-
         }
     }
 }

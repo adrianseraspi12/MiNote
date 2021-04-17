@@ -142,6 +142,14 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
         textColorsAdapter.setSelectedColor(textColor)
     }
 
+    override fun setSaveBtnVisibility(isAutoSaveEnable: Boolean) {
+        if (isAutoSaveEnable) {
+            binding.editorBtnSave.visibility = View.GONE
+        } else {
+            binding.editorBtnSave.visibility = View.VISIBLE
+        }
+    }
+
     override fun showToastMessage(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }

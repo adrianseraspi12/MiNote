@@ -14,6 +14,8 @@ interface EditorNoteContract {
 
         fun setTextColor(textColor: Int)
 
+        fun setSaveBtnVisibility(isAutoSaveEnable: Boolean)
+
         fun showToastMessage(message: String)
     }
 
