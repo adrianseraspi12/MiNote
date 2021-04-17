@@ -1,8 +1,8 @@
 package com.suzei.minote.ui.settings
 
-import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.suzei.minote.Injection
 import com.suzei.minote.R
 
 class SettingsActivity : AppCompatActivity() {
@@ -19,7 +19,7 @@ class SettingsActivity : AppCompatActivity() {
     private fun initPresenter() {
         SettingsPresenter(
                 fragment,
-                getPreferences(Context.MODE_PRIVATE)
+                Injection.provideSharedPreference(this)
         )
     }
 
