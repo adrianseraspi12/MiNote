@@ -29,6 +29,7 @@ class TodoSubtaskAdapter(var data: MutableList<TodoItem>,
         holder.bind(item)
         holder.subTaskTextChangedListener.updatePosition(position)
         holder.itemView.item_edit_todo_remove.setOnClickListener {
+            holder.itemView.item_edit_todo_text.clearFocus()
             onDeleteCallback.invoke()
             delete(position)
         }
