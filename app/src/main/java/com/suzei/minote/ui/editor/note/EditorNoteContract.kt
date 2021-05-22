@@ -29,6 +29,11 @@ interface EditorNoteContract {
                      textColor: String,
                      password: String?)
 
+        fun autoSave(title: String,
+                     message: String,
+                     noteColor: String,
+                     textColor: String,
+                     password: String?)
     }
 
 }
