@@ -41,4 +41,7 @@
     <string name="sub_tasks">Sub Tasks</string>
     <string name="done_todo">done todo</string>
     <string name="note">Note</string>
+    <string name="settings">Settings</string>
+    <string name="autosave">Autosave</string>
+    <string name="preference_file_key">MiNoteSharedPreference</string>
 </resources>

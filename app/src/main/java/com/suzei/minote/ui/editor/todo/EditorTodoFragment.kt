@@ -9,6 +9,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
@@ -55,6 +56,12 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
     private var _bottomsheetEditNoteBinding: BottomsheetEditNoteBinding? = null
     private val bottomsheetEditNoteBinding get() = _bottomsheetEditNoteBinding!!
 
+    private var onChangesCallback: () -> Unit = { requestAutoSave() }
+    private var onDeleteCalback: () -> Unit = {
+        taskCount--
+        setTaskCount()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
@@ -64,10 +71,7 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
                 false
         )
         initAdapters()
-        todoSubtaskAdapter = TodoSubtaskAdapter(ArrayList()) {
-            taskCount--
-            setTaskCount()
-        }
+        todoSubtaskAdapter = TodoSubtaskAdapter(ArrayList(), onChangesCallback, onDeleteCalback)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -91,6 +95,7 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
         setupNoteColorRecyclerView()
         setupTextColorRecyclerView()
         setupSubTaskRecyclerView()
+        binding.editorTodoTitle.addTextChangedListener(setTextWatcher(binding.editorTodoTitle))
         binding.editorTodoCvDone.setOnClickListener(onNewSubTaskDoneClickListener)
         binding.editorTodoTvText.addTextChangedListener(onAddSubTaskTextChangedListener)
         binding.itemEditorTodoAdd.setOnClickListener(onAddNewSubTaskClickListener)
@@ -146,6 +151,14 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
         todoSubtaskAdapter.changeBackgroundColor(color)
         noteColorsAdapter.setSelectedColor(color)
         binding.editorTodoIvCheck.setColorFilter(color)
+    }
+
+    override fun setSaveBtnVisibility(isAutoSaveEnable: Boolean) {
+        if (isAutoSaveEnable) {
+            binding.editorTodoSave.visibility = View.GONE
+        } else {
+            binding.editorTodoSave.visibility = View.VISIBLE
+        }
     }
 
     override fun setTextColor(color: Int) {
@@ -231,6 +244,7 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
         binding.editorTodoTvText.clearFocus()
         hideKeyboard()
         binding.editorTodoScrollView.scrollToBottom()
+        requestAutoSave()
     }
 
     private fun setupSubTaskRecyclerView() {
@@ -270,11 +284,13 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
 
             override fun onChangedColor(color: Int) {
                 setNoteColor(color)
+                requestAutoSave()
             }
 
             override fun onShowColorWheel(color: Int) {
                 showColorWheel("Choose note color", color) {
                     setNoteColor(it)
+                    requestAutoSave()
                 }
             }
 
@@ -283,15 +299,40 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
         textColorsAdapter = ColorListAdapterBuilder.textList(object : ColorListAdapterCallback {
             override fun onChangedColor(color: Int) {
                 setTextColor(color)
+                requestAutoSave()
             }
 
             override fun onShowColorWheel(color: Int) {
                 showColorWheel("Choose text color", color) {
                     setTextColor(it)
+                    requestAutoSave()
                 }
             }
 
         })
+    }
+
+    private fun requestAutoSave() {
+        val noteColor = (binding.editorTodoRoot.background as ColorDrawable).color
+        val hexNoteColor = String.format("#%06X", 0xFFFFFF and noteColor)
+
+        val textColor = binding.editorTodoTitle.currentTextColor
+        val hexTextColor = String.format("#%06X", 0xFFFFFF and textColor)
+
+        val title = binding.editorTodoTitle.text.toString()
+        val todoItemList = todoSubtaskAdapter.data
+        presenter.autoSave(title, todoItemList, hexNoteColor, hexTextColor)
+    }
+
+    private fun setTextWatcher(editText: EditText) = object : TextWatcher {
+        override fun afterTextChanged(p0: Editable?) {
+            if (editText.hasFocus()) {
+                requestAutoSave()
+            }
+        }
+
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
     }
 
     private fun setupBottomSheet() {

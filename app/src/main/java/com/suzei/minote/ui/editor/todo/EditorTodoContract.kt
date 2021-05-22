@@ -15,6 +15,8 @@ interface EditorTodoContract {
 
         fun setNoteColor(color: Int)
 
+        fun setSaveBtnVisibility(isAutoSaveEnable: Boolean)
+
         fun setTextColor(color: Int)
 
     }
@@ -28,6 +30,10 @@ interface EditorTodoContract {
                      noteColor: String,
                      textColor: String)
 
+        fun autoSave(title: String,
+                     todoItems: List<TodoItem>,
+                     noteColor: String,
+                     textColor: String)
     }
 
 }
