@@ -80,6 +80,11 @@ class TodoSubtaskAdapter(var data: MutableList<TodoItem>,
 
     private fun delete(position: Int) {
         data.removeAt(position)
+        if (data.isEmpty()) {
+            notifyDataSetChanged()
+            return
+        }
+
         notifyItemRemoved(position)
         notifyItemRangeChanged(position, data.size)
     }
