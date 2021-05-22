@@ -3,9 +3,12 @@ package com.suzei.minote.ui.editor.note
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
@@ -42,8 +45,18 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
     private var _bottomsheetEditNoteBinding: BottomsheetEditNoteBinding? = null
     private val bottomsheetEditNoteBinding get() = _bottomsheetEditNoteBinding!!
 
-    companion object {
+    private fun setTextWatcher(editText: EditText) = object : TextWatcher {
+        override fun afterTextChanged(p0: Editable?) {
+            if (editText.hasFocus()) {
+                requestAutoSave()
+            }
+        }
 
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+    }
+
+    companion object {
         private const val EXTRA_PASSWORD = "EXTRA_PASSWORD"
         private const val EXTRA_NOTE_COLOR = "EXTRA_NOTE_COLOR"
         private const val EXTRA_TEXT_COLOR = "EXTRA_TEXT_COLOR"
@@ -83,6 +96,7 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
         presenter.setup()
         setupBottomSheet()
         setupSaveOnClick()
+        setupEditTextTextWatcher()
         setupBack()
         setupLock()
         setupNoteColorRecyclerView()
@@ -160,6 +174,11 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
         }
     }
 
+    private fun setupEditTextTextWatcher() {
+        binding.editorText.addTextChangedListener(setTextWatcher(binding.editorText))
+        binding.editorTitle.addTextChangedListener(setTextWatcher(binding.editorTitle))
+    }
+
     private fun setupNoteColorRecyclerView() {
         bottomsheetEditNoteBinding.bottomsheetRvNoteColor.apply {
             adapter = noteColorsAdapter
@@ -184,6 +203,7 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
                         bottomsheetEditNoteBinding.bottomSheetSwitchLock.isChecked = false
                     } else {
                         mPassword = it
+                        requestAutoSave()
                     }
                 }
                 passwordDialog.show(fragmentManager!!, "Password Dialog")
@@ -249,11 +269,13 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
 
             override fun onChangedColor(color: Int) {
                 setNoteColor(color)
+                requestAutoSave()
             }
 
             override fun onShowColorWheel(color: Int) {
                 showColorWheel("Choose note color", color) {
                     setNoteColor(it)
+                    requestAutoSave()
                 }
             }
 
@@ -262,14 +284,30 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
         textColorsAdapter = ColorListAdapterBuilder.textList(object : ColorListAdapterCallback {
             override fun onChangedColor(color: Int) {
                 setTextColor(color)
+                requestAutoSave()
             }
 
             override fun onShowColorWheel(color: Int) {
                 showColorWheel("Choose text color", color) {
                     setTextColor(it)
+                    requestAutoSave()
                 }
             }
 
         })
+    }
+
+    private fun requestAutoSave() {
+        val noteColor = (binding.editorRoot.background as ColorDrawable).color
+        val hexNoteColor = String.format("#%06X", 0xFFFFFF and noteColor)
+
+        val textColor = binding.editorText.currentTextColor
+        val hexTextColor = String.format("#%06X", 0xFFFFFF and textColor)
+
+        val title = binding.editorTitle.text.toString()
+        val message = binding.editorText.text.toString()
+        val password = mPassword?.let { it1 -> Turing.encrypt(it1) }
+
+        presenter.autoSave(title, message, hexNoteColor, hexTextColor, password)
     }
 }
