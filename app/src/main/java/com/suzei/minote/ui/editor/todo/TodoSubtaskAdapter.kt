@@ -12,6 +12,7 @@ import com.suzei.minote.databinding.ItemRowEditTodoBinding
 import com.suzei.minote.ext.setAlpha
 
 class TodoSubtaskAdapter(var data: MutableList<TodoItem>,
+                         private var onChangesCallback: () -> Unit,
                          private var onDeleteCallback: () -> Unit) : RecyclerView.Adapter<TodoSubtaskAdapter.ViewHolder>() {
 
     private var textColor: Int = 0xFFFFFF
@@ -20,7 +21,7 @@ class TodoSubtaskAdapter(var data: MutableList<TodoItem>,
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = ItemRowEditTodoBinding.inflate(layoutInflater, parent, false)
-        return ViewHolder(binding, SubTaskTextChangedListener())
+        return ViewHolder(binding, SubTaskTextChangedListener(binding))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -29,13 +30,15 @@ class TodoSubtaskAdapter(var data: MutableList<TodoItem>,
         holder.subTaskTextChangedListener.updatePosition(position)
         holder.binding.itemEditTodoRemove.setOnClickListener {
             holder.binding.itemEditTodoText.clearFocus()
-            onDeleteCallback.invoke()
             delete(position)
+            onDeleteCallback.invoke()
+            onChangesCallback.invoke()
         }
 
         holder.binding.itemRowEditTodoCvDone.setOnClickListener {
             val isDone = item.completed ?: false
             isTaskCompleted(position, !isDone)
+            onChangesCallback.invoke()
         }
     }
 
@@ -119,13 +122,17 @@ class TodoSubtaskAdapter(var data: MutableList<TodoItem>,
 
     }
 
-    inner class SubTaskTextChangedListener : TextWatcher {
+    inner class SubTaskTextChangedListener(val binding: ItemRowEditTodoBinding) : TextWatcher {
 
         private var position = -1
 
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
-        override fun afterTextChanged(p0: Editable?) {}
+        override fun afterTextChanged(p0: Editable?) {
+            if (binding.itemEditTodoText.hasFocus()) {
+                onChangesCallback.invoke()
+            }
+        }
 
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             val charSequence = p0 ?: ""

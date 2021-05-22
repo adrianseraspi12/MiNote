@@ -2,6 +2,8 @@ package com.suzei.minote.ui.editor.todo
 
 import android.content.SharedPreferences
 import android.graphics.Color
+import android.os.Handler
+import android.os.Looper
 import com.suzei.minote.data.entity.Todo
 import com.suzei.minote.data.entity.TodoItem
 import com.suzei.minote.data.repository.Repository
@@ -14,8 +16,9 @@ class EditorTodoPresenter : EditorTodoContract.Presenter {
     private var mView: EditorTodoContract.View
     private var sharedPrefs: SharedPreferences
     private var itemId: String? = null
-
     private var createdDate: OffsetDateTime? = null
+    private var isAutoSave: Boolean = false
+    private var saveHandler = Handler(Looper.myLooper()!!)
 
     internal constructor(itemId: String,
                          sharedPreferences: SharedPreferences,
@@ -25,6 +28,7 @@ class EditorTodoPresenter : EditorTodoContract.Presenter {
         this.itemId = itemId
         this.repository = repository
         this.mView = view
+        this.isAutoSave = sharedPreferences.getBoolean("auto_save", false)
 
         mView.setPresenter(this)
     }
@@ -35,13 +39,13 @@ class EditorTodoPresenter : EditorTodoContract.Presenter {
         this.sharedPrefs = sharedPreferences
         this.repository = repository
         this.mView = view
+        this.isAutoSave = sharedPreferences.getBoolean("auto_save", false)
 
         mView.setPresenter(this)
     }
 
     override fun setup() {
-        val isAutoSaveEnable = sharedPrefs.getBoolean("auto_save", false)
-        mView.setSaveBtnVisibility(isAutoSaveEnable)
+        mView.setSaveBtnVisibility(isAutoSave)
 
         if (itemId != null) {
             showTodo()
@@ -66,6 +70,7 @@ class EditorTodoPresenter : EditorTodoContract.Presenter {
                     createdDate!!)
 
             repository.update(todo)
+            if (isAutoSave) return
             mView.showToastMessage("Todo Updated")
         } else {
             LogMe.info("Presenter =  Save")
@@ -81,6 +86,7 @@ class EditorTodoPresenter : EditorTodoContract.Presenter {
                 override fun onSuccess(itemId: String, createdDate: OffsetDateTime) {
                     this@EditorTodoPresenter.itemId = itemId
                     this@EditorTodoPresenter.createdDate = createdDate
+                    if (isAutoSave) return
                     mView.showToastMessage("Todo Created")
                 }
 
@@ -91,6 +97,14 @@ class EditorTodoPresenter : EditorTodoContract.Presenter {
             })
         }
 
+    }
+
+    override fun autoSave(title: String, todoItems: List<TodoItem>, noteColor: String, textColor: String) {
+        if (!isAutoSave) return
+        saveHandler.removeCallbacksAndMessages(null)
+        saveHandler.postDelayed(
+                { saveTodo(title, todoItems, noteColor, textColor) },
+                1000)
     }
 
     private fun showTodo() {

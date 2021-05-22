@@ -30,6 +30,10 @@ interface EditorTodoContract {
                      noteColor: String,
                      textColor: String)
 
+        fun autoSave(title: String,
+                     todoItems: List<TodoItem>,
+                     noteColor: String,
+                     textColor: String)
     }
 
 }
