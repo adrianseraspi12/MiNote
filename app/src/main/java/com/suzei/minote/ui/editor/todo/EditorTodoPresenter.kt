@@ -4,8 +4,8 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
-import com.suzei.minote.data.entity.Todo
-import com.suzei.minote.data.entity.TodoItem
+import com.suzei.minote.data.local.entity.Todo
+import com.suzei.minote.data.local.entity.TodoItem
 import com.suzei.minote.data.repository.Repository
 import com.suzei.minote.utils.LogMe
 import org.threeten.bp.OffsetDateTime

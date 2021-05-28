@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.suzei.minote.data.entity.TodoItem
+import com.suzei.minote.data.local.entity.TodoItem
 import com.suzei.minote.databinding.ItemRowEditTodoBinding
 import com.suzei.minote.ext.setAlpha
 

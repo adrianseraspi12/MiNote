@@ -1,6 +1,6 @@
 package com.suzei.minote.ui.list.todo
 
-import com.suzei.minote.data.entity.Todo
+import com.suzei.minote.data.local.entity.Todo
 import com.suzei.minote.data.repository.Repository
 import com.suzei.minote.ui.list.ListContract
 import com.suzei.minote.utils.LogMe

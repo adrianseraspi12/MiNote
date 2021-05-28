@@ -1,7 +1,7 @@
 package com.suzei.minote.data.repository
 
-import com.suzei.minote.data.dao.NotesDao
-import com.suzei.minote.data.entity.Notes
+import com.suzei.minote.data.local.dao.NotesDao
+import com.suzei.minote.data.local.entity.Notes
 import com.suzei.minote.utils.executors.AppExecutor
 
 class NotesRepository private constructor(

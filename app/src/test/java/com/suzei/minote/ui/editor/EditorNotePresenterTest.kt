@@ -2,7 +2,7 @@ package com.suzei.minote.ui.editor
 
 import android.graphics.Color
 import com.suzei.minote.BaseUnitTest
-import com.suzei.minote.data.entity.Notes
+import com.suzei.minote.data.local.entity.Notes
 import com.suzei.minote.data.repository.NotesRepository
 import com.suzei.minote.data.repository.Repository
 import com.suzei.minote.ui.editor.note.EditorNoteContract

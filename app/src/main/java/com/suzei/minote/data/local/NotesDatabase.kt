@@ -1,4 +1,4 @@
-package com.suzei.minote.data
+package com.suzei.minote.data.local
 
 import android.content.ContentValues
 import android.content.Context

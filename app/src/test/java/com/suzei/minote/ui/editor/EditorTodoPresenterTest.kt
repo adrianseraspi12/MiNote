@@ -2,7 +2,7 @@ package com.suzei.minote.ui.editor
 
 import android.graphics.Color
 import com.suzei.minote.BaseUnitTest
-import com.suzei.minote.data.entity.Todo
+import com.suzei.minote.data.local.entity.Todo
 import com.suzei.minote.data.repository.Repository
 import com.suzei.minote.data.repository.TodoRepository
 import com.suzei.minote.ui.editor.todo.EditorTodoContract

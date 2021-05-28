@@ -1,6 +1,6 @@
 package com.suzei.minote.ui.list
 
-import com.suzei.minote.data.entity.Notes
+import com.suzei.minote.data.local.entity.Notes
 
 interface ListAdapterCallback<T> {
 

@@ -1,8 +1,8 @@
 package com.suzei.minote.data.repository
 
-import com.suzei.minote.data.dao.TodoDao
-import com.suzei.minote.data.dao.TodoItemDao
-import com.suzei.minote.data.entity.Todo
+import com.suzei.minote.data.local.dao.TodoDao
+import com.suzei.minote.data.local.dao.TodoItemDao
+import com.suzei.minote.data.local.entity.Todo
 import com.suzei.minote.utils.LogMe
 import com.suzei.minote.utils.executors.AppExecutor
 

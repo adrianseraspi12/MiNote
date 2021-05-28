@@ -1,6 +1,6 @@
 package com.suzei.minote.ui.editor.note
 
-import com.suzei.minote.data.entity.Notes
+import com.suzei.minote.data.local.entity.Notes
 
 interface EditorNoteContract {
 

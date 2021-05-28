@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.suzei.minote.R
-import com.suzei.minote.data.entity.Notes
+import com.suzei.minote.data.local.entity.Notes
 import com.suzei.minote.databinding.ItemRowNotesBinding
 import com.suzei.minote.ui.list.ListAdapterCallback
 import org.threeten.bp.format.DateTimeFormatter

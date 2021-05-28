@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.suzei.minote.R
-import com.suzei.minote.data.entity.Notes
+import com.suzei.minote.data.local.entity.Notes
 import com.suzei.minote.databinding.BottomsheetEditNoteBinding
 import com.suzei.minote.databinding.FragmentEditorBinding
 import com.suzei.minote.ext.convertToPx

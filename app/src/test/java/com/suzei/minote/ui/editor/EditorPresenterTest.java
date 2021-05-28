@@ -1,23 +1,8 @@
 package com.suzei.minote.ui.editor;
 
-import android.content.SharedPreferences;
-import android.graphics.Color;
-
-import com.suzei.minote.data.entity.Notes;
-import com.suzei.minote.ui.editor.note.EditorNoteContract;
-import com.suzei.minote.ui.editor.note.EditorNotePresenter;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class EditorPresenterTest {
 

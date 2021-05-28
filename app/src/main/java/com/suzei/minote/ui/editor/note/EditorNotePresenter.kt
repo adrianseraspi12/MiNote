@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
-import com.suzei.minote.data.entity.Notes
+import com.suzei.minote.data.local.entity.Notes
 import com.suzei.minote.data.repository.Repository
 import com.suzei.minote.utils.LogMe
 import org.threeten.bp.OffsetDateTime

@@ -1,4 +1,4 @@
-package com.suzei.minote.data.entity
+package com.suzei.minote.data.local.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

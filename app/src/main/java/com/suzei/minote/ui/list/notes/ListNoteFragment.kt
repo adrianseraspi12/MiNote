@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.suzei.minote.R
-import com.suzei.minote.data.entity.Notes
+import com.suzei.minote.data.local.entity.Notes
 import com.suzei.minote.databinding.FragmentListBinding
 import com.suzei.minote.ui.editor.note.EditorNoteActivity
 import com.suzei.minote.ui.list.ListActivity

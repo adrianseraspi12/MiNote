@@ -18,8 +18,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.suzei.minote.R
-import com.suzei.minote.data.entity.Todo
-import com.suzei.minote.data.entity.TodoItem
+import com.suzei.minote.data.local.entity.Todo
+import com.suzei.minote.data.local.entity.TodoItem
 import com.suzei.minote.databinding.BottomsheetEditNoteBinding
 import com.suzei.minote.databinding.FragmentEditorTodoBinding
 import com.suzei.minote.ext.*

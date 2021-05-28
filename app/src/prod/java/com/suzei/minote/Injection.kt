@@ -3,7 +3,7 @@ package com.suzei.minote
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
-import com.suzei.minote.data.NotesDatabase
+import com.suzei.minote.data.local.NotesDatabase
 import com.suzei.minote.data.repository.NotesRepository
 import com.suzei.minote.data.repository.TodoRepository
 import com.suzei.minote.utils.executors.AppExecutor
