@@ -123,7 +123,7 @@ class ListActivity : AppCompatActivity() {
 
     private fun initPresenters() {
         ListNotePresenter(
-                Injection.provideNotesRepository(applicationContext),
+                Injection.provideNoteDataSource(applicationContext),
                 listNoteFragment)
         ListTodoPresenter(
                 Injection.provideTodoRepository(applicationContext),
