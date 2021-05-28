@@ -14,7 +14,11 @@ class NoteDataSource(private val service: LocalService<Notes>) : DataSource<Note
         return service.getListOfData()
     }
 
-    override suspend fun save(data: Notes): Result<Nothing> {
+    override suspend fun getData(id: String): Result<Notes> {
+        return service.getData(id)
+    }
+
+    override suspend fun save(data: Notes): Result<Notes> {
         return service.save(data)
     }
 

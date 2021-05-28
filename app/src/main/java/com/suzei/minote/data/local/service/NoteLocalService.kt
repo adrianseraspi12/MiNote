@@ -16,10 +16,10 @@ class NoteLocalService(
                 NoteLocalService = NoteLocalService(ioDispatcher, notesDao)
     }
 
-    override suspend fun save(data: Notes): Result<Nothing> = withContext(ioDispatcher) {
+    override suspend fun save(data: Notes): Result<Notes> = withContext(ioDispatcher) {
         return@withContext try {
             notesDao.saveNote(data)
-            Result.Success()
+            Result.Success(data)
         } catch (e: Exception) {
             Result.Error(e)
         }
