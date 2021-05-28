@@ -33,10 +33,10 @@ class EditorNoteActivity : AppCompatActivity() {
             if (itemId != null) {
                 EditorNotePresenter(itemId,
                         Injection.provideSharedPreference(this),
-                        Injection.provideNotesRepository(applicationContext),
+                        Injection.provideNoteDataSource(applicationContext),
                         editorFragment)
             } else {
-                EditorNotePresenter(Injection.provideNotesRepository(applicationContext),
+                EditorNotePresenter(Injection.provideNoteDataSource(applicationContext),
                         Injection.provideSharedPreference(this),
                         editorFragment)
             }
