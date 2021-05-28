@@ -8,13 +8,13 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.suzei.minote.data.converter.DateTimeTypeConverter
-import com.suzei.minote.data.dao.NotesDao
-import com.suzei.minote.data.dao.TodoDao
-import com.suzei.minote.data.dao.TodoItemDao
-import com.suzei.minote.data.entity.Notes
-import com.suzei.minote.data.entity.Todo
-import com.suzei.minote.data.entity.TodoItem
+import com.suzei.minote.data.local.converter.DateTimeTypeConverter
+import com.suzei.minote.data.local.dao.NotesDao
+import com.suzei.minote.data.local.dao.TodoDao
+import com.suzei.minote.data.local.dao.TodoItemDao
+import com.suzei.minote.data.local.entity.Notes
+import com.suzei.minote.data.local.entity.Todo
+import com.suzei.minote.data.local.entity.TodoItem
 import com.suzei.minote.utils.LogMe
 
 //  If the database updated, Increment version by 1
