@@ -33,6 +33,9 @@ android {
             manifestPlaceholders = [crashlyticsCollectionEnabled: "false"]
         }
     }
+    packagingOptions {
+        exclude "DebugProbesKt.bin"
+    }
     lintOptions {
         abortOnError false
         disable 'GoogleAppIndexingWarning'
