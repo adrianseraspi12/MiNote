@@ -39,8 +39,8 @@ class TodoLocalService(
 
     override suspend fun getData(itemId: String): Result<Todo> = withContext(ioDispatcher) {
         return@withContext try {
-            todoDao.getTodoWithTasksById(itemId, todoItemDao)
-            Result.Success()
+            val todo = todoDao.getTodoWithTasksById(itemId, todoItemDao)
+            Result.Success(todo)
         } catch (e: Exception) {
             Result.Error(e)
         }
