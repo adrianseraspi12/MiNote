@@ -5,7 +5,10 @@ import com.suzei.minote.data.local.entity.TodoItem
 import com.suzei.minote.ui.editor.TodoContract
 
 interface EditorTodoContract {
-    interface View: TodoContract.View<Todo>
+    interface View : TodoContract.View<Todo> {
+        fun setPresenter(presenter: Presenter)
+    }
+
     interface Presenter : TodoContract.Presenter {
         fun saveTodo(title: String,
                      todoItems: List<TodoItem>,
