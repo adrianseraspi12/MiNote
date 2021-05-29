@@ -126,7 +126,7 @@ class ListActivity : AppCompatActivity() {
                 Injection.provideNoteDataSource(applicationContext),
                 listNoteFragment)
         ListTodoPresenter(
-                Injection.provideTodoRepository(applicationContext),
+                Injection.provideTodoDataSource(applicationContext),
                 listTodoFragment)
     }
 
