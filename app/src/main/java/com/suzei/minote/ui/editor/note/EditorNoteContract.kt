@@ -1,28 +1,15 @@
 package com.suzei.minote.ui.editor.note
 
 import com.suzei.minote.data.local.entity.Notes
+import com.suzei.minote.ui.editor.TodoContract
 
 interface EditorNoteContract {
 
-    interface View {
-
+    interface View : TodoContract.View<Notes> {
         fun setPresenter(presenter: Presenter)
-
-        fun showNoteDetails(note: Notes)
-
-        fun setNoteColor(noteColor: Int)
-
-        fun setTextColor(textColor: Int)
-
-        fun setSaveBtnVisibility(isAutoSaveEnable: Boolean)
-
-        fun showToastMessage(message: String)
     }
 
-    interface Presenter {
-
-        fun setup()
-
+    interface Presenter : TodoContract.Presenter {
         fun saveNote(title: String,
                      message: String,
                      noteColor: String,

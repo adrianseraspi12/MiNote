@@ -129,31 +129,31 @@ class EditorNoteFragment : Fragment(), EditorNoteContract.View {
         this.presenter = presenter
     }
 
-    override fun showNoteDetails(note: Notes) {
-        mPassword = note.password?.let { Turing.decrypt(it) }
-        binding.editorTitle.setText(note.title)
-        binding.editorText.setText(note.message)
-        setNoteColor(Color.parseColor(note.color))
-        setTextColor(Color.parseColor(note.textColor))
+    override fun showDetails(data: Notes) {
+        mPassword = data.password?.let { Turing.decrypt(it) }
+        binding.editorTitle.setText(data.title)
+        binding.editorText.setText(data.message)
+        setNoteColor(Color.parseColor(data.color))
+        setTextColor(Color.parseColor(data.textColor))
 
         binding.editorTitle.moveFocus()
     }
 
-    override fun setNoteColor(noteColor: Int) {
-        currentNoteColor = noteColor
-        activity?.window?.statusBarColor = noteColor
-        binding.editorRoot.setBackgroundColor(noteColor)
-        noteColorsAdapter.setSelectedColor(noteColor)
+    override fun setNoteColor(color: Int) {
+        currentNoteColor = color
+        activity?.window?.statusBarColor = color
+        binding.editorRoot.setBackgroundColor(color)
+        noteColorsAdapter.setSelectedColor(color)
     }
 
-    override fun setTextColor(textColor: Int) {
-        currentTextColor = textColor
-        binding.editorTitle.setTextColor(textColor)
-        binding.editorText.setTextColor(textColor)
-        binding.editorBackArrow.setColorFilter(textColor)
-        binding.editorTitle.setHintTextColor(textColor.setAlpha(0.5f))
-        binding.editorText.setHintTextColor(textColor.setAlpha(0.5f))
-        textColorsAdapter.setSelectedColor(textColor)
+    override fun setTextColor(color: Int) {
+        currentTextColor = color
+        binding.editorTitle.setTextColor(color)
+        binding.editorText.setTextColor(color)
+        binding.editorBackArrow.setColorFilter(color)
+        binding.editorTitle.setHintTextColor(color.setAlpha(0.5f))
+        binding.editorText.setHintTextColor(color.setAlpha(0.5f))
+        textColorsAdapter.setSelectedColor(color)
     }
 
     override fun setSaveBtnVisibility(isAutoSaveEnable: Boolean) {

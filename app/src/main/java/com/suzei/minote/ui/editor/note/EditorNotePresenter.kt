@@ -149,7 +149,7 @@ class EditorNotePresenter : EditorNoteContract.Presenter {
             note.createdDate?.let {
                 createdDate = it
             }
-            mView.showNoteDetails(note)
+            mView.showDetails(note)
         }
     }
 }
