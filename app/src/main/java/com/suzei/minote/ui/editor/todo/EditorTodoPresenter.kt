@@ -4,29 +4,33 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
+import com.suzei.minote.data.Result
 import com.suzei.minote.data.local.entity.Todo
 import com.suzei.minote.data.local.entity.TodoItem
-import com.suzei.minote.data.repository.Repository
+import com.suzei.minote.data.repository.DataSource
 import com.suzei.minote.utils.LogMe
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import org.threeten.bp.OffsetDateTime
 
 class EditorTodoPresenter : EditorTodoContract.Presenter {
 
-    private var repository: Repository<Todo>
+    private var mDataSource: DataSource<Todo>
     private var mView: EditorTodoContract.View
     private var sharedPrefs: SharedPreferences
     private var itemId: String? = null
     private var createdDate: OffsetDateTime? = null
     private var isAutoSave: Boolean = false
     private var saveHandler = Handler(Looper.myLooper()!!)
+    private val scope = MainScope()
 
     internal constructor(itemId: String,
                          sharedPreferences: SharedPreferences,
-                         repository: Repository<Todo>,
+                         dataSource: DataSource<Todo>,
                          view: EditorTodoContract.View) {
         this.sharedPrefs = sharedPreferences
         this.itemId = itemId
-        this.repository = repository
+        this.mDataSource = dataSource
         this.mView = view
         this.isAutoSave = sharedPreferences.getBoolean("auto_save", false)
 
@@ -34,10 +38,10 @@ class EditorTodoPresenter : EditorTodoContract.Presenter {
     }
 
     internal constructor(sharedPreferences: SharedPreferences,
-                         repository: Repository<Todo>,
+                         dataSource: DataSource<Todo>,
                          view: EditorTodoContract.View) {
         this.sharedPrefs = sharedPreferences
-        this.repository = repository
+        this.mDataSource = dataSource
         this.mView = view
         this.isAutoSave = sharedPreferences.getBoolean("auto_save", false)
 
@@ -57,44 +61,12 @@ class EditorTodoPresenter : EditorTodoContract.Presenter {
 
     override fun saveTodo(title: String, todoItems: List<TodoItem>,
                           noteColor: String, textColor: String) {
-
         if (itemId != null) {
             LogMe.info("Presenter = Updating")
-
-            val todo = Todo(
-                    itemId!!,
-                    title,
-                    todoItems,
-                    textColor,
-                    noteColor,
-                    createdDate!!)
-
-            repository.update(todo)
-            if (isAutoSave) return
-            mView.showToastMessage("Todo Updated")
+            updateTodo(title, todoItems, noteColor, textColor)
         } else {
             LogMe.info("Presenter =  Save")
-
-            val todo = Todo(
-                    title,
-                    todoItems,
-                    textColor,
-                    noteColor)
-
-            repository.save(todo, object : Repository.ActionListener {
-
-                override fun onSuccess(itemId: String, createdDate: OffsetDateTime) {
-                    this@EditorTodoPresenter.itemId = itemId
-                    this@EditorTodoPresenter.createdDate = createdDate
-                    if (isAutoSave) return
-                    mView.showToastMessage("Todo Created")
-                }
-
-                override fun onFailed() {
-                    mView.showToastMessage("Save Failed")
-                }
-
-            })
+            createTodo(title, todoItems, noteColor, textColor)
         }
 
     }
@@ -107,24 +79,65 @@ class EditorTodoPresenter : EditorTodoContract.Presenter {
                 1000)
     }
 
+    private fun createTodo(title: String, todoItems: List<TodoItem>,
+                           noteColor: String, textColor: String) {
+        scope.launch {
+            val todo = Todo(
+                    title,
+                    todoItems,
+                    textColor,
+                    noteColor)
+
+            val result = mDataSource.save(todo)
+            if (result is Result.Error) {
+                mView.showToastMessage("Save Failed")
+                return@launch
+            }
+
+            val saveTodo = (result as Result.Success).data
+            if (saveTodo == null) {
+                mView.showToastMessage("Save Failed")
+                return@launch
+            }
+
+            this@EditorTodoPresenter.itemId = saveTodo.id
+            this@EditorTodoPresenter.createdDate = saveTodo.createdDate
+            if (isAutoSave) return@launch
+            mView.showToastMessage("Todo Created")
+        }
+    }
+
+    private fun updateTodo(title: String, todoItems: List<TodoItem>,
+                           noteColor: String, textColor: String) {
+        scope.launch {
+            val todo = Todo(
+                    itemId!!,
+                    title,
+                    todoItems,
+                    textColor,
+                    noteColor,
+                    createdDate!!)
+
+
+            mDataSource.update(todo)
+            if (isAutoSave) return@launch
+            mView.showToastMessage("Todo Updated")
+        }
+    }
+
     private fun showTodo() {
-        repository.getData(itemId!!, object : Repository.Listener<Todo> {
+        scope.launch {
+            val result = mDataSource.getData(itemId!!)
+            if (result is Result.Error) return@launch
 
-            override fun onDataAvailable(data: Todo) {
-                createdDate = data.createdDate
-                mView.showDetails(data)
-            }
-
-            override fun onDataUnavailable() {
-
-            }
-
-        })
+            val todo = (result as Result.Success).data ?: return@launch
+            createdDate = todo.createdDate
+            mView.showDetails(todo)
+        }
     }
 
     private fun showNewTodo() {
         mView.setNoteColor(Color.parseColor("#FF6464"))
         mView.setTextColor(Color.parseColor("#000000"))
     }
-
 }

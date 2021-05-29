@@ -33,16 +33,13 @@ class EditorTodoActivity : AppCompatActivity() {
             if (itemId != null) {
                 EditorTodoPresenter(itemId,
                         Injection.provideSharedPreference(this),
-                        Injection.provideTodoRepository(applicationContext),
+                        Injection.provideTodoDataSource(applicationContext),
                         editorFragment)
             } else {
                 EditorTodoPresenter(Injection.provideSharedPreference(this),
-                        Injection.provideTodoRepository(applicationContext),
+                        Injection.provideTodoDataSource(applicationContext),
                         editorFragment)
             }
-
         }
-
     }
-
 }

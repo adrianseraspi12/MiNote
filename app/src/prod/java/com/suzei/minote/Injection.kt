@@ -8,20 +8,9 @@ import com.suzei.minote.data.local.service.NoteLocalService
 import com.suzei.minote.data.local.service.TodoLocalService
 import com.suzei.minote.data.repository.NoteDataSource
 import com.suzei.minote.data.repository.TodoDataSource
-import com.suzei.minote.data.repository.TodoRepository
-import com.suzei.minote.utils.executors.AppExecutor
 import kotlinx.coroutines.Dispatchers.IO
 
 object Injection {
-    fun provideTodoRepository(context: Context): TodoRepository {
-        val database = getDatabase(context)
-
-        return TodoRepository.getInstance(
-                AppExecutor.instance,
-                database.todoDao(),
-                database.todoItemDao())
-    }
-
     fun provideSharedPreference(activity: Activity): SharedPreferences {
         return activity.getSharedPreferences(
                 activity.getString(R.string.preference_file_key),
