@@ -5,20 +5,14 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.suzei.minote.data.local.NotesDatabase
 import com.suzei.minote.data.local.service.NoteLocalService
+import com.suzei.minote.data.local.service.TodoLocalService
 import com.suzei.minote.data.repository.NoteDataSource
-import com.suzei.minote.data.repository.NotesRepository
+import com.suzei.minote.data.repository.TodoDataSource
 import com.suzei.minote.data.repository.TodoRepository
 import com.suzei.minote.utils.executors.AppExecutor
 import kotlinx.coroutines.Dispatchers.IO
 
 object Injection {
-
-    fun provideNotesRepository(context: Context): NotesRepository {
-        return NotesRepository.getInstance(
-                AppExecutor.instance,
-                getDatabase(context).notesDao())
-    }
-
     fun provideTodoRepository(context: Context): TodoRepository {
         val database = getDatabase(context)
 
@@ -41,8 +35,15 @@ object Injection {
         return NoteDataSource.instance(noteLocalService)
     }
 
+    fun provideTodoDataSource(context: Context): TodoDataSource {
+        val database = getDatabase(context)
+        val todoLocalService = TodoLocalService.instance(IO,
+                database.todoDao(),
+                database.todoItemDao())
+        return TodoDataSource.instance(todoLocalService)
+    }
+
     private fun getDatabase(context: Context): NotesDatabase {
         return NotesDatabase.getInstance(context)
     }
-
 }
