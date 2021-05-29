@@ -127,15 +127,15 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
         this.presenter = presenter
     }
 
-    override fun showTodoDetails(todo: Todo) {
-        val todoItemList = todo.todoItems?.toMutableList() ?: ArrayList()
+    override fun showDetails(data: Todo) {
+        val todoItemList = data.todoItems?.toMutableList() ?: ArrayList()
         taskCount = todoItemList.size
         todoSubtaskAdapter.updateData(todoItemList)
         setTaskCount()
 
-        binding.editorTodoTitle.setText(todo.title)
-        setNoteColor(Color.parseColor(todo.color))
-        setTextColor(Color.parseColor(todo.textColor))
+        binding.editorTodoTitle.setText(data.title)
+        setNoteColor(Color.parseColor(data.color))
+        setTextColor(Color.parseColor(data.textColor))
 
         binding.editorTodoTitle.moveFocus()
     }

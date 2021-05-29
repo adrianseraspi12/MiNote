@@ -112,7 +112,7 @@ class EditorTodoPresenter : EditorTodoContract.Presenter {
 
             override fun onDataAvailable(data: Todo) {
                 createdDate = data.createdDate
-                mView.showTodoDetails(data)
+                mView.showDetails(data)
             }
 
             override fun onDataUnavailable() {
