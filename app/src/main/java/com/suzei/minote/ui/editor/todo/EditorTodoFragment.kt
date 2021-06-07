@@ -9,26 +9,20 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.Toast
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.suzei.minote.R
 import com.suzei.minote.data.local.entity.Todo
 import com.suzei.minote.data.local.entity.TodoItem
 import com.suzei.minote.databinding.BottomsheetEditNoteBinding
 import com.suzei.minote.databinding.FragmentEditorTodoBinding
-import com.suzei.minote.ext.*
-import com.suzei.minote.utils.recycler_view.adapters.ColorListAdapter
-import com.suzei.minote.utils.recycler_view.adapters.ColorListAdapterBuilder
-import com.suzei.minote.utils.recycler_view.adapters.ColorListAdapterCallback
-import com.suzei.minote.utils.recycler_view.decorator.GridSpacingItemDecoration
+import com.suzei.minote.ext.hideKeyboard
+import com.suzei.minote.ext.moveFocus
+import com.suzei.minote.ext.scrollToBottom
+import com.suzei.minote.ext.setAlpha
+import com.suzei.minote.ui.editor.BaseEditorFragment
 
-class EditorTodoFragment : Fragment(), EditorTodoContract.View {
+class EditorTodoFragment : BaseEditorFragment(), EditorTodoContract.View {
 
     companion object {
 
@@ -46,9 +40,6 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
     private var currentNoteColor = -1
     private var currentTextColor = -1
     private var taskCount = 0
-    private lateinit var noteColorsAdapter: ColorListAdapter
-    private lateinit var textColorsAdapter: ColorListAdapter
-    private lateinit var itemDecoration: GridSpacingItemDecoration
     private lateinit var todoSubtaskAdapter: TodoSubtaskAdapter
     private var _binding: FragmentEditorTodoBinding? = null
     private val binding get() = _binding!!
@@ -64,13 +55,6 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        retainInstance = true
-        itemDecoration = GridSpacingItemDecoration(
-                6,
-                resources.getDimensionPixelSize(R.dimen.colorListSpacing),
-                false
-        )
-        initAdapters()
         todoSubtaskAdapter = TodoSubtaskAdapter(ArrayList(), onChangesCallback, onDeleteCalback)
     }
 
@@ -91,16 +75,17 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.setup()
-        setupBottomSheet()
-        setupNoteColorRecyclerView()
-        setupTextColorRecyclerView()
+        setupBottomSheet(binding.bottomsheetEditNote.bottomsheetSettingsContainer, binding.editorTodoContainer)
+        setupNoteColorRecyclerView(bottomsheetEditNoteBinding.bottomsheetRvNoteColor)
+        setupTextColorRecyclerView(bottomsheetEditNoteBinding.bottomsheetRvTextColor)
         setupSubTaskRecyclerView()
+        setupBack(binding.editorTodoBackArrow)
+        hideLock()
         binding.editorTodoTitle.addTextChangedListener(setTextWatcher(binding.editorTodoTitle))
         binding.editorTodoCvDone.setOnClickListener(onNewSubTaskDoneClickListener)
         binding.editorTodoTvText.addTextChangedListener(onAddSubTaskTextChangedListener)
         binding.itemEditorTodoAdd.setOnClickListener(onAddNewSubTaskClickListener)
         binding.editorTodoSave.setOnClickListener(onSaveClickListener)
-        binding.editorTodoBackArrow.setOnClickListener(onBackClickListener)
     }
 
     override fun onResume() {
@@ -121,6 +106,30 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
         super.onSaveInstanceState(outState)
         outState.putInt(EXTRA_NOTE_COLOR, currentNoteColor)
         outState.putInt(EXTRA_TEXT_COLOR, currentTextColor)
+    }
+
+    override fun onAfterTextChanged() {
+        requestAutoSave()
+    }
+
+    override fun onChangeNoteColor(color: Int) {
+        setNoteColor(color)
+        requestAutoSave()
+    }
+
+    override fun onChangeTextColor(color: Int) {
+        setTextColor(color)
+        requestAutoSave()
+    }
+
+    override fun onShowNoteColorWheel(color: Int) {
+        setNoteColor(color)
+        requestAutoSave()
+    }
+
+    override fun onShowTextColorWheel(color: Int) {
+        setTextColor(color)
+        requestAutoSave()
     }
 
     override fun setPresenter(presenter: EditorTodoContract.Presenter) {
@@ -181,8 +190,6 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
         }
         textColorsAdapter.setSelectedColor(color)
     }
-
-    private var onBackClickListener = View.OnClickListener { activity!!.finish() }
 
     private var onSaveClickListener = View.OnClickListener {
         val noteColor = (binding.editorTodoRoot.background as ColorDrawable).color
@@ -247,26 +254,16 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
         requestAutoSave()
     }
 
+    private fun hideLock() {
+        bottomsheetEditNoteBinding.bottomSheetSwitchLock.visibility = View.GONE
+        bottomsheetEditNoteBinding.bottomsheetLockTitle.visibility = View.GONE
+        bottomsheetEditNoteBinding.bottomsheetDividerBottom.visibility = View.GONE
+    }
+
     private fun setupSubTaskRecyclerView() {
         binding.editorTodoList.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = todoSubtaskAdapter
-        }
-    }
-
-    private fun setupNoteColorRecyclerView() {
-        bottomsheetEditNoteBinding.bottomsheetRvNoteColor.apply {
-            adapter = noteColorsAdapter
-            layoutManager = GridLayoutManager(activity!!, 6)
-            addItemDecoration(itemDecoration)
-        }
-    }
-
-    private fun setupTextColorRecyclerView() {
-        bottomsheetEditNoteBinding.bottomsheetRvTextColor.apply {
-            adapter = textColorsAdapter
-            layoutManager = GridLayoutManager(activity!!, 6)
-            addItemDecoration(itemDecoration)
         }
     }
 
@@ -279,39 +276,6 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
         }
     }
 
-    private fun initAdapters() {
-        noteColorsAdapter = ColorListAdapterBuilder.noteList(object : ColorListAdapterCallback {
-
-            override fun onChangedColor(color: Int) {
-                setNoteColor(color)
-                requestAutoSave()
-            }
-
-            override fun onShowColorWheel(color: Int) {
-                showColorWheel("Choose note color", color) {
-                    setNoteColor(it)
-                    requestAutoSave()
-                }
-            }
-
-        })
-
-        textColorsAdapter = ColorListAdapterBuilder.textList(object : ColorListAdapterCallback {
-            override fun onChangedColor(color: Int) {
-                setTextColor(color)
-                requestAutoSave()
-            }
-
-            override fun onShowColorWheel(color: Int) {
-                showColorWheel("Choose text color", color) {
-                    setTextColor(it)
-                    requestAutoSave()
-                }
-            }
-
-        })
-    }
-
     private fun requestAutoSave() {
         val noteColor = (binding.editorTodoRoot.background as ColorDrawable).color
         val hexNoteColor = String.format("#%06X", 0xFFFFFF and noteColor)
@@ -322,55 +286,5 @@ class EditorTodoFragment : Fragment(), EditorTodoContract.View {
         val title = binding.editorTodoTitle.text.toString()
         val todoItemList = todoSubtaskAdapter.data
         presenter.autoSave(title, todoItemList, hexNoteColor, hexTextColor)
-    }
-
-    private fun setTextWatcher(editText: EditText) = object : TextWatcher {
-        override fun afterTextChanged(p0: Editable?) {
-            if (editText.hasFocus()) {
-                requestAutoSave()
-            }
-        }
-
-        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-    }
-
-    private fun setupBottomSheet() {
-        bottomsheetEditNoteBinding.bottomSheetSwitchLock.visibility = View.GONE
-        bottomsheetEditNoteBinding.bottomsheetLockTitle.visibility = View.GONE
-        bottomsheetEditNoteBinding.bottomsheetDividerBottom.visibility = View.GONE
-
-        //  Setup Bottomsheet Behavior
-        val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomsheetEditNote.bottomsheetSettingsContainer)
-        val hiddenView = binding.bottomsheetEditNote.bottomsheetSettingsContainer.getChildAt(2)
-
-        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                if (newState == BottomSheetBehavior.STATE_SETTLING) {
-                    //  Set Editor (EditText) a margin to avoid
-                    //  bottomsheet overlaps the editor
-                    val params = CoordinatorLayout.LayoutParams(
-                            CoordinatorLayout.LayoutParams.MATCH_PARENT,
-                            CoordinatorLayout.LayoutParams.MATCH_PARENT
-                    )
-                    val bottomsheetSize = hiddenView.top + 32.convertToPx(resources)
-                    params.setMargins(0, 56.convertToPx(resources),
-                            0, bottomsheetSize)
-
-                    binding.editorTodoContainer.layoutParams = params
-                    binding.editorTodoContainer.requestLayout()
-                    bottomSheetBehavior.removeBottomSheetCallback(this)
-                }
-            }
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
-
-        })
-
-        binding.bottomsheetEditNote.bottomsheetSettingsContainer.viewTreeObserver.addOnGlobalLayoutListener {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            bottomSheetBehavior.setPeekHeight(hiddenView.top, true)
-        }
     }
 }
