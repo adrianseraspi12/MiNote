@@ -5,7 +5,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.suzei.minote.data.entity.Todo
+import com.suzei.minote.data.local.entity.Todo
 import com.suzei.minote.databinding.ItemRowTodoBinding
 import com.suzei.minote.ui.list.ListAdapterCallback
 import org.threeten.bp.format.DateTimeFormatter

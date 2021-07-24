@@ -1,9 +1,9 @@
-package com.suzei.minote.data.dao
+package com.suzei.minote.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.suzei.minote.data.entity.TodoItem
+import com.suzei.minote.data.local.entity.TodoItem
 
 @Dao
 interface TodoItemDao {

@@ -1,4 +1,4 @@
-package com.suzei.minote.data.converter
+package com.suzei.minote.data.local.converter
 
 import androidx.room.TypeConverter
 import org.threeten.bp.OffsetDateTime

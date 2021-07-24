@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import com.suzei.minote.Injection;
 import com.suzei.minote.R;
 import com.suzei.minote.data.DataSourceImpl;
-import com.suzei.minote.data.entity.Notes;
+import com.suzei.minote.data.local.entity.Notes;
 import com.suzei.minote.ui.editor.note.EditorNoteActivity;
 import com.suzei.minote.utils.ScreenOrientationUtils;
 

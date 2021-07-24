@@ -1,4 +1,4 @@
-package com.suzei.minote.data.entity
+package com.suzei.minote.data.local.entity
 
 import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
@@ -8,8 +8,8 @@ import androidx.room.PrimaryKey
 import org.threeten.bp.OffsetDateTime
 import java.util.*
 
-@Entity(tableName = "notes")
-class Notes {
+@Entity(tableName = "todo")
+class Todo() {
 
     @PrimaryKey
     @ColumnInfo(name = "_id")
@@ -18,9 +18,8 @@ class Notes {
 
     var title: String? = null
 
-    var password: String? = null
-
-    var message: String? = null
+    @Ignore
+    var todoItems: List<TodoItem>? = null
 
     @ColumnInfo(name = "text_color")
     var textColor: String? = null
@@ -30,34 +29,25 @@ class Notes {
     @ColumnInfo(name = "created_date")
     var createdDate: OffsetDateTime? = null
 
-    constructor(title: String,
-                password: String?,
-                message: String,
-                textColor: String,
-                color: String) {
-
+    constructor(title: String, todoItem: List<TodoItem>, textColor: String, color: String) : this() {
         this.id = UUID.randomUUID().toString()
         this.title = title
-        this.password = password
-        this.message = message
+        this.todoItems = todoItem
         this.textColor = textColor
         this.color = color
         this.createdDate = OffsetDateTime.now()
-
     }
 
     @Ignore
     constructor(id: String,
                 title: String,
-                password: String?,
-                message: String,
+                todoItem: List<TodoItem>,
                 textColor: String,
                 color: String,
-                createdDate: OffsetDateTime) {
+                createdDate: OffsetDateTime) : this() {
         this.id = id
         this.title = title
-        this.password = password
-        this.message = message
+        this.todoItems = todoItem
         this.textColor = textColor
         this.color = color
         this.createdDate = createdDate

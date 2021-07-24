@@ -1,9 +1,9 @@
-package com.suzei.minote.data.dao;
+package com.suzei.minote.data.local.dao;
 
 import android.content.Context;
 
-import com.suzei.minote.data.NotesDatabase;
-import com.suzei.minote.data.entity.Notes;
+import com.suzei.minote.data.local.NotesDatabase;
+import com.suzei.minote.data.local.entity.Notes;
 
 import org.junit.After;
 import org.junit.Before;
