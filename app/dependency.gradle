@@ -34,7 +34,7 @@ def play_core_ktx_version = "1.8.1"
 
 //  Coroutines
 def kotlin_coroutines_version = "1.5.0"
-def coroutine_test_version = "1.4.3"
+def coroutine_test_version = "1.5.0"
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
