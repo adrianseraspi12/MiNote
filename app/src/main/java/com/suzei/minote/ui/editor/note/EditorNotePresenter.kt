@@ -19,31 +19,39 @@ class EditorNotePresenter : EditorNoteContract.Presenter {
     private var sharedPrefs: SharedPreferences
     private var itemId: String? = null
     private var isAutoSave: Boolean = false
-    private var saveHandler = Handler(Looper.myLooper()!!)
+    private var saveHandler: Handler? = null
     private val scope = MainScope()
 
     private lateinit var createdDate: OffsetDateTime
 
-    internal constructor(itemId: String,
-                         sharedPreferences: SharedPreferences,
-                         dataSource: DataSource<Notes>,
-                         mView: EditorNoteContract.View) {
+    internal constructor(
+        itemId: String,
+        sharedPreferences: SharedPreferences,
+        dataSource: DataSource<Notes>,
+        mView: EditorNoteContract.View,
+        handler: Handler = Handler(Looper.myLooper()!!)
+    ) {
         this.sharedPrefs = sharedPreferences
         this.mDataSource = dataSource
         this.mView = mView
         this.itemId = itemId
         this.isAutoSave = sharedPreferences.getBoolean("auto_save", false)
+        this.saveHandler = handler
 
         mView.setPresenter(this)
     }
 
-    internal constructor(dataSource: DataSource<Notes>,
-                         sharedPreferences: SharedPreferences,
-                         mView: EditorNoteContract.View) {
+    internal constructor(
+        dataSource: DataSource<Notes>,
+        sharedPreferences: SharedPreferences,
+        mView: EditorNoteContract.View,
+        handler: Handler = Handler(Looper.myLooper()!!)
+    ) {
         this.sharedPrefs = sharedPreferences
         this.mDataSource = dataSource
         this.mView = mView
         this.isAutoSave = sharedPreferences.getBoolean("auto_save", false)
+        this.saveHandler = handler
 
         mView.setPresenter(this)
     }
@@ -58,46 +66,53 @@ class EditorNotePresenter : EditorNoteContract.Presenter {
         }
     }
 
-    override fun saveNote(title: String,
-                          message: String,
-                          noteColor: String,
-                          textColor: String,
-                          password: String?) {
+    override fun saveNote(
+        title: String,
+        message: String,
+        noteColor: String,
+        textColor: String,
+        password: String?
+    ) {
         LogMe.info("Item Id = $itemId")
 
         if (itemId != null) {
             val note = Notes(
-                    itemId!!,
-                    title,
-                    password,
-                    message,
-                    textColor,
-                    noteColor,
-                    createdDate)
+                itemId!!,
+                title,
+                password,
+                message,
+                textColor,
+                noteColor,
+                createdDate
+            )
 
             updateNote(note)
         } else {
             val note = Notes(
-                    title,
-                    password,
-                    message,
-                    textColor,
-                    noteColor)
+                title,
+                password,
+                message,
+                textColor,
+                noteColor
+            )
 
             createNote(note)
         }
     }
 
-    override fun autoSave(title: String,
-                          message: String,
-                          noteColor: String,
-                          textColor: String,
-                          password: String?) {
+    override fun autoSave(
+        title: String,
+        message: String,
+        noteColor: String,
+        textColor: String,
+        password: String?
+    ) {
         if (!isAutoSave) return
-        saveHandler.removeCallbacksAndMessages(null)
-        saveHandler.postDelayed(
-                { saveNote(title, message, noteColor, textColor, password) },
-                1000)
+        saveHandler?.removeCallbacksAndMessages(null)
+        saveHandler?.postDelayed(
+            { saveNote(title, message, noteColor, textColor, password) },
+            1000
+        )
     }
 
     private fun createNote(note: Notes) {
@@ -107,7 +122,7 @@ class EditorNotePresenter : EditorNoteContract.Presenter {
                 mView.showToastMessage("Save Failed")
                 return@launch
             }
-            val saveNote = (result as Result.Success).data
+            val saveNote = (result as? Result.Success)?.data
             if (saveNote == null) {
                 mView.showToastMessage("Save Failed")
                 return@launch

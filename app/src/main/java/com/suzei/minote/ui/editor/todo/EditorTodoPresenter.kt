@@ -21,29 +21,37 @@ class EditorTodoPresenter : EditorTodoContract.Presenter {
     private var itemId: String? = null
     private var createdDate: OffsetDateTime? = null
     private var isAutoSave: Boolean = false
-    private var saveHandler = Handler(Looper.myLooper()!!)
+    private var saveHandler: Handler? = null
     private val scope = MainScope()
 
-    internal constructor(itemId: String,
-                         sharedPreferences: SharedPreferences,
-                         dataSource: DataSource<Todo>,
-                         view: EditorTodoContract.View) {
+    internal constructor(
+        itemId: String,
+        sharedPreferences: SharedPreferences,
+        dataSource: DataSource<Todo>,
+        view: EditorTodoContract.View,
+        handler: Handler = Handler(Looper.myLooper()!!)
+    ) {
         this.sharedPrefs = sharedPreferences
         this.itemId = itemId
         this.mDataSource = dataSource
         this.mView = view
         this.isAutoSave = sharedPreferences.getBoolean("auto_save", false)
+        this.saveHandler = handler
 
         mView.setPresenter(this)
     }
 
-    internal constructor(sharedPreferences: SharedPreferences,
-                         dataSource: DataSource<Todo>,
-                         view: EditorTodoContract.View) {
+    internal constructor(
+        sharedPreferences: SharedPreferences,
+        dataSource: DataSource<Todo>,
+        view: EditorTodoContract.View,
+        handler: Handler = Handler(Looper.myLooper()!!)
+    ) {
         this.sharedPrefs = sharedPreferences
         this.mDataSource = dataSource
         this.mView = view
         this.isAutoSave = sharedPreferences.getBoolean("auto_save", false)
+        this.saveHandler = handler
 
         mView.setPresenter(this)
     }
@@ -59,8 +67,10 @@ class EditorTodoPresenter : EditorTodoContract.Presenter {
 
     }
 
-    override fun saveTodo(title: String, todoItems: List<TodoItem>,
-                          noteColor: String, textColor: String) {
+    override fun saveTodo(
+        title: String, todoItems: List<TodoItem>,
+        noteColor: String, textColor: String
+    ) {
         if (itemId != null) {
             LogMe.info("Presenter = Updating")
             updateTodo(title, todoItems, noteColor, textColor)
@@ -71,22 +81,31 @@ class EditorTodoPresenter : EditorTodoContract.Presenter {
 
     }
 
-    override fun autoSave(title: String, todoItems: List<TodoItem>, noteColor: String, textColor: String) {
+    override fun autoSave(
+        title: String,
+        todoItems: List<TodoItem>,
+        noteColor: String,
+        textColor: String
+    ) {
         if (!isAutoSave) return
-        saveHandler.removeCallbacksAndMessages(null)
-        saveHandler.postDelayed(
-                { saveTodo(title, todoItems, noteColor, textColor) },
-                1000)
+        saveHandler?.removeCallbacksAndMessages(null)
+        saveHandler?.postDelayed(
+            { saveTodo(title, todoItems, noteColor, textColor) },
+            1000
+        )
     }
 
-    private fun createTodo(title: String, todoItems: List<TodoItem>,
-                           noteColor: String, textColor: String) {
+    private fun createTodo(
+        title: String, todoItems: List<TodoItem>,
+        noteColor: String, textColor: String
+    ) {
         scope.launch {
             val todo = Todo(
-                    title,
-                    todoItems,
-                    textColor,
-                    noteColor)
+                title,
+                todoItems,
+                textColor,
+                noteColor
+            )
 
             val result = mDataSource.save(todo)
             if (result is Result.Error) {
@@ -94,7 +113,7 @@ class EditorTodoPresenter : EditorTodoContract.Presenter {
                 return@launch
             }
 
-            val saveTodo = (result as Result.Success).data
+            val saveTodo = (result as? Result.Success)?.data
             if (saveTodo == null) {
                 mView.showToastMessage("Save Failed")
                 return@launch
@@ -107,16 +126,19 @@ class EditorTodoPresenter : EditorTodoContract.Presenter {
         }
     }
 
-    private fun updateTodo(title: String, todoItems: List<TodoItem>,
-                           noteColor: String, textColor: String) {
+    private fun updateTodo(
+        title: String, todoItems: List<TodoItem>,
+        noteColor: String, textColor: String
+    ) {
         scope.launch {
             val todo = Todo(
-                    itemId!!,
-                    title,
-                    todoItems,
-                    textColor,
-                    noteColor,
-                    createdDate!!)
+                itemId!!,
+                title,
+                todoItems,
+                textColor,
+                noteColor,
+                createdDate!!
+            )
 
 
             mDataSource.update(todo)
@@ -130,7 +152,7 @@ class EditorTodoPresenter : EditorTodoContract.Presenter {
             val result = mDataSource.getData(itemId!!)
             if (result is Result.Error) return@launch
 
-            val todo = (result as Result.Success).data ?: return@launch
+            val todo = (result as? Result.Success)?.data ?: return@launch
             createdDate = todo.createdDate
             mView.showDetails(todo)
         }
