@@ -111,7 +111,7 @@
         app:layout_constraintStart_toEndOf="@+id/bottomsheet_lock_title"
         app:layout_constraintTop_toBottomOf="@+id/bottomsheet_divider_bottom"
         app:thumbTint="@color/white"
-        app:trackTint="@color/track_tint_selector"
+        app:trackTint="@color/bottomsheet_track_tint_selector"
         app:useMaterialThemeColors="false" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,7 +1,7 @@
-package com.suzei.minote.data.dao
+package com.suzei.minote.data.local.dao
 
 import androidx.room.*
-import com.suzei.minote.data.entity.Notes
+import com.suzei.minote.data.local.entity.Notes
 
 @Dao
 interface NotesDao {

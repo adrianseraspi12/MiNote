@@ -10,10 +10,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
-        android:layout_marginBottom="@dimen/margin_large"
         app:cardBackgroundColor="@color/primaryColor"
         app:cardCornerRadius="40dp"
-        app:layout_constraintBottom_toTopOf="@+id/create_note_btn_create"
         app:layout_constraintEnd_toStartOf="@+id/create_note_container_todo"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,6 +28,21 @@
 
     </com.google.android.material.card.MaterialCardView>
 
+    <TextView
+        android:id="@+id/create_note_title_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:fontFamily="@font/proxima_nova_bold"
+        android:text="@string/note"
+        android:textColor="@color/textColor"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/create_note_btn_create"
+        app:layout_constraintEnd_toEndOf="@+id/create_note_container_note"
+        app:layout_constraintStart_toStartOf="@+id/create_note_container_note"
+        app:layout_constraintTop_toBottomOf="@+id/create_note_container_note" />
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/create_note_container_todo"
         android:layout_width="wrap_content"
@@ -38,7 +51,6 @@
         android:layout_marginBottom="@dimen/margin_large"
         app:cardBackgroundColor="@color/primaryColor"
         app:cardCornerRadius="40dp"
-        app:layout_constraintBottom_toTopOf="@+id/create_note_btn_create"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/create_note_container_note"
@@ -54,6 +66,21 @@
             app:srcCompat="@drawable/ic_todo_selection" />
 
     </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/create_note_todo_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:fontFamily="@font/proxima_nova_bold"
+        android:text="@string/todo"
+        android:textColor="@color/textColor"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/create_note_btn_create"
+        app:layout_constraintEnd_toEndOf="@+id/create_note_container_todo"
+        app:layout_constraintStart_toStartOf="@+id/create_note_container_todo"
+        app:layout_constraintTop_toBottomOf="@+id/create_note_container_todo" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/create_note_btn_create"

@@ -24,7 +24,7 @@
                 style="@style/ImageButton.Selectable"
                 android:layout_marginStart="@dimen/margin_small"
                 android:contentDescription="@string/back"
-                app:srcCompat="@drawable/ic_back" />
+                app:srcCompat="@drawable/ic_back_black" />
 
         </com.google.android.material.appbar.MaterialToolbar>
 
@@ -66,7 +66,7 @@
                 <EditText
                     android:id="@+id/editor_text"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_medium"
                     android:layout_marginRight="@dimen/margin_medium"
                     android:autofillHints=""
@@ -78,13 +78,19 @@
                     android:inputType="textMultiLine"
                     android:textCursorDrawable="@null" />
 
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="52dp"/>
+
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
 
     </FrameLayout>
 
-    <include layout="@layout/bottomsheet_edit_note" />
+    <include
+        android:id="@+id/bottomsheet_edit_note"
+        layout="@layout/bottomsheet_edit_note" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/editor_btn_save"
@@ -92,7 +98,7 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/save_note_button"
         app:backgroundTint="@color/secondaryColor"
-        app:layout_anchor="@+id/bottomsheet_settings_container"
+        app:layout_anchor="@+id/bottomsheet_edit_note"
         app:layout_anchorGravity="center_horizontal"
         app:srcCompat="@drawable/ic_done" />
 

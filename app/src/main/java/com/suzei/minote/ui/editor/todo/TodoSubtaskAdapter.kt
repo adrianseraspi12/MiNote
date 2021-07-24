@@ -7,36 +7,38 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.suzei.minote.R
-import com.suzei.minote.data.entity.TodoItem
+import com.suzei.minote.data.local.entity.TodoItem
+import com.suzei.minote.databinding.ItemRowEditTodoBinding
 import com.suzei.minote.ext.setAlpha
-import kotlinx.android.synthetic.main.item_row_edit_todo.view.*
 
 class TodoSubtaskAdapter(var data: MutableList<TodoItem>,
+                         private var onChangesCallback: () -> Unit,
                          private var onDeleteCallback: () -> Unit) : RecyclerView.Adapter<TodoSubtaskAdapter.ViewHolder>() {
 
     private var textColor: Int = 0xFFFFFF
     private var backgroundColor: Int = 0xFFFFFF
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_row_edit_todo, parent, false)
-        return ViewHolder(view, SubTaskTextChangedListener())
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val binding = ItemRowEditTodoBinding.inflate(layoutInflater, parent, false)
+        return ViewHolder(binding, SubTaskTextChangedListener(binding))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = data[position]
         holder.bind(item)
         holder.subTaskTextChangedListener.updatePosition(position)
-        holder.itemView.item_edit_todo_remove.setOnClickListener {
-            holder.itemView.item_edit_todo_text.clearFocus()
-            onDeleteCallback.invoke()
+        holder.binding.itemEditTodoRemove.setOnClickListener {
+            holder.binding.itemEditTodoText.clearFocus()
             delete(position)
+            onDeleteCallback.invoke()
+            onChangesCallback.invoke()
         }
 
-        holder.itemView.item_row_edit_todo_cv_done.setOnClickListener {
+        holder.binding.itemRowEditTodoCvDone.setOnClickListener {
             val isDone = item.completed ?: false
             isTaskCompleted(position, !isDone)
+            onChangesCallback.invoke()
         }
     }
 
@@ -86,46 +88,51 @@ class TodoSubtaskAdapter(var data: MutableList<TodoItem>,
     }
 
     inner class ViewHolder(
-            itemView: View,
-            var subTaskTextChangedListener: SubTaskTextChangedListener) : RecyclerView.ViewHolder(itemView) {
+            val binding: ItemRowEditTodoBinding,
+            var subTaskTextChangedListener: SubTaskTextChangedListener) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(todoItem: TodoItem) {
             val transparent = ContextCompat.getColor(itemView.context!!,
                     android.R.color.transparent)
-            itemView.item_edit_todo_text.setTextColor(textColor)
-            itemView.item_edit_todo_text.setHintTextColor(textColor.setAlpha(0.5f))
-            itemView.item_edit_todo_remove.setColorFilter(textColor)
-            itemView.item_row_edit_todo_cv_done.strokeColor = textColor
-            itemView.item_row_edit_todo_divider.setBackgroundColor(textColor.setAlpha(0.5f))
-            itemView.item_row_edit_todo_iv_check.setColorFilter(backgroundColor)
 
-            itemView.item_edit_todo_text.setText(todoItem.task)
+            binding.itemEditTodoText.setTextColor(textColor)
+            binding.itemEditTodoText.setHintTextColor(textColor.setAlpha(0.5f))
+            binding.itemEditTodoRemove.setColorFilter(textColor)
+            binding.itemRowEditTodoCvDone.strokeColor = textColor
+            binding.itemRowEditTodoDivider.setBackgroundColor(textColor.setAlpha(0.5f))
+            binding.itemRowEditTodoIvCheck.setColorFilter(backgroundColor)
+
+            binding.itemEditTodoText.setText(todoItem.task)
             if (todoItem.completed == true) {
-                itemView.item_row_edit_todo_cv_done.setCardBackgroundColor(textColor)
-                itemView.item_row_edit_todo_iv_check.visibility = View.VISIBLE
+                binding.itemRowEditTodoCvDone.setCardBackgroundColor(textColor)
+                binding.itemRowEditTodoIvCheck.visibility = View.VISIBLE
             } else {
-                itemView.item_row_edit_todo_cv_done.setCardBackgroundColor(transparent)
-                itemView.item_row_edit_todo_iv_check.visibility = View.GONE
+                binding.itemRowEditTodoCvDone.setCardBackgroundColor(transparent)
+                binding.itemRowEditTodoIvCheck.visibility = View.GONE
             }
         }
 
         fun enableTextWatcher() {
-            itemView.item_edit_todo_text.addTextChangedListener(subTaskTextChangedListener)
+            binding.itemEditTodoText.addTextChangedListener(subTaskTextChangedListener)
         }
 
         fun disableTextWatcher() {
-            itemView.item_edit_todo_text.removeTextChangedListener(subTaskTextChangedListener)
+            binding.itemEditTodoText.removeTextChangedListener(subTaskTextChangedListener)
         }
 
     }
 
-    inner class SubTaskTextChangedListener : TextWatcher {
+    inner class SubTaskTextChangedListener(val binding: ItemRowEditTodoBinding) : TextWatcher {
 
         private var position = -1
 
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
-        override fun afterTextChanged(p0: Editable?) {}
+        override fun afterTextChanged(p0: Editable?) {
+            if (binding.itemEditTodoText.hasFocus()) {
+                onChangesCallback.invoke()
+            }
+        }
 
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             val charSequence = p0 ?: ""

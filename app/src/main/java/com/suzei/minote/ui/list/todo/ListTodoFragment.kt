@@ -8,17 +8,24 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.suzei.minote.R
-import com.suzei.minote.data.entity.Todo
+import com.suzei.minote.data.local.entity.Todo
+import com.suzei.minote.databinding.FragmentListBinding
 import com.suzei.minote.ui.editor.todo.EditorTodoActivity
 import com.suzei.minote.ui.list.ListActivity
 import com.suzei.minote.ui.list.ListAdapterCallback
 import com.suzei.minote.ui.list.ListContract
 import com.suzei.minote.ui.list.ToastCallback
+import com.suzei.minote.ui.settings.SettingsActivity
 import com.suzei.minote.utils.LogMe
 import com.suzei.minote.utils.recycler_view.decorator.LinearLayoutSpacing
-import kotlinx.android.synthetic.main.fragment_list.*
 
 class ListTodoFragment : Fragment(), ListContract.View<Todo> {
+
+    private lateinit var presenter: ListContract.Presenter<Todo>
+    private lateinit var listActivity: ListActivity
+    private lateinit var listTodoAdapter: ListTodoAdapter
+    private var _binding: FragmentListBinding? = null
+    private val binding get() = _binding!!
 
     companion object {
 
@@ -29,10 +36,6 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
         }
     }
 
-    private lateinit var presenter: ListContract.Presenter<Todo>
-    private lateinit var listActivity: ListActivity
-    private lateinit var listTodoAdapter: ListTodoAdapter
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         listActivity = activity as ListActivity
@@ -40,28 +43,27 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_list, container, false)
+                              savedInstanceState: Bundle?): View {
+        _binding = FragmentListBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val mediumSpacing = resources.getDimension(R.dimen.margin_medium).toInt()
-        list_tv_title.setText(R.string.todo)
-        list_notes.addItemDecoration(LinearLayoutSpacing(mediumSpacing, mediumSpacing))
-        list_notes.adapter = listTodoAdapter
-        list_notes.layoutManager = LinearLayoutManager(context)
+        binding.listTvTitle.setText(R.string.todo)
+        setupRecyclerView()
+        setupSettingsButton()
+        presenter.setup()
     }
 
     override fun onStart() {
         super.onStart()
-        LogMe.info("LOG ListTodoFragment = onStart()")
         presenter.setup()
     }
 
     override fun onDestroyView() {
-        LogMe.info("LOG ListTodoFragment = onDestroyView()")
         super.onDestroyView()
+        _binding = null
     }
 
     override fun setPresenter(presenter: ListContract.Presenter<Todo>) {
@@ -70,16 +72,42 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
     }
 
     override fun showListOfNotes(listOfNotes: MutableList<Todo>) {
-        list_empty_placeholder.visibility = View.GONE
+        binding.listEmptyPlaceholder.visibility = View.GONE
         listTodoAdapter.update(listOfNotes)
-        list_notes.smoothScrollToPosition(0)
+        binding.listNotes.smoothScrollToPosition(0)
     }
 
     override fun showListUnavailable() {
-        list_empty_placeholder.visibility = View.VISIBLE
-        list_iv_empty.setImageResource(R.drawable.ic_empty_todo)
-        list_tv_empty_title.setText(R.string.no_todo_found_title)
-        list_tv_empty_subtitle.setText(R.string.no_todo_found_subtitle)
+        binding.listEmptyPlaceholder.visibility = View.VISIBLE
+        binding.listIvEmpty.setImageResource(R.drawable.ic_empty_todo)
+        binding.listTvEmptyTitle.setText(R.string.no_todo_found_title)
+        binding.listTvEmptySubtitle.setText(R.string.no_todo_found_subtitle)
+    }
+
+    private fun setupSettingsButton() {
+        binding.listBtnSettings.setOnClickListener {
+            val intent = Intent(context, SettingsActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    private fun setupRecyclerView() {
+        val mediumSpacing = resources.getDimension(R.dimen.margin_medium).toInt()
+        binding.listNotes.addItemDecoration(LinearLayoutSpacing(mediumSpacing, mediumSpacing))
+        binding.listNotes.adapter = listTodoAdapter
+        binding.listNotes.layoutManager = LinearLayoutManager(context)
+    }
+
+    private var toastCallback = object : ToastCallback {
+
+        override fun onUndoClick() {
+            listTodoAdapter.retainDeletedItem()
+            binding.listEmptyPlaceholder.visibility = View.GONE
+        }
+
+        override fun onToastDismiss() {
+            presenter.delete(listTodoAdapter.tempDeletedTodo!!)
+        }
     }
 
     private var listAdapterCallback = object : ListAdapterCallback<Todo> {
@@ -100,24 +128,12 @@ class ListTodoFragment : Fragment(), ListContract.View<Todo> {
         }
 
         override fun scrollTo(position: Int) {
-            list_notes.scrollToPosition(position)
+            binding.listNotes.scrollToPosition(position)
         }
 
         override fun forceDelete(data: Todo) {
             presenter.delete(data)
         }
 
-    }
-
-    private var toastCallback = object : ToastCallback {
-
-        override fun onUndoClick() {
-            listTodoAdapter.retainDeletedItem()
-            list_empty_placeholder.visibility = View.GONE
-        }
-
-        override fun onToastDismiss() {
-            presenter.delete(listTodoAdapter.tempDeletedTodo!!)
-        }
     }
 }

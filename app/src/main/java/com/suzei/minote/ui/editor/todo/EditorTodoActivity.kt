@@ -17,32 +17,29 @@ class EditorTodoActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_editor_todo)
+        setContentView(R.layout.base_activity)
 
         val itemId = intent.getStringExtra(EXTRA_TODO_ID)
-
         val fm = supportFragmentManager
-
         var editorFragment = fm.findFragmentByTag(FRAGMENT_EDITOR_TODO_TAG) as EditorTodoFragment?
 
         if (editorFragment == null) {
             editorFragment = EditorTodoFragment.newInstance()
 
             fm.beginTransaction()
-                    .replace(R.id.editor_todo_container, editorFragment, FRAGMENT_EDITOR_TODO_TAG)
+                    .replace(R.id.base_container, editorFragment, FRAGMENT_EDITOR_TODO_TAG)
                     .commit()
 
             if (itemId != null) {
                 EditorTodoPresenter(itemId,
-                        Injection.provideTodoRepository(applicationContext),
+                        Injection.provideSharedPreference(this),
+                        Injection.provideTodoDataSource(applicationContext),
                         editorFragment)
             } else {
-                EditorTodoPresenter(Injection.provideTodoRepository(applicationContext),
+                EditorTodoPresenter(Injection.provideSharedPreference(this),
+                        Injection.provideTodoDataSource(applicationContext),
                         editorFragment)
             }
-
         }
-
     }
-
 }

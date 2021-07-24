@@ -7,9 +7,15 @@ import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.suzei.minote.R
-import kotlinx.android.synthetic.main.dialog_create_note.*
+import com.suzei.minote.databinding.DialogCreateNoteBinding
 
 class SelectNoteDialog : BottomSheetDialogFragment() {
+
+    private var selectNoteDialogListener: ((Int) -> Unit)? = null
+    private var currentSelectedCatagory = NOTE_PAD
+
+    private var _binding: DialogCreateNoteBinding? = null
+    private val binding get() = _binding!!
 
     companion object {
 
@@ -25,11 +31,9 @@ class SelectNoteDialog : BottomSheetDialogFragment() {
 
     }
 
-    private var selectNoteDialogListener: ((Int) -> Unit)? = null
-    private var currentSelectedCatagory = NOTE_PAD
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.dialog_create_note, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = DialogCreateNoteBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,30 +41,35 @@ class SelectNoteDialog : BottomSheetDialogFragment() {
         setupViews()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun setupViews() {
         val primaryColor = ResourcesCompat.getColor(resources, R.color.primaryColor, null)
         val secondaryColor = ResourcesCompat.getColor(resources, R.color.secondaryColor, null)
 
-        create_note_container_note.setOnClickListener {
+        binding.createNoteContainerNote.setOnClickListener {
             changeCategoryColor(secondaryColor, primaryColor)
             currentSelectedCatagory = NOTE_PAD
         }
 
-        create_note_container_todo.setOnClickListener {
+        binding.createNoteContainerTodo.setOnClickListener {
             changeCategoryColor(primaryColor, secondaryColor)
             currentSelectedCatagory = TODO_LIST
         }
 
-        create_note_btn_create.setOnClickListener {
+        binding.createNoteBtnCreate.setOnClickListener {
             selectNoteDialogListener?.invoke(currentSelectedCatagory)
         }
     }
 
     private fun changeCategoryColor(noteColor: Int, todoColor: Int) {
-        create_note_container_note.strokeColor = noteColor
-        create_note_container_todo.strokeColor = todoColor
-        create_note_container_note.invalidate()
-        create_note_container_todo.invalidate()
+        binding.createNoteContainerNote.strokeColor = noteColor
+        binding.createNoteContainerTodo.strokeColor = todoColor
+        binding.createNoteContainerNote.invalidate()
+        binding.createNoteContainerTodo.invalidate()
     }
 
     override fun dismiss() {
