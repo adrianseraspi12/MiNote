@@ -15,11 +15,7 @@
         android:theme="@style/AppTheme"
         tools:targetApi="m">
         <activity android:name=".ui.settings.SettingsActivity" />
-
-        <meta-data
-            android:name="firebase_crashlytics_collection_enabled"
-            android:value="${crashlyticsCollectionEnabled}" />
-
+        
         <activity
             android:name=".ui.SplashActivity"
             android:theme="@style/SplashScreenTheme">
